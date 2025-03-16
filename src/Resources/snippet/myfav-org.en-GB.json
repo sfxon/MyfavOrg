@@ -1,0 +1,12 @@
+{
+    "myfav": {
+        "org": {
+            "employee": {
+                "addEmployeeButton": "Add Employee",
+                "employeeListTitle": "Current Employees",
+                "linkTitle": "Company-Employees",
+                "pageTitle": "Company-Employees"
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    {% block page_myfav_org_employee_overview %}
+        <div class="myfav-org-employee-overview">
+            <h1>{{ 'myfav.org.employee.pageTitle'|trans|sw_sanitize }}</h1>
+            <div class="myfav-org-employee-add-button-container">
+                <a href="#"><button class="btn btn-primary">{{ 'myfav.org.employee.addEmployeeButton'|trans|sw_sanitize }}</button></a>
+            </div>
+            <h2>{{ 'myfav.org.employee.employeeListTitle'|trans|sw_sanitize }}</h2>
+        </div>
+    {% endblock %}
+{% endblock %}

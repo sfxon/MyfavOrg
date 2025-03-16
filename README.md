@@ -1,2 +1,3 @@
 # MyfavOrg
-Shopware 6 plugin to manage an organizations staff. Create roles, acl and teams. You can manage orders for team members and limit budgets.
+
+Extends your Shopware 6 store with functionality for companies. Now you can create Company accounts with sub-accounts. You can manage orders for team members and limit budgets. An integrated acl let's you define, which user can take which action in the shop.

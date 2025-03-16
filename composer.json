@@ -1,0 +1,37 @@
+{
+    "name": "myfav/org",
+    "version": "1.0.0",
+    "description": "Business Organisation Management",
+    "type": "shopware-platform-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mindfav Software",
+            "homepage": "https://www.mindfav.com"
+        }
+    ],
+    "require": {
+        "shopware/core": "^6.6",
+        "shopware/storefront": "^6.6",
+        "shopware/administration": "~6.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Myfav\\Org\\": "src\/"
+        }
+    },
+    "extra": {
+        "shopware-plugin-class": "Myfav\\Org\\MyfavOrg",
+        "plugin-icon": "plugin.png",
+        "shopware-min-version": "6.6",
+        "copyright": "(c) by Mindfav Software",
+        "label": {
+            "de-DE": "Business Organization Management",
+            "en-GB": "Business Organization Management"
+        },
+        "description": {
+            "de-DE": "Fügt dem Shop Team-Accounts für Unternehmen hinzu. Ermöglicht Freigaben von Bestellungen und Budgets für einzelne Team-Mitglieder.",
+            "en-GB": "Adds Team-Account for companies to the shop. Allows approval of orders and budgets for individual team members."
+        }
+    }
+}
