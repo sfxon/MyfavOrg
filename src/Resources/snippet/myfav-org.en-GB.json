@@ -1,11 +1,17 @@
 {
     "myfav": {
         "org": {
+            "aclRole": {
+                "addAclRoleButton": "Add ACL Role",
+                "aclRoleListTitle": "Current ACL Role",
+                "linkTitle": "ACL Roles",
+                "pageTitle": "ACL Roles"
+            },
             "employee": {
                 "addEmployeeButton": "Add Employee",
                 "employeeListTitle": "Current Employees",
-                "linkTitle": "Company-Employees",
-                "pageTitle": "Company-Employees"
+                "linkTitle": "Company Employees",
+                "pageTitle": "Company Employees"
             }
         }
     }

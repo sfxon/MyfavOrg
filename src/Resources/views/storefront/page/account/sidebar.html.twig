@@ -11,4 +11,13 @@
             {{ 'myfav.org.employee.linkTitle'|trans|sw_sanitize }}
         </a>
     {% endblock %}
+
+    {% block page_account_sidebar_link_myfav_org_acl_role_list %}
+        <a href="{{ path('myfav.org.aclrole.list') }}"
+            title="{{ 'myfav.org.aclRole.linkTitle'|trans|striptags }}"
+            class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.aclRole.list') %} is-active{% endif %}"
+            {% if activeRoute is same as('myfav.org.aclRole.list') %} aria-current="page"{% endif %}>
+            {{ 'myfav.org.aclRole.linkTitle'|trans|sw_sanitize }}
+        </a>
+    {% endblock %}
 {% endblock %}

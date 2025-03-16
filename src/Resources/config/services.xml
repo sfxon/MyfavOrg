@@ -6,6 +6,16 @@
 
     <services>
         <!-- Controllers -->
+        <service id="Myfav\Org\Storefront\Controller\AclRoleController" public="true">
+            <argument type="service" id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
         <service id="Myfav\Org\Storefront\Controller\EmployeeController" public="true">
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
             <call method="setContainer">
@@ -16,7 +26,33 @@
             </call>
         </service>
 
+        <!-- Entity -->
+        <service id="Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_acl_attribute" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_acl_role" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_acl_role_attribute" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_employee" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgEmployeeAclAttribute\MyfavOrgEmployeeAclAttributeDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_employee_acl_attribute" />
+        </service>
+
         <!-- PageLoader -->
+        <service id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader" public="true">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
         <service id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" public="true">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
             <argument type="service" id="event_dispatcher"/>

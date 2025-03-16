@@ -1,0 +1,13 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    {% block page_myfav_org_acl_role_overview %}
+        <div class="myfav-org-acl-role-overview">
+            <h1>{{ 'myfav.org.aclRole.pageTitle'|trans|sw_sanitize }}</h1>
+            <div class="myfav-org-acl-role-add-button-container">
+                <a href="#"><button class="btn btn-primary">{{ 'myfav.org.aclRole.addAclRoleButton'|trans|sw_sanitize }}</button></a>
+            </div>
+            <h2>{{ 'myfav.org.aclRole.aclRoleListTitle'|trans|sw_sanitize }}</h2>
+        </div>
+    {% endblock %}
+{% endblock %}
