@@ -43,7 +43,7 @@ class MyfavOrgAclRoleAttributeDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return PimImageEntity::class;
+        return MyfavOrgAclRoleAttributeEntity::class;
     }
 
     /**
@@ -53,7 +53,7 @@ class MyfavOrgAclRoleAttributeDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return PimImageCollection::class;
+        return MyfavOrgAclRoleAttributeCollection::class;
     }
 
     /**

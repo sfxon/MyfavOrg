@@ -2,8 +2,8 @@
 
 namespace Myfav\Org\Core\Content\MyfavOrgAclRole;
 
+use Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityCustomFieldsTrait;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
 class MyfavOrgAclRoleEntity extends Entity
@@ -11,6 +11,7 @@ class MyfavOrgAclRoleEntity extends Entity
     use EntityIdTrait;
 
     protected ?string $name;
+    protected ?MyfavOrgAclRoleAttributeCollection $myfavOrgAclRoleAttributes;
 
     // $name
     public function getName(): ?string
@@ -21,5 +22,31 @@ class MyfavOrgAclRoleEntity extends Entity
     public function setName(?string $name): void
     {
         $this->name = $name;
+    }
+
+    // myfavOrgAclRoleAttributes
+    public function getMyfavOrgAclRoleAttributes(): ?MyfavOrgAclRoleAttributeCollection
+    {
+        return $this->myfavOrgAclRoleAttributes;
+    }
+
+    public function setMyfavOrgAclRoleAttributes(?MyfavOrgAclRoleAttributeCollection $myfavOrgAclRoleAttributes): void
+    {
+        $this->myfavOrgAclRoleAttributes = $myfavOrgAclRoleAttributes;
+    }
+
+    public function getAttributesIndexByAttributeId(): array
+    {
+        $retval = [];
+
+        if($this->myfavOrgAclRoleAttributes === null) {
+            return $retval;
+        }
+
+        foreach($this->myfavOrgAclRoleAttributes as $roleAttribute) { 
+            $retval[$roleAttribute->getMyfavOrgAclAttributeId()] = $roleAttribute;
+        }
+
+        return $retval;
     }
 }

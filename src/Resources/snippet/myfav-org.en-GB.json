@@ -2,10 +2,30 @@
     "myfav": {
         "org": {
             "aclRole": {
+                "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingRead": "Read",
+                "aclTableHeadingWrite": "Write",
+                "aclTableHeadingDelete": "Delete",
+                "aclTableAttributeEmployee": "Employee",
+                "aclTableAttributeRole": "Role",
                 "addAclRoleButton": "Add ACL Role",
                 "aclRoleListTitle": "Current ACL Role",
+                "aclRoleTableHeadingName": "Name",
+                "aclRoleTableHeadingAction": "Action",
+                "aclRoleTableEditButton": "Edit",
+                "btnSave": "Save",
+                "formFieldName": "Name of the Role",
+                "headingAclAttribute": "Access-Rights",
                 "linkTitle": "ACL Roles",
-                "pageTitle": "ACL Roles"
+                "messageNoRolesYet": "No roles have been created yet.",
+                "pageNewTitle": "Create new role",
+                "pageTitle": "ACL Roles",
+                "removeEntryBtn": "Confirm delete",
+                "removeEntryCollapseHeader": "Delete ACL Role",
+                "removeEntryWarning": "Warning! Clicking \"Confirm delete\" will permanently delete the entry! We will  not ask again.",
+                "successMessageRoleCreated": "The role has been created.",
+                "successMessageRoleDeleted": "The role has been deleted.",
+                "successMessageRoleUpdated": "The role has been updated."
             },
             "employee": {
                 "addEmployeeButton": "Add Employee",

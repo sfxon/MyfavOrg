@@ -16,6 +16,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\SearchRanking;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
@@ -42,7 +43,7 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return PimImageEntity::class;
+        return MyfavOrgAclRoleEntity::class;
     }
 
     /**
@@ -52,7 +53,7 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return PimImageCollection::class;
+        return MyfavOrgAclRoleCollection::class;
     }
 
     /**
@@ -66,7 +67,7 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
             (new StringField('name', 'name'))->addFlags(new Required()),
 
-            new OneToManyAssociationField('myfav_org_acl_role_attributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_rule_id')
+            new OneToManyAssociationField('myfavOrgAclRoleAttributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_role_id')
         ]);
     }
 }

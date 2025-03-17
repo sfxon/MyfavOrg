@@ -17,6 +17,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
@@ -42,7 +43,7 @@ class MyfavOrgAclAttributeDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return PimImageEntity::class;
+        return MyfavOrgAclAttributeEntity::class;
     }
 
     /**
@@ -52,7 +53,7 @@ class MyfavOrgAclAttributeDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return PimImageCollection::class;
+        return MyfavOrgAclAttributeCollection::class;
     }
 
     /**

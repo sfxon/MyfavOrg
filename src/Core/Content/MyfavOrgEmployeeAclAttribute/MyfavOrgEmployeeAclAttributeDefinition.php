@@ -43,7 +43,7 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return PimImageEntity::class;
+        return MyfavOrgEmployeeAclAttributeEntity::class;
     }
 
     /**
@@ -53,7 +53,7 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return PimImageCollection::class;
+        return MyfavOrgEmployeeAclAttributeCollection::class;
     }
 
     /**

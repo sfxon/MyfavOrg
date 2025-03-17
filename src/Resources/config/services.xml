@@ -7,7 +7,10 @@
     <services>
         <!-- Controllers -->
         <service id="Myfav\Org\Storefront\Controller\AclRoleController" public="true">
+            <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader" />
+            <argument type="service" id="Myfav\Org\Service\AclRoleService" />
+            <argument type="service" id="router"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
@@ -56,6 +59,15 @@
         <service id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" public="true">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
             <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <!-- Service -->
+        <service id="Myfav\Org\Service\AclRoleAttributeService" public="true">
+            <argument type="service" id="myfav_org_acl_role_attribute.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\AclRoleService" public="true">
+            <argument type="service" id="myfav_org_acl_role.repository" />
         </service>
     </services>
 </container>

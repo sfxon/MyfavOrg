@@ -2,10 +2,30 @@
     "myfav": {
         "org": {
             "aclRole": {
+                "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingRead": "Lesen",
+                "aclTableHeadingWrite": "Schreiben",
+                "aclTableHeadingDelete": "Löschen",
+                "aclTableAttributeEmployee": "Mitarbeiter",
+                "aclTableAttributeRole": "Rollen",
                 "addAclRoleButton": "ACL Rolle hinzufügen",
-                "aclRoleListTitle": "Aktuelle ACL Rolle",
+                "aclRoleListTitle": "Aktuelle ACL Rollen",
+                "aclRoleTableHeadingName": "Name",
+                "aclRoleTableHeadingAction": "Aktion",
+                "aclRoleTableEditButton": "Bearbeiten",
+                "btnSave": "Speichern",
+                "formFieldName": "Name der Rolle",
+                "headingAclAttribute": "Zugriffs-Rechte",
                 "linkTitle": "ACL Rollen",
-                "pageTitle": "ACL Rollen"
+                "messageNoRolesYet": "Es wurden noch keine Rollen angelegt.",
+                "pageNewTitle": "Neue Rolle anlegen",
+                "pageTitle": "ACL Rollen",
+                "removeEntryBtn": "Löschen bestätigen",
+                "removeEntryCollapseHeader": "ACL Rolle löschen",
+                "removeEntryWarning": "Warning! With\"Löschen bestätigen\" wird der Eintrag unwiderruflich gelöscht! Es erfolgt keine weitere Sicherheitsabfrage!",
+                "successMessageRoleCreated": "Die Rolle wurde erstellt.",
+                "successMessageRoleDeleted": "Die Rolle wurde gelöscht.",
+                "successMessageRoleUpdated": "Die Rolle wurde aktualisiert"
             },
             "employee": {
                 "addEmployeeButton": "Mitarbeiter hinzufügen",
