@@ -70,8 +70,8 @@ class MyfavOrgAclRoleAttributeDefinition extends EntityDefinition
             (new DateTimeField('valid_from', 'validFrom')),
             (new DateTimeField('valid_until', 'validUntil')),
 
-            new ManyToOneAssociationField('myfav_org_acl_role', 'myfav_org_acl_role_id', MyfavOrgAclRoleDefinition::class, 'id'),
-            new ManyToOneAssociationField('myfav_org_acl_attribute', 'myfav_org_acl_attribute_id', MyfavOrgAclAttributeDefinition::class, 'id'),
+            new ManyToOneAssociationField('myfavOrgAclRole', 'myfav_org_acl_role_id', MyfavOrgAclRoleDefinition::class, 'id'),
+            new ManyToOneAssociationField('myfavOrgAclAttribute', 'myfav_org_acl_attribute_id', MyfavOrgAclAttributeDefinition::class, 'id'),
         ]);
     }
 }

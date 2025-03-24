@@ -2,6 +2,7 @@
 
 namespace Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute;
 
+use Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeEntity;
 use Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeCollection;
 use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleCollection;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
@@ -17,6 +18,7 @@ class MyfavOrgAclRoleAttributeEntity extends Entity
     protected ?\DateTimeImmutable $validFrom;
     protected ?\DateTimeImmutable $validUntil;
 
+    protected ?MyfavOrgAclAttributeEntity $myfavOrgAclAttribute = null;
     protected ?MyfavOrgAclRoleCollection $myfavOrgAclRoles = null;
     protected ?MyfavOrgAclAttributeCollection $myfavOrgAclAttributes = null;
 
@@ -84,5 +86,16 @@ class MyfavOrgAclRoleAttributeEntity extends Entity
     public function setMyfavOrgAclAttributes(MyfavOrgAclAttributeCollection $myfavOrgAclAttributes): void
     {
         $this->myfavOrgAclAttributes = $myfavOrgAclAttributes;
+    }
+
+    // myfavOrgAclAttribute
+    public function getMyfavOrgAclAttribute(): ?MyfavOrgAclAttributeEntity
+    {
+        return $this->myfavOrgAclAttribute;
+    }
+
+    public function setMyfavOrgAclAttribute(MyfavOrgAclAttributeEntity $myfavOrgAclAttribute): void
+    {
+        $this->myfavOrgAclAttribute = $myfavOrgAclAttribute;
     }
 }

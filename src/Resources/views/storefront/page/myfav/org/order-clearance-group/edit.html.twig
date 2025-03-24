@@ -1,0 +1,54 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    {% block page_myfav_org_order__clearance_group_overview %}
+        <div class="myfav-org-order-clearance-group-edit">
+            <h1>
+                {% if editMode == 'new' %}{{ 'myfav.org.orderClearanceGroup.pageNewTitle'|trans|sw_sanitize }}{% else %}{{ 'myfav.org.orderClearanceGroup.pageEditTitle'|trans|sw_sanitize }}{% endif %}
+            </h1>
+            <div class="myfav-org-order-clearance-group-edit-container">
+                <form
+                    action="{% if editMode == 'new' %}{{ path('myfav.org.orderclearancegroup.create') }}{% else %}{{ path('myfav.org.orderclearancegroup.update', { 'orderClearanceGroupId': orderClearanceGroup.id }) }}{% endif %}"
+                    method="POST"
+                >
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="name">{{ 'myfav.org.orderClearanceGroup.formFieldName'|trans|sw_sanitize }}</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.orderClearanceGroup.formFieldName'|trans|sw_sanitize }}"
+                                name="name"
+                                id="name"
+                                required="required"
+                                value="{% if editMode == 'edit' %}{{ orderClearanceGroup.name }}{% endif %}"
+                            />
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button type="submit" class="btn btn-primary btn-sm" title="{{ 'myfav.org.orderClearanceGroup.btnSave'|trans|sw_sanitize }}">{{ 'myfav.org.orderClearanceGroup.btnSave'|trans|sw_sanitize }}</button>
+                    </div>
+                </form>
+                {% if editMode == 'edit' && userAclCanDelete %}
+                    <hr />
+                    <div class="accordion" id="accordionRemoveEntry">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseRemoveEntry" aria-expanded="false" aria-controls="flush-collapseRemoveEntry">
+                                    {{ 'myfav.org.orderClearanceGroup.removeEntryCollapseHeader'|trans|sw_sanitize }}
+                                </button>
+                            </h2>
+                            <div id="flush-collapseRemoveEntry" class="accordion-collapse collapse" data-bs-parent="#accordionRemoveEntry">
+                                <div class="accordion-body">
+                                    <p class="myfav-org-order-clearance-group-delete-warning">{{ 'myfav.org.orderClearanceGroup.removeEntryWarning'|trans|sw_sanitize }}</p>
+                                    <a href="{{ path('myfav.org.orderclearancegroup.delete', { 'orderClearanceGroupId': orderClearanceGroup.id }) }}"><button type="submit" class="btn btn-danger btn-sm">{{ 'myfav.org.orderClearanceGroup.removeEntryBtn'|trans|sw_sanitize }}</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}

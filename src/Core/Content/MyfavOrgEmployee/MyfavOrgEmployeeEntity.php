@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Myfav\Org\Core\Content\MyfavOrgAclAttribute;
+namespace Myfav\Org\Core\Content\MyfavOrgEmployee;
 
 use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleEntity;
+use Myfav\Org\Core\Content\MyfavOrgEmployeeAclAttribute\MyfavOrgEmployeeAclAttributeCollection;
+use Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupEntity;
+use Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleEntity;
 use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressEntity;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
@@ -12,7 +15,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 use Shopware\Core\System\Language\LanguageEntity;
 use Shopware\Core\System\Salutation\SalutationEntity;
 
-class MyfavOrgAclAttributeEntity extends Entity
+class MyfavOrgEmployeeEntity extends Entity
 {
     use EntityCustomFieldsTrait;
     use EntityIdTrait;
@@ -31,6 +34,8 @@ class MyfavOrgAclAttributeEntity extends Entity
     protected ?string $email;
     protected ?string $title;
     protected bool $active;
+    protected ?string $orderClearanceGroupId;
+    protected ?string $orderClearanceRoleId;
     protected ?\DateTimeInterface $firstLogin = null;
     protected ?\DateTimeInterface $lastLogin = null;
 
@@ -41,6 +46,9 @@ class MyfavOrgAclAttributeEntity extends Entity
     protected ?CustomerAddressEntity $defaultBillingAddress;
     protected ?CustomerAddressEntity $defaultShippingAddress;
     protected ?SalutationEntity $salutation;
+    protected ?MyfavOrgEmployeeAclAttributeCollection $myfavOrgEmployeeAclAttributes;
+    protected ?OrderClearanceGroupEntity $orderClearanceGroup;
+    protected ?OrderClearanceRoleEntity $orderClearanceRole;
 
     // $customerId
     public function getCustomerId(): ?string
@@ -196,6 +204,28 @@ class MyfavOrgAclAttributeEntity extends Entity
         $this->active = $active;
     }
 
+    // $orderClearanceGroupId
+    public function getOrderClearanceGroupId(): ?string
+    {
+        return $this->orderClearanceGroupId;
+    }
+
+    public function setOrderClearanceGroupId(?string $orderClearanceGroupId): void
+    {
+        $this->orderClearanceGroupId = $orderClearanceGroupId;
+    }
+
+    // $orderClearanceRoleId
+    public function getOrderClearanceRoleId(): ?string
+    {
+        return $this->orderClearanceRoleId;
+    }
+
+    public function setOrderClearanceRoleId(?string $orderClearanceRoleId): void
+    {
+        $this->orderClearanceRoleId = $orderClearanceRoleId;
+    }
+
     // $firstLogin
     public function getFirstLogin(): ?\DateTimeInterface
     {
@@ -293,5 +323,68 @@ class MyfavOrgAclAttributeEntity extends Entity
     public function setSalutation(?SalutationEntity $salutation): void
     {
         $this->salutation = $salutation;
+    }
+
+    // myfavOrgEmployeeAclAttributes
+    public function getMyfavOrgEmployeeAclAttributes(): ?MyfavOrgEmployeeAclAttributeCollection
+    {
+        return $this->myfavOrgEmployeeAclAttributes;
+    }
+
+    public function setMyfavOrgEmployeeAclAttributes(?MyfavOrgEmployeeAclAttributeCollection $myfavOrgEmployeeAclAttributes): void
+    {
+        $this->myfavOrgEmployeeAclAttributes = $myfavOrgEmployeeAclAttributes;
+    }
+
+    public function getAttributesIndexByAttributeId(): array
+    {
+        $retval = [];
+
+        if($this->myfavOrgEmployeeAclAttributes === null) {
+            return $retval;
+        }
+
+        foreach($this->myfavOrgEmployeeAclAttributes as $aclAttribute) {
+            $retval[$aclAttribute->getMyfavOrgAclAttributeId()] = $aclAttribute;
+        }
+
+        return $retval;
+    }
+
+    public function getAttributesIndexByTechnicalName(): array
+    {
+        $retval = [];
+
+        if($this->myfavOrgEmployeeAclAttributes === null) {
+            return $retval;
+        }
+
+        foreach($this->myfavOrgEmployeeAclAttributes as $aclAttribute) {
+            $retval[$aclAttribute->getMyfavOrgAclAttribute()->getTechnicalName()] = $aclAttribute;
+        }
+
+        return $retval;
+    }
+
+    // $orderClearanceGroup
+    public function getOrderClearanceGroup(): ?OrderClearanceGroupEntity
+    {
+        return $this->orderClearanceGroup;
+    }
+
+    public function setOrderClearanceGroup(?OrderClearanceGroupEntity $orderClearanceGroup): void
+    {
+        $this->orderClearanceGroup = $orderClearanceGroup;
+    }
+
+    // $orderClearanceRole
+    public function getOrderClearanceRole(): ?OrderClearanceRoleEntity
+    {
+        return $this->orderClearanceRole;
+    }
+
+    public function setOrderClearanceRole(?OrderClearanceRoleEntity $orderClearanceRole): void
+    {
+        $this->orderClearanceRole = $orderClearanceRole;
     }
 }

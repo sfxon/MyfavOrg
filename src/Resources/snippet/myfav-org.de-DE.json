@@ -3,11 +3,20 @@
         "org": {
             "aclRole": {
                 "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingCreate": "Erstellen",
                 "aclTableHeadingRead": "Lesen",
-                "aclTableHeadingWrite": "Schreiben",
+                "aclTableHeadingUpdate": "Aktualisieren",
                 "aclTableHeadingDelete": "Löschen",
                 "aclTableAttributeEmployee": "Mitarbeiter",
                 "aclTableAttributeRole": "Rollen",
+                "aclTableAttributeSw": {
+                    "profile": "Account Profil",
+                    "orders": "Account Bestellungen",
+                    "addresses": "Account Adressen",
+                    "payment": {
+                        "methods": "Zahlungsweisen"
+                    }
+                },
                 "addAclRoleButton": "ACL Rolle hinzufügen",
                 "aclRoleListTitle": "Aktuelle ACL Rollen",
                 "aclRoleTableHeadingName": "Name",
@@ -18,7 +27,8 @@
                 "headingAclAttribute": "Zugriffs-Rechte",
                 "linkTitle": "ACL Rollen",
                 "messageNoRolesYet": "Es wurden noch keine Rollen angelegt.",
-                "pageNewTitle": "Neue Rolle anlegen",
+                "pageEditTitle": "ACL Rolle bearbeiten",
+                "pageNewTitle": "Neue ACL Rolle anlegen",
                 "pageTitle": "ACL Rollen",
                 "removeEntryBtn": "Löschen bestätigen",
                 "removeEntryCollapseHeader": "ACL Rolle löschen",
@@ -28,10 +38,77 @@
                 "successMessageRoleUpdated": "Die Rolle wurde aktualisiert"
             },
             "employee": {
+                "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingCreate": "Erstellen",
+                "aclTableHeadingRead": "Lesen",
+                "aclTableHeadingUpdate": "Aktualisieren",
+                "aclTableHeadingDelete": "Löschen",
+                "aclTableAttributeEmployee": "Mitarbeiter",
+                "aclTableAttributeRole": "Rollen",
+                "aclTableAttributeSw": {
+                    "profile": "Account Profil",
+                    "orders": "Account Bestellungen",
+                    "addresses": "Account Adressen",
+                    "payment": {
+                        "methods": "Zahlungsweisen"
+                    }
+                },
                 "addEmployeeButton": "Mitarbeiter hinzufügen",
+                "btnSave": "Speichern",
+                "editErrorEmail": "Bitte eine gültige E-Mail Adresse eingeben.",
+                "editErrorEmailAccountDuplicate": "Diese E-Mail Adresse wird bereits von einem Voll-Account verwendet.",
+                "editErrorEmailEmployeeDuplicate": "Diese E-Mail Adresse wird bereits von einem Mitarbeiter-Account verwendet.",
+                "editErrorGeneral": "Es ist ein Fehler aufgetreten. Bitte prüfe deine Eingaben.",
                 "employeeListTitle": "Aktuelle Mitarbeiter",
+                "employeeTableHeadingName": "Name",
+                "employeeTableHeadingEmail": "E-Mail",
+                "employeeTableHeadingAction": "Aktion",
+                "employeeTableEditButton": "Edit",
+                "formFieldActive": "Aktiviert",
+                "formFieldDefaultBillingAddress": "Standard-Rechnungsadresse",
+                "formFieldDefaultShippingAddress": "Standard-Lieferadresse",
+                "formFieldEmail": "E-Mail",
+                "formFieldFirstName": "Vorname",
+                "formFieldLanguage": "Sprache",
+                "formFieldLastName": "Nachname",
+                "formFieldPassword": "Passwort",
+                "formFieldPosition": "Position",
+                "formFieldMyfavOrgAclRole": "ACL Rolle",
+                "formFieldSalutation": "Anrede",
+                "formFieldTitle": "Titel",
+                "headingAclAttribute": "Zugriffs-Rechte",
                 "linkTitle": "Firmen Mitarbeiter",
-                "pageTitle": "Firmen Mitarbeiter"
+                "messageNoEmployeesYet": "Es wurden noch keine Mitarbeiter-Accounts hinzugefügt.",
+                "optionLabelActive": "Aktiv",
+                "optionLabelInActive": "Inaktiv",
+                "pageEditTitle": "Mitarbeiter-Account bearbeiten",
+                "pageNewTitle": "Mitarbeiter-Account anlegen",
+                "pageTitle": "Firmen Mitarbeiter",
+                "removeEntryBtn": "Löschen bestätigen",
+                "removeEntryCollapseHeader": "Mitarbeiter-Account löschen",
+                "removeEntryWarning": "Warning! With\"Löschen bestätigen\" wird der Eintrag unwiderruflich gelöscht! Es erfolgt keine weitere Sicherheitsabfrage!",
+                "successMessageEmployeeCreated": "Der Mitarbeiter-Account wurde angelegt.",
+                "successMessageEmployeeDeleted": "Der Mitarbeiter-Account wurde gelöscht.",
+                "successMessageEmployeeUpdated": "Der Mitarbeiter-account wurde aktualisiert."
+            },
+            "orderClearanceGroup": {
+                "addOrderClearanceGroupButton": "Gruppe hinzufügen",
+                "btnSave": "Speichern",
+                "formFieldName": "Name",
+                "linkTitle": "Bestellfreigabe-Gruppen",
+                "pageEditTitle": "Bestellfreigabe-Gruppe Bearbeiten",
+                "pageNewTitle": "Neue Bestellfreigabe-Gruppe anlegen",
+                "pageTitle": "Bestellfreigabe-Gruppen",
+                "orderClearanceGroupListTitle": "Übersicht",
+                "orderClearanceGroupTableEditButton": "Bearbeiten",
+                "orderClearanceGroupTableHeadingAction": "Aktion",
+                "orderClearanceGroupTableHeadingName": "Name",
+                "removeEntryBtn": "Eintrag jetzt löschen",
+                "removeEntryCollapseHeader": "Eintrag löschen",
+                "removeEntryWarning": "Warnung! Der Eintrag wird ohne weitere Nachfrage gelöscht.",
+                "successMessageOrderClearanceGroupCreated": "Eintrag erfolgreich angelegt.",
+                "successMessageOrderClearanceGroupDeleted": "Die Gruppe wurde gelöscht.",
+                "successMessageOrderClearanceGroupUpdated": "Eintrag erfolgreich gespeichert."
             }
         }
     }

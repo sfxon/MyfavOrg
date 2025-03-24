@@ -3,13 +3,22 @@
         "org": {
             "aclRole": {
                 "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingCreate": "Create",
                 "aclTableHeadingRead": "Read",
-                "aclTableHeadingWrite": "Write",
+                "aclTableHeadingUpdate": "Update",
                 "aclTableHeadingDelete": "Delete",
                 "aclTableAttributeEmployee": "Employee",
                 "aclTableAttributeRole": "Role",
+                "aclTableAttributeSw": {
+                    "profile": "Account Profile",
+                    "orders": "Account Orders",
+                    "addresses": "Account Addresses",
+                    "payment": {
+                        "methods": "Payment methods"
+                    }
+                },
                 "addAclRoleButton": "Add ACL Role",
-                "aclRoleListTitle": "Current ACL Role",
+                "aclRoleListTitle": "Existing ACL Roles",
                 "aclRoleTableHeadingName": "Name",
                 "aclRoleTableHeadingAction": "Action",
                 "aclRoleTableEditButton": "Edit",
@@ -19,6 +28,7 @@
                 "linkTitle": "ACL Roles",
                 "messageNoRolesYet": "No roles have been created yet.",
                 "pageNewTitle": "Create new role",
+                "pageEditTitle": "Edit ACL Role",
                 "pageTitle": "ACL Roles",
                 "removeEntryBtn": "Confirm delete",
                 "removeEntryCollapseHeader": "Delete ACL Role",
@@ -28,10 +38,77 @@
                 "successMessageRoleUpdated": "The role has been updated."
             },
             "employee": {
+                "aclTableHeadingAttributeName": "Name",
+                "aclTableHeadingCreate": "Create",
+                "aclTableHeadingRead": "Read",
+                "aclTableHeadingUpdate": "Update",
+                "aclTableHeadingDelete": "Delete",
+                "aclTableAttributeEmployee": "Employee",
+                "aclTableAttributeRole": "Role",
+                "aclTableAttributeSw": {
+                    "profile": "Account Profile",
+                    "orders": "Account Orders",
+                    "addresses": "Account Addresses",
+                    "payment": {
+                        "methods": "Payment methods"
+                    }
+                },
                 "addEmployeeButton": "Add Employee",
+                "btnSave": "Save",
+                "editErrorEmail": "Enter a valid mail address.",
+                "editErrorEmailAccountDuplicate": "Email address is already in use by a full account.",
+                "editErrorEmailEmployeeDuplicate": "Email address is already in use by an employee account.",
+                "editErrorGeneral": "An error occured. Please check your input.",
                 "employeeListTitle": "Current Employees",
+                "employeeTableHeadingName": "Name",
+                "employeeTableHeadingEmail": "Email",
+                "employeeTableHeadingAction": "Action",
+                "employeeTableEditButton": "Edit",
+                "formFieldActive": "Activated",
+                "formFieldDefaultBillingAddress": "Default Billing Address",
+                "formFieldDefaultShippingAddress": "Default Shipping Address",
+                "formFieldEmail": "Email",
+                "formFieldFirstName": "Firstname",
+                "formFieldLanguage": "Language",
+                "formFieldLastName": "Lastname",
+                "formFieldPassword": "Password",
+                "formFieldPosition": "Position",
+                "formFieldMyfavOrgAclRole": "ACL Role",
+                "formFieldSalutation": "Salutation",
+                "formFieldTitle": "Title",
+                "headingAclAttribute": "Access-Rights",
                 "linkTitle": "Company Employees",
-                "pageTitle": "Company Employees"
+                "messageNoEmployeesYet": "No employee accounts have been added yet.",
+                "optionLabelActive": "Active",
+                "optionLabelInActive": "Inactive",
+                "pageEditTitle": "Edit employee account",
+                "pageNewTitle": "Create employee account",
+                "pageTitle": "Company Employees",
+                "removeEntryBtn": "Confirm delete",
+                "removeEntryCollapseHeader": "Delete employee account",
+                "removeEntryWarning": "Warning! Clicking \"Confirm delete\" will permanently delete the entry! We will  not ask again.",
+                "successMessageEmployeeCreated": "The employee account has been created.",
+                "successMessageEmployeeDeleted": "The employee account has been deleted.",
+                "successMessageEmployeeUpdated": "The employee account has been updated."
+            },
+            "orderClearanceGroup": {
+                "addOrderClearanceGroupButton": "Add Group",
+                "btnSave": "Save",
+                "formFieldName": "Name",
+                "linkTitle": "Order-Clearance Groups",
+                "pageEditTitle": "Edit Order-Clearance Group",
+                "pageNewTitle": "Create Clearance-Group",
+                "pageTitle": "Order-Clearance Groups",
+                "orderClearanceGroupListTitle": "Overview",
+                "orderClearanceGroupTableEditButton": "Edit",
+                "orderClearanceGroupTableHeadingAction": "Action",
+                "orderClearanceGroupTableHeadingName": "Name",
+                "removeEntryBtn": "Delete now",
+                "removeEntryCollapseHeader": "Delete Entry",
+                "removeEntryWarning": "Warning! The entry is deleted without further request.",
+                "successMessageOrderClearanceGroupCreated": "Created entry successfully.",
+                "successMessageOrderClearanceGroupDeleted": "The group has been deleted.",
+                "successMessageOrderClearanceGroupUpdated": "Saved entry."
             }
         }
     }

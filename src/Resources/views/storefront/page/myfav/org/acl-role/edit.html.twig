@@ -32,59 +32,78 @@
                             <thead>
                                 <tr>
                                     <th>{{ 'myfav.org.aclRole.aclTableHeadingAttributeName'|trans|sw_sanitize }}</th>
+                                    <th>{{ 'myfav.org.aclRole.aclTableHeadingCreate'|trans|sw_sanitize }}</th>
                                     <th>{{ 'myfav.org.aclRole.aclTableHeadingRead'|trans|sw_sanitize }}</th>
-                                    <th>{{ 'myfav.org.aclRole.aclTableHeadingWrite'|trans|sw_sanitize }}</th>
+                                    <th>{{ 'myfav.org.aclRole.aclTableHeadingUpdate'|trans|sw_sanitize }}</th>
                                     <th>{{ 'myfav.org.aclRole.aclTableHeadingDelete'|trans|sw_sanitize }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>{{ 'myfav.org.aclRole.aclTableAttributeEmployee'|trans|sw_sanitize }}</th>
+                                {% for aclAttributeGroup in aclAttributeGroups %}
+                                    <tr>
+                                        <th>{{ ('myfav.org.aclRole.aclTableAttribute' ~ (aclAttributeGroup.name|capitalize))|trans|sw_sanitize }}</th>
 
-                                    {# Employee #}
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbc8a8d72879c46e7860474db5d]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbc8a8d72879c46e7860474db5d'] is defined %}checked="checked"{% endif %}
-                                    /></td>
+                                        {# create #}
+                                        {% set tmpAttributeFound = false %}
+                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
+                                            {% if myfavOrgAclAttribute.technicalName ends with '.create' %}
+                                                {% set tmpAttributeFound = true %}
+                                                <td><input
+                                                    type="checkbox"
+                                                    value="1"
+                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
+                                                    {% if editMode == 'edit' && activatedRoleAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
+                                                /></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
 
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbcd3d071ffb80ea0f53b1861d4]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbcd3d071ffb80ea0f53b1861d4'] is defined %}checked="checked"{% endif %}
-                                    /></td>
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbd1b1c705b95eb72c42922275b]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbd1b1c705b95eb72c42922275b'] is defined %}checked="checked"{% endif %}
-                                    /></td>
-                                </tr>
+                                        {# read #}
+                                        {% set tmpAttributeFound = false %}
+                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
+                                            {% if myfavOrgAclAttribute.technicalName ends with '.read' %}
+                                                {% set tmpAttributeFound = true %}
+                                                <td><input
+                                                    type="checkbox"
+                                                    value="1"
+                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
+                                                    {% if editMode == 'edit' && activatedRoleAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
+                                                /></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
 
-                                {# Role #}
-                                <tr>
-                                    <th>{{ 'myfav.org.aclRole.aclTableAttributeRole'|trans|sw_sanitize }}</th>
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbd646d7018a8471fe4a3243637]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbd646d7018a8471fe4a3243637'] is defined %}checked="checked"{% endif %}
-                                    /></td>
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbd76d773f5bd8de83141880810]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbd76d773f5bd8de83141880810'] is defined %}checked="checked"{% endif %}
-                                    /></td>
-                                    <td><input
-                                        type="checkbox"
-                                        value="1"
-                                        name="aclAttributes[01959fbdbfff70ffa7748871b8d014f5]"
-                                        {% if editMode == 'edit' && activatedRoleAttributes['01959fbdbfff70ffa7748871b8d014f5'] is defined %}checked="checked"{% endif %}
-                                    /></td>
-                                </tr>
+                                        {# update #}
+                                        {% set tmpAttributeFound = false %}
+                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
+                                            {% if myfavOrgAclAttribute.technicalName ends with '.update' %}
+                                                {% set tmpAttributeFound = true %}
+                                                <td><input
+                                                    type="checkbox"
+                                                    value="1"
+                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
+                                                    {% if editMode == 'edit' && activatedRoleAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
+                                                /></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
+
+                                        {# delete #}
+                                        {% set tmpAttributeFound = false %}
+                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
+                                            {% if myfavOrgAclAttribute.technicalName ends with '.delete' %}
+                                                {% set tmpAttributeFound = true %}
+                                                <td><input
+                                                    type="checkbox"
+                                                    value="1"
+                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
+                                                    {% if editMode == 'edit' && activatedRoleAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
+                                                /></td>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -92,7 +111,7 @@
                         <button type="submit" class="btn btn-primary btn-sm" title="{{ 'myfav.org.aclRole.btnSave'|trans|sw_sanitize }}">{{ 'myfav.org.aclRole.btnSave'|trans|sw_sanitize }}</button>
                     </div>
                 </form>
-                {% if editMode == 'edit' %}
+                {% if editMode == 'edit' && userAclCanDelete %}
                     <hr />
                     <div class="accordion" id="accordionRemoveEntry">
                         <div class="accordion-item">

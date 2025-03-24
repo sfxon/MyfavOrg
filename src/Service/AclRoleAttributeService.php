@@ -2,7 +2,6 @@
 
 namespace Myfav\Org\Service;
 
-use Shopware\Core\Content\Category\Tree\TreeItem;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -58,7 +57,7 @@ class AclRoleAttributeService
     }
 
     /**
-     * createRole
+     * updateRoleAttributes
      *
      * @param  Context $context
      * @param  string $aclRoleId

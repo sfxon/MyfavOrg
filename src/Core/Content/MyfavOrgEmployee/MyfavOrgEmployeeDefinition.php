@@ -2,9 +2,12 @@
 
 namespace Myfav\Org\Core\Content\MyfavOrgEmployee;
 
+use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleDefinition;
+use Myfav\Org\Core\Content\MyfavOrgEmployeeAclAttribute\MyfavOrgEmployeeAclAttributeDefinition;
+use Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition;
+use Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition;
 use Shopware\Core\Checkout\Customer\CustomerDefinition;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerAddress\CustomerAddressDefinition;
-use Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeDefinition;
 use Shopware\Core\Checkout\Customer\Aggregate\CustomerGroup\CustomerGroupDefinition;
 use Shopware\Core\Checkout\Payment\PaymentMethodDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
@@ -18,14 +21,10 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\EmailField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\PasswordField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Shopware\Core\System\Language\LanguageDefinition;
 use Shopware\Core\System\Salutation\SalutationDefinition;
@@ -87,12 +86,14 @@ class MyfavOrgEmployeeDefinition extends EntityDefinition
             (new EmailField('email', 'email'))->addFlags(new ApiAware(), new Required()),
             (new StringField('title', 'title'))->addFlags(new ApiAware()),
             (new BoolField('active', 'active'))->addFlags(new ApiAware()),
+            (new FkField('order_clearance_group_id', 'orderClearanceGroupId', OrderClearanceGroupDefinition::class))->addFlags(new ApiAware()),
+            (new FkField('order_clearance_role_id', 'orderClearanceRoleId', OrderClearanceRoleDefinition::class))->addFlags(new ApiAware()),
             (new DateTimeField('first_login', 'firstLogin'))->addFlags(new ApiAware()),
             (new DateTimeField('last_login', 'lastLogin'))->addFlags(new ApiAware()),
             (new CustomFields())->addFlags(new ApiAware()),
 
             (new ManyToOneAssociationField('customer', 'customer_id', CustomerDefinition::class, 'id', false))->addFlags(new ApiAware()),
-            (new ManyToOneAssociationField('myfavOrgAclRole', 'myfav_org_acl_role_id', CustomerGroupDefinition::class, 'id', false))->addFlags(new ApiAware()),
+            (new ManyToOneAssociationField('myfavOrgAclRole', 'myfav_org_acl_role_id', MyfavOrgAclRoleDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new ManyToOneAssociationField('defaultPaymentMethod', 'default_payment_method_id', PaymentMethodDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new ManyToOneAssociationField('language', 'language_id', LanguageDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new ManyToOneAssociationField('defaultBillingAddress', 'default_billing_address_id', CustomerAddressDefinition::class, 'id', false))->addFlags(new ApiAware()),
@@ -101,6 +102,9 @@ class MyfavOrgEmployeeDefinition extends EntityDefinition
             (new ManyToOneAssociationField('activeShippingAddress', 'active_shipping_address_id', CustomerAddressDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new ManyToOneAssociationField('salutation', 'salutation_id', SalutationDefinition::class, 'id', false))->addFlags(new ApiAware()),
             (new OneToManyAssociationField('addresses', CustomerAddressDefinition::class, 'customer_id', 'id'))->addFlags(new ApiAware()),
+            (new OneToManyAssociationField('myfavOrgEmployeeAclAttributes', MyfavOrgEmployeeAclAttributeDefinition::class, 'myfav_org_employee_id')),
+            (new ManyToOneAssociationField('orderClearanceGroup', 'order_clearance_group_id', OrderClearanceGroupDefinition::class, 'id', false))->addFlags(new ApiAware()),
+            (new ManyToOneAssociationField('orderClearanceRole', 'order_clearance_role_id', OrderClearanceRoleDefinition::class, 'id', false))->addFlags(new ApiAware()),
         ]);
     }
 }

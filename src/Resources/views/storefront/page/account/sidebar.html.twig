@@ -1,23 +1,58 @@
 {% sw_extends '@MyfavOrg/storefront/page/account/sidebar.html.twig' %}
 
+{% block page_account_sidebar_link_profile %}
+    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.profile.update']) %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block page_account_sidebar_link_address %}
+    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.addresses.update']) %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
+{% block page_account_sidebar_link_payment %}
+    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.payment.methods.update']) %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
 {% block page_account_sidebar_link_orders %}
-    {{ parent() }}
+    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.orders.update']) %}
+        {{ parent() }}
+    {% endif %}
 
     {% block page_account_sidebar_link_myfav_org_employee_list %}
-        <a href="{{ path('myfav.org.employee.list') }}"
-            title="{{ 'myfav.org.employee.linkTitle'|trans|striptags }}"
-            class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.employee.list') %} is-active{% endif %}"
-            {% if activeRoute is same as('myfav.org.employee.list') %} aria-current="page"{% endif %}>
-            {{ 'myfav.org.employee.linkTitle'|trans|sw_sanitize }}
-        </a>
+        {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['employee.read']) %}
+            <a href="{{ path('myfav.org.employee.list') }}"
+                title="{{ 'myfav.org.employee.linkTitle'|trans|striptags }}"
+                class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.employee.list') %} is-active{% endif %}"
+                {% if activeRoute is same as('myfav.org.employee.list') %} aria-current="page"{% endif %}>
+                {{ 'myfav.org.employee.linkTitle'|trans|sw_sanitize }}
+            </a>
+        {% endif %}
     {% endblock %}
 
     {% block page_account_sidebar_link_myfav_org_acl_role_list %}
-        <a href="{{ path('myfav.org.aclrole.list') }}"
-            title="{{ 'myfav.org.aclRole.linkTitle'|trans|striptags }}"
-            class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.aclRole.list') %} is-active{% endif %}"
-            {% if activeRoute is same as('myfav.org.aclRole.list') %} aria-current="page"{% endif %}>
-            {{ 'myfav.org.aclRole.linkTitle'|trans|sw_sanitize }}
-        </a>
+        {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['role.read']) %}
+            <a href="{{ path('myfav.org.aclrole.list') }}"
+                title="{{ 'myfav.org.aclRole.linkTitle'|trans|striptags }}"
+                class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.aclrole.list') %} is-active{% endif %}"
+                {% if activeRoute is same as('myfav.org.aclRole.list') %} aria-current="page"{% endif %}>
+                {{ 'myfav.org.aclRole.linkTitle'|trans|sw_sanitize }}
+            </a>
+        {% endif %}
+    {% endblock %}
+
+    {% block page_account_sidebar_link_order_clearance_group_list %}
+        {% if context.myfavOrgployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['orderclearancegroup.read']) %}
+            <a href="{{ path('myfav.org.orderclearancegroup.list') }}"
+                title="{{ 'myfav.org.orderClearanceGroup.linkTitle'|trans|striptags }}"
+                class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.orderclearancegroup.list') %} is-active{% endif %} "
+                {% if activeRoute is same as('myfav.org.orderclearancegroup.list') %} aria-current="page"{% endif %}>
+                {{ 'myfav.org.orderClearanceGroup.linkTitle'|trans|sw_sanitize }}
+            </a>
+        {% endif %}
     {% endblock %}
 {% endblock %}

@@ -43,8 +43,23 @@ class MyfavOrgAclRoleEntity extends Entity
             return $retval;
         }
 
-        foreach($this->myfavOrgAclRoleAttributes as $roleAttribute) { 
+        foreach($this->myfavOrgAclRoleAttributes as $roleAttribute) {
             $retval[$roleAttribute->getMyfavOrgAclAttributeId()] = $roleAttribute;
+        }
+
+        return $retval;
+    }
+
+    public function getAttributesIndexByTechnicalName(): array
+    {
+        $retval = [];
+
+        if($this->myfavOrgAclRoleAttributes === null) {
+            return $retval;
+        }
+
+        foreach($this->myfavOrgAclRoleAttributes as $roleAttribute) {
+            $retval[$roleAttribute->getMyfavOrgAclAttribute()->getTechnicalName()] = $roleAttribute;
         }
 
         return $retval;

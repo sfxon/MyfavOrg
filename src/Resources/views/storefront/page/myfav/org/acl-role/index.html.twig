@@ -3,7 +3,7 @@
 {% block page_account_main_content %}
     {% block page_myfav_org_acl_role_overview %}
         <div class="myfav-org-acl-role-overview">
-            {% if successMessage && (successMessage == 'createdRole' || successMessage == 'deletedRole') %}
+            {% if successMessage && (successMessage == 'createdRole' || successMessage == 'deletedRole' || successMessage == 'updatedRole') %}
                 <div role="alert" class="alert alert-success alert-has-icon">
                     <span class="icon icon-checkmark-circle" aria-hidden="true">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><defs><path d="M24 12c0 6.6274-5.3726 12-12 12S0 18.6274 0 12 5.3726 0 12 0s12 5.3726 12 12zM12 2C6.4772 2 2 6.4772 2 12s4.4772 10 10 10 10-4.4772 10-10S17.5228 2 12 2zM7.7071 12.2929 10 14.5858l6.2929-6.293c.3905-.3904 1.0237-.3904 1.4142 0 .3905.3906.3905 1.0238 0 1.4143l-7 7c-.3905.3905-1.0237.3905-1.4142 0l-3-3c-.3905-.3905-.3905-1.0237 0-1.4142.3905-.3905 1.0237-.3905 1.4142 0z" id="icons-default-checkmark-circle"></path></defs><use xlink:href="#icons-default-checkmark-circle" fill="#758CA3" fill-rule="evenodd"></use></svg>
@@ -21,9 +21,12 @@
             {% endif %}
 
             <h1>{{ 'myfav.org.aclRole.pageTitle'|trans|sw_sanitize }}</h1>
-            <div class="myfav-org-acl-role-add-button-container">
-                <a href="{{ path('myfav.org.aclrole.new') }}"><button class="btn btn-primary">{{ 'myfav.org.aclRole.addAclRoleButton'|trans|sw_sanitize }}</button></a>
-            </div>
+
+            {% if userAclCanCreate %}
+                <div class="myfav-org-acl-role-add-button-container">
+                    <a href="{{ path('myfav.org.aclrole.new') }}"><button class="btn btn-primary">{{ 'myfav.org.aclRole.addAclRoleButton'|trans|sw_sanitize }}</button></a>
+                </div>
+            {% endif %}
 
             <h2>{{ 'myfav.org.aclRole.aclRoleListTitle'|trans|sw_sanitize }}</h2>
 
@@ -40,9 +43,9 @@
                     <tbody>
                         {% for aclRole in aclRoles %}
                             <tr>
-                                <td><a href="{{ path('myfav.org.aclrole.edit', { 'aclRoleId': aclRole.id }) }}">{{ aclRole.name }}</a></td>
+                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.aclrole.edit', { 'aclRoleId': aclRole.id }) }}">{% endif %}{{ aclRole.name }}{% if userAclCanCreate %}</a>{% endif %}</td>
                                 <td>
-                                    <a href="{{ path('myfav.org.aclrole.edit', { 'aclRoleId': aclRole.id }) }}"><button type="submit" class="btn btn-primary btn-sm">{{ 'myfav.org.aclRole.aclRoleTableEditButton'|trans|sw_sanitize }}</button></a>
+                                    {% if userAclCanUpdate %}<a href="{{ path('myfav.org.aclrole.edit', { 'aclRoleId': aclRole.id }) }}"><button type="submit" class="btn btn-primary btn-sm">{{ 'myfav.org.aclRole.aclRoleTableEditButton'|trans|sw_sanitize }}</button></a>{% else %}&nbsp;{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

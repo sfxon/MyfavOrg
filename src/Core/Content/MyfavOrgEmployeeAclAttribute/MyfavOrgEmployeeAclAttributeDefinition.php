@@ -70,8 +70,8 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
             (new DateTimeField('valid_from', 'validFrom')),
             (new DateTimeField('valid_until', 'validUntil')),
 
-            new ManyToOneAssociationField('myfav_org_employee', 'myfav_org_employee_id', MyfavOrgEmployeeDefinition::class, 'id'),
-            new ManyToOneAssociationField('myfav_org_acl_attribute', 'myfav_org_acl_attribute_id', MyfavOrgAclAttributeDefinition::class, 'id'),
+            new ManyToOneAssociationField('myfavOrgEmployee', 'myfav_org_employee_id', MyfavOrgEmployeeDefinition::class, 'id'),
+            new ManyToOneAssociationField('myfavOrgAclAttribute', 'myfav_org_acl_attribute_id', MyfavOrgAclAttributeDefinition::class, 'id'),
         ]);
     }
 }

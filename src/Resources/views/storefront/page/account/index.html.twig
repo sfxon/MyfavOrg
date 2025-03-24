@@ -1,0 +1,69 @@
+{% sw_extends '@Storefront/storefront/page/account/index.html.twig' %}
+
+
+
+
+{% block page_account_overview_welcome %}
+    <div class="account-welcome">
+        <h1>{{ 'account.overviewTitle'|trans|sw_sanitize }}</h1>
+
+        {% block page_account_overview_welcome_intro %}
+            {% if context.myfavOrgEmployeeId === null %}
+                {{ parent() }}
+            {% endif %}
+        {% endblock %}
+    </div>
+{% endblock %}
+
+
+{# Personal data #}
+{% block page_account_overview_profile_content %}
+    <p>
+        {% if context.myfavOrgEmployeeId === null %}
+            {{ parent() }}
+        {% else %}
+            {% if context.extensions.myfavOrgEmployee.salutation and context.extensions.myfavOrgEmployee.salutation.salutationKey != 'not_specified' %}
+                {{ context.extensions.myfavOrgEmployee.salutation.displayName }}
+            {% endif %}
+            {% if context.extensions.myfavOrgEmployee.title %}
+                {{ context.extensions.myfavOrgEmployee.title }}<br>
+            {% endif %}
+            {{ context.extensions.myfavOrgEmployee.firstName }} {{ context.extensions.myfavOrgEmployee.lastName }}
+        {% endif %}
+    </p>
+{% endblock %}
+
+{# E-Mail #}
+{% block page_account_overview_profile_email %}
+    <p>
+        {% if context.myfavOrgEmployeeId === null %}
+            {{ parent() }}
+        {% else %}
+            {{ context.extensions.myfavOrgEmployee.email|decodeIdnEmail }}
+        {% endif %}
+    </p>
+{% endblock %}
+
+{% block page_account_overview_profile_actions %}
+    <div class="card-actions">
+        {% block page_account_overview_profile_actions_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{# @deprecated tag:v6.7.0 - default payment method of a customer will be removed #}
+{% block page_account_overview_payment %}
+    {# Hide, is removed in Version 6.7 anyways. #}
+{% endblock %}
+
+{# Newsletter #}
+{% block page_account_overview_newsletter %}
+    {# Hide #}
+{% endblock %}
+
+{% block page_account_overview_addresses_include %}
+    {% sw_include '@Storefront/storefront/page/account/address.html.twig' %}
+{% endblock %}
+
+{% block page_account_overview_newest_order %}
+    {# Hide #}
+{% endblock %}

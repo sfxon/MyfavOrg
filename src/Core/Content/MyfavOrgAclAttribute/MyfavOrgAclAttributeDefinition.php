@@ -2,6 +2,7 @@
 
 namespace Myfav\Org\Core\Content\MyfavOrgAclAttribute;
 
+use Myfav\Org\Core\Content\MyfavOrgAclAttributeGroup\MyfavOrgAclAttributeGroupDefinition;
 use Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
@@ -66,8 +67,10 @@ class MyfavOrgAclAttributeDefinition extends EntityDefinition
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
             (new StringField('technical_name', 'technicalName'))->addFlags(new Required()),
+            (new FkField('myfav_org_acl_attribute_group_id', 'myfavOrgAclAttributeGroupId', MyfavOrgAclAttributeGroupDefinition::class))->addFlags(new Required()),
 
-            new OneToManyAssociationField('myfav_org_acl_role_attributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_attribute_id')
+            new OneToManyAssociationField('myfavOrgAclRoleAttributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_attribute_id'),
+            new ManyToOneAssociationField('myfavOrgAclAttributeGroup', 'myfav_org_acl_attribute_group_id', MyfavOrgAclAttributeGroupDefinition::class, 'id'),
         ]);
     }
 }

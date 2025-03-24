@@ -7,9 +7,11 @@
     <services>
         <!-- Controllers -->
         <service id="Myfav\Org\Storefront\Controller\AclRoleController" public="true">
-            <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService" />
-            <argument type="service" id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader" />
-            <argument type="service" id="Myfav\Org\Service\AclRoleService" />
+            <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
+            <argument type="service" id="Myfav\Org\Service\AclAttributeGroupService"/>
+            <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService"/>
+            <argument type="service" id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader"/>
+            <argument type="service" id="Myfav\Org\Service\AclRoleService"/>
             <argument type="service" id="router"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
@@ -20,7 +22,16 @@
         </service>
 
         <service id="Myfav\Org\Storefront\Controller\EmployeeController" public="true">
+            <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
+            <argument type="service" id="Myfav\Org\Service\AclAttributeGroupService"/>
+            <argument type="service" id="Myfav\Org\Service\AclRoleService" />
+            <argument type="service" id="Myfav\Org\Service\AddressService" />
+            <argument type="service" id="Myfav\Org\Service\EmployeeAclAttributeService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
+            <argument type="service" id="Myfav\Org\Service\EmployeeService" />
+            <argument type="service" id="Myfav\Org\Service\LanguageService" />
+            <argument type="service" id="Myfav\Org\Service\SalutationService" />
+            <argument type="service" id="router"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
@@ -29,9 +40,53 @@
             </call>
         </service>
 
+        <service id="Myfav\Org\Storefront\Controller\OrderClearanceGroupController" public="true">
+            <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
+            <argument type="service" id="Myfav\Org\Storefront\Page\OrderClearanceGroup\OrderClearanceGroupPageLoader"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
+        <!-- Decorator -->
+        <service id="Myfav\Org\Decorator\Core\Checkout\Customer\SalesChannel\LoginRoute"
+                decorates="Shopware\Core\Checkout\Customer\SalesChannel\LoginRoute">
+            <argument type="service" id="Myfav\Org\Decorator\Core\Checkout\Customer\SalesChannel\LoginRoute.inner"/>
+            <argument type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\AccountService"/>
+            <argument type="service" id="Myfav\Org\Service\EmployeeLoginService"/>
+            <argument type="service" id="Symfony\Component\HttpFoundation\RequestStack"/>
+            <argument type="service" id="Shopware\Core\Framework\RateLimiter\RateLimiter"/>
+        </service>
+
+        <service id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextService"
+                 decorates="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService">
+            <argument type="service" id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextService.inner"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
+            <argument type="service" id="Myfav\Org\Service\EmployeeService"/>
+            <argument type="service" id="Myfav\Org\Service\MyfavOrgAclLoaderService"/>
+        </service>
+
+        <service id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextPersister"
+                 decorates="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister">
+            <argument type="service" id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextPersister.inner"/>
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
+            <argument type="string">%shopware.api.store.context_lifetime%</argument>
+        </service>
+
         <!-- Entity -->
         <service id="Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeDefinition">
             <tag name="shopware.entity.definition" entity="myfav_org_acl_attribute" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgAclAttributeGroup\MyfavOrgAclAttributeGroupDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_acl_attribute_group" />
         </service>
 
         <service id="Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleDefinition">
@@ -50,6 +105,14 @@
             <tag name="shopware.entity.definition" entity="myfav_org_employee_acl_attribute" />
         </service>
 
+        <service id="Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition">
+            <tag name="shopware.entity.definition" entity="order_clearance_group" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition">
+            <tag name="shopware.entity.definition" entity="order_clearance_role" />
+        </service>
+
         <!-- PageLoader -->
         <service id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader" public="true">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
@@ -61,13 +124,83 @@
             <argument type="service" id="event_dispatcher"/>
         </service>
 
+        <service id="Myfav\Org\Storefront\Page\OrderClearanceGroup\OrderClearanceGroupPageLoader" public="true">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
         <!-- Service -->
+        <service id="Myfav\Org\Service\AccessRightsService" public="true">
+            <argument type="service" id="router"/>
+        </service>
+
+        <service id="Myfav\Org\Service\AclAttributeGroupService" public="true">
+            <argument type="service" id="myfav_org_acl_attribute_group.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\AddressService" public="true">
+            <argument type="service" id="customer_address.repository" />
+        </service>
+
         <service id="Myfav\Org\Service\AclRoleAttributeService" public="true">
             <argument type="service" id="myfav_org_acl_role_attribute.repository" />
         </service>
 
         <service id="Myfav\Org\Service\AclRoleService" public="true">
             <argument type="service" id="myfav_org_acl_role.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\CustomerService" public="true">
+            <argument type="service" id="customer.repository" />
+        </service>
+        
+        <service id="Myfav\Org\Service\EmployeeAclAttributeService" public="true">
+            <argument type="service" id="myfav_org_employee_acl_attribute.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\EmployeeService" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Myfav\Org\Service\CustomerService"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
+            <argument type="service" id="myfav_org_employee.repository" />
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
+        <service id="Myfav\Org\Service\EmployeeLoginService" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
+            <argument type="service" id="Myfav\Org\Service\CustomerService"/>
+            <argument type="service" id="Myfav\Org\Service\EmployeeService"/>
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
+        </service>
+
+        <service id="Myfav\Org\Service\LanguageService" public="true">
+            <argument type="service" id="language.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\MyfavOrgAclLoaderService" public="true">
+            <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService"/>
+        </service>
+
+        <service id="Myfav\Org\Service\OrderClearanceGroupService" public="true">
+            <argument type="service" id="order_clearance_group.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\SalutationService" public="true">
+            <argument type="service" id="salutation.repository" />
+        </service>
+
+        <!-- Subscriber -->
+        <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="order.repository" />
+        </service>
+
+        <!-- ValidationFactory-->
+        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\Validation\EmployeePasswordValidationFactory" public="true">
         </service>
     </services>
 </container>
