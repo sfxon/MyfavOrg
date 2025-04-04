@@ -97,6 +97,10 @@
             <tag name="shopware.entity.definition" entity="myfav_org_acl_role_attribute" />
         </service>
 
+        <service id="Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_company" />
+        </service>
+
         <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition">
             <tag name="shopware.entity.definition" entity="myfav_org_employee" />
         </service>
@@ -197,10 +201,6 @@
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="order.repository" />
-        </service>
-
-        <!-- ValidationFactory-->
-        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\Validation\EmployeePasswordValidationFactory" public="true">
         </service>
     </services>
 </container>

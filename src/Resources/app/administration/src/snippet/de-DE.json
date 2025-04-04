@@ -1,0 +1,22 @@
+{
+    "myfav-org-company": {
+        "detail": {
+            "buttonCancel": "Abbrechen",
+            "buttonSave": "Speichern",
+            "cardTitle": "Allgemeine Informationen",
+            "labelName": "Firmen-Name",
+            "title": "Firmen"
+        },
+        "general": {
+            "menuTitle": "Firmen",
+            "title": "Firmen"
+        },
+        "list": {
+            "buttonAdd": "Firma hinzufügen",
+            "cardTitle": "Einstellungen",
+            "columnName": "Firmen-Name",
+            "labelName": "Firmen-Name",
+            "title": "Firmen"
+        }
+    }
+}

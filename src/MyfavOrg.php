@@ -73,6 +73,9 @@ class MyfavOrg extends Plugin
         $myfavOrgEmployeePositionFieldId = '0195c872bcc073eaa589a485d15e7130';
         $myfavOrgEmployeeEmailFieldId = '0195c872d80470bb8745581c64021d96';
         $myfavOrgEmployeeTitleFieldId = '0195c872eae873d3a063a22444f522de';
+        $myfavOrgOrderClearanceEmployeeIdFieldId = '0195cb6b654273f5be57ad4f77014735';
+        $myfavOrgOrderClearanceEmployeeFirstnameFieldId = '0195cb6b99a8736c851547db5124a5a0';
+        $myfavOrgOrderClearanceEmployeeLastnameFieldId = '0195cb6bb5f770a5a6e8e0255b21b607';
 
         $check = $this->customFieldSetExists($context, $fieldSetId);
 
@@ -241,6 +244,58 @@ class MyfavOrg extends Plugin
                             'componentName' => 'sw-text-field',
                             'customFieldType' => 'text',
                             'customFieldPosition' => 90,
+                        ],
+                        'active' => true
+                    ],
+
+                    // orderClearanceEmployeeid
+                    [
+                        'id' => $myfavOrgOrderClearanceEmployeeIdFieldId,
+                        'name' => 'myfav_org_order_data_order_clearance_employee_id',
+                        'type' => CustomFieldTypes::TEXT,
+                        'config' => [
+                            'label' => [
+                                'en-GB' => 'Order Clearance by employeeId',
+                                'de-DE' => 'Bestellfreigabe durch employeeId'
+                            ],
+                            'type' => 'text',
+                            'componentName' => 'sw-text-field',
+                            'customFieldType' => 'text',
+                            'customFieldPosition' => 100,
+                        ],
+                        'active' => true
+                    ],
+                    // orderClearanceFirstname
+                    [
+                        'id' => $myfavOrgOrderClearanceEmployeeFirstnameFieldId,
+                        'name' => 'myfav_org_order_data_order_clearance_firstname',
+                        'type' => CustomFieldTypes::TEXT,
+                        'config' => [
+                            'label' => [
+                                'en-GB' => 'Order Clearance by Firstname',
+                                'de-DE' => 'Bestellfreigabe durch Vorname'
+                            ],
+                            'type' => 'text',
+                            'componentName' => 'sw-text-field',
+                            'customFieldType' => 'text',
+                            'customFieldPosition' => 110,
+                        ],
+                        'active' => true
+                    ],
+                    // orderClearanceLastname
+                    [
+                        'id' => $myfavOrgOrderClearanceEmployeeLastnameFieldId,
+                        'name' => 'myfav_org_order_data_order_clearance_lastname',
+                        'type' => CustomFieldTypes::TEXT,
+                        'config' => [
+                            'label' => [
+                                'en-GB' => 'Order Clearance by Lastname',
+                                'de-DE' => 'Bestellfreigabe durch Nachname'
+                            ],
+                            'type' => 'text',
+                            'componentName' => 'sw-text-field',
+                            'customFieldType' => 'text',
+                            'customFieldPosition' => 120,
                         ],
                         'active' => true
                     ],

@@ -1,0 +1,39 @@
+<sw-page class="myfavOrgCompany__list">
+    <template #smart-bar-header>
+        <h2>
+            {{ $tc('myfav-org-company.list.title') }}
+        </h2>
+    </template>
+
+    <template #smart-bar-actions>
+        <!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+        <sw-button
+            :router-link="{ name: 'myfav.org.company.create' }"
+            class="myfav-org-company-list__add-myfav-org-company"
+            variant="primary"
+        >
+            {{ $tc('myfav-org-company.list.buttonAdd') }}
+        </sw-button>
+    </template>
+
+    <template #content>
+        <sw-entity-listing
+            v-if="entitySearchable"
+            class="myfav-org-company-list__grid"
+                detailRoute="myfav.org.company.detail"
+                :is-loading="isLoading"
+                :columns="myfavOrgCompanyColumns"
+                :repository="myfavOrgCompanyRepository"
+                :items="myfavOrgCompanies"
+                :criteria-limit="limit"
+                :sort-by="currentSortBy"
+                :sort-direction="sortDirection"
+                :disable-data-fetching="true"
+                identifier="myfav-org-company-form-list"
+                @update-records="updateTotal"
+                @page-change="onPageChange"
+                @column-sort="onSortColumn"
+            >
+            </sw-entity-listing>
+    </template>
+</sw-page>

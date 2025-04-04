@@ -1,0 +1,54 @@
+<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+{% block myfav_org_company_detail %}
+<sw-page class="myfav-org-company-detail">
+    <template #smart-bar-header>
+        <h2>{{ placeholder(myfavOrgCompany, 'name', $tc('myfav-org-company.detail.title')) }}</h2>
+    </template>
+
+     <template #smart-bar-actions>
+        <sw-button
+            :disabled="myfavOrgCompanyIsLoading"
+            @click="onCancel"
+        >
+            {{ $tc('myfav-org-company.detail.buttonCancel') }}
+        </sw-button>
+
+        <sw-button-process
+            v-model="isSaveSuccessful"
+            class="myfav-org-company-detail__save-action"
+            :is-loading="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $tc('myfav-org-company.detail.buttonSave') }}
+        </sw-button-process>
+
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <template v-if="myfavOrgCompanyIsLoading">
+                <sw-skeleton variant="detail-bold" />
+                <sw-skeleton />
+            </template>
+
+            <template v-else>
+                <sw-card
+                    position-identifier="myfav-org-company-detail-basic-info"
+                    :title="$tc('myfav-org-company.detail.cardTitle')"
+                >
+
+                    <sw-text-field
+                        v-model:value="myfavOrgCompany.name"
+                        type="text"
+                        :label="$tc('myfav-org-company.detail.labelName')"
+                        name="name"
+                        validation="required"
+                        required
+                    />
+                </sw-card>
+            </template>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}
