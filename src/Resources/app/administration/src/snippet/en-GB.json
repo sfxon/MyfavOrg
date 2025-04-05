@@ -4,6 +4,8 @@
             "buttonCancel": "Cancel",
             "buttonSave": "Save",
             "cardTitle": "General Information",
+            "cardTitleCompanySettings": "Company Settings",
+            "labelCustomerGroupMultiSelect": "CustomerGroups, that this company is allowed to assign to their employees:",
             "labelName": "Company-Name",
             "title": "Companies"
         },

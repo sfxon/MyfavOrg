@@ -37,7 +37,6 @@
                     position-identifier="myfav-org-company-detail-basic-info"
                     :title="$tc('myfav-org-company.detail.cardTitle')"
                 >
-
                     <sw-text-field
                         v-model:value="myfavOrgCompany.name"
                         type="text"
@@ -46,6 +45,18 @@
                         validation="required"
                         required
                     />
+                </sw-card>
+
+                <sw-card v-if="myfavOrgCompanyId !== null"
+                    position-identifier="myfav-org-company-detail-company-settings"
+                    :title="$tc('myfav-org-company.detail.cardTitleCompanySettings')"
+                >
+                    <sw-entity-multi-select
+                        entityName="customer_group"
+                        v-model:entity-collection="myfavOrgCompanyCustomerGroupCollection"
+                        :criteria="customerGroupCriteria"
+                        :label="$tc('myfav-org-company.detail.labelCustomerGroupMultiSelect')"
+                    ></sw-entity-multi-select>
                 </sw-card>
             </template>
         </sw-card-view>

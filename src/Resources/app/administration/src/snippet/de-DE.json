@@ -4,6 +4,8 @@
             "buttonCancel": "Abbrechen",
             "buttonSave": "Speichern",
             "cardTitle": "Allgemeine Informationen",
+            "cardTitleCompanySettings": "Firmen-Einstellungen",
+            "labelCustomerGroupMultiSelect": "Kundengruppen, die diese Firma ihren Mitarbeitern zuweisen darf:",
             "labelName": "Firmen-Name",
             "title": "Firmen"
         },

@@ -5,6 +5,14 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Admin-API Controller -->
+        <service id="Myfav\Org\Administration\Controller\CompanyCustomerGroupApiController" public="true">
+            <argument type="service" id="myfav_org_company_customer_group.repository" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
         <!-- Controllers -->
         <service id="Myfav\Org\Storefront\Controller\AclRoleController" public="true">
             <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
@@ -99,6 +107,10 @@
 
         <service id="Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition">
             <tag name="shopware.entity.definition" entity="myfav_org_company" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\MyfavOrgCompanyCustomerGroup\MyfavOrgCompanyCustomerGroupDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_company_customer_group" />
         </service>
 
         <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition">
@@ -201,6 +213,10 @@
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="order.repository" />
+        </service>
+
+        <!-- ValidationFactory-->
+        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\Validation\EmployeePasswordValidationFactory" public="true">
         </service>
     </services>
 </container>

@@ -1,8 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Myfav\Org\Core\Content\MyfavOrgCompany;
+namespace Myfav\Org\Core\Content\MyfavOrgCompanyCustomerGroup;
 
-use Myfav\Org\Core\Content\MyfavOrgCompanyCustomerGroup\MyfavOrgCompanyCustomerGroupDefinition;
+use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition;
+use Shopware\Core\Checkout\Customer\Aggregate\CustomerGroup\CustomerGroupDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\DateField;
@@ -16,15 +17,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\SearchRanking;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
-class MyfavOrgCompanyDefinition extends EntityDefinition
+class MyfavOrgCompanyCustomerGroupDefinition extends EntityDefinition
 {
-    public const ENTITY_NAME = 'myfav_org_company';
+    public const ENTITY_NAME = 'myfav_org_company_customer_group';
 
     /**
      * getEntityName
@@ -43,7 +44,7 @@ class MyfavOrgCompanyDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return MyfavOrgCompanyEntity::class;
+        return MyfavOrgCompanyCustomerGroupEntity::class;
     }
 
     /**
@@ -53,7 +54,7 @@ class MyfavOrgCompanyDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return MyfavOrgCompanyCollection::class;
+        return MyfavOrgCompanyCustomerGroupCollection::class;
     }
 
     /**
@@ -65,9 +66,11 @@ class MyfavOrgCompanyDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
-            (new StringField('name', 'name'))->addFlags(new Required()),
+            (new FkField('myfav_org_company_id', 'myfavOrgCompanyId', MyfavOrgCompanyDefinition::class))->addFlags(new Required()),
+            (new FkField('customer_group_id', 'customerGroupId', CustomerGroupDefinition::class))->addFlags(new Required()),
 
-            new OneToManyAssociationField('myfavOrgCompanyCustomerGroups', MyfavOrgCompanyCustomerGroupDefinition::class, 'myfav_org_company_id')
+            new ManyToOneAssociationField('myfavOrgCompany', 'myfav_org_company_id', MyfavOrgCompanyDefinition::class, 'id'),
+            new ManyToOneAssociationField('customerGroup', 'customer_group_id', CustomerGroupDefinition::class, 'id'),
         ]);
     }
 }
