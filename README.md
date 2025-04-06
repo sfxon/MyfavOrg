@@ -8,10 +8,11 @@ This project is still in development. Some features are working, while others ar
 
 Extends your Shopware 6 store with functionality for companies.
 
-* Create Company accounts with sub-accounts.
-* Manage orders for team members and limit budgets.
-* Integrated acl: Define, which user can take which action in the shop.
-* Map the organizational structure of your company to the shop.
+* **Create Companies**.
+* Customer-Accounts can now be assigned to companies. They can then be seen and managed as **Employees**.
+* Employees can have different **Access Rights**. The plugin comes with an integrated **ACL** (Access Control List). So you can define, which employees of your company can take which actions in the shop.
+* Manage **Budgets** for your employees.
+* Organize your employees in teams for **Order Approval**. Order approval allows orders to be placed on hold until they are approved after review.
 
 ## Disclaimer
 
