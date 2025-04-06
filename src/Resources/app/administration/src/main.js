@@ -1,3 +1,4 @@
+import './extension/sw-customer-detail-base';
 import './module/myfav-org-company';
 import './module/myfav-org-company/page/list';
 import './module/myfav-org-company/page/create';

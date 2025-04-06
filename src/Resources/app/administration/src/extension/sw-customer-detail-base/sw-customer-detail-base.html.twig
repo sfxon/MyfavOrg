@@ -1,0 +1,27 @@
+{% block sw_customer_detail_base_info_card %}
+    {% parent %}
+
+    <sw-card
+        class="myfav-org-company-selection"
+        :title="$tc('myfav-org-company.sw-customer-detail-base.cardTitle')"
+        position-identifier="myfav-org-company-card"
+    >
+        <sw-container columns="1fr">
+            <sw-entity-single-select
+                entity="myfav_org_company"
+                :label="$tc('myfav-org-company.sw-customer-detail-base.assignedCompanyLabel')"
+                v-model:value="myfavOrgCompanyId"
+                :disabled="!customerEditMode"
+            ></sw-entity-single-select>
+        </sw-container>
+
+        <sw-container columns="1fr">
+            <sw-entity-single-select
+                entity="myfav_org_acl_role"
+                :label="$tc('myfav-org-company.sw-customer-detail-base.assignedMyfavOrgAclRoleLabel')"
+                v-model:value="myfavOrgAclRoleId"
+                :disabled="!customerEditMode"
+            ></sw-entity-single-select>
+        </sw-container>
+    </sw-card>
+{% endblock %}

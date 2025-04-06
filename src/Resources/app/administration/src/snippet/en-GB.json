@@ -19,6 +19,11 @@
             "columnName": "Company-Name",
             "labelName": "Company-Name",
             "title": "Companies"
+        },
+        "sw-customer-detail-base": {
+            "assignedMyfavOrgAclRoleLabel": "Assigned ACL Role",
+            "assignedCompanyLabel": "Assigned Company",
+            "cardTitle": "Company"
         }
     }
 }

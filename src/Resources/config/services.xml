@@ -113,6 +113,10 @@
             <tag name="shopware.entity.definition" entity="myfav_org_company_customer_group" />
         </service>
 
+        <service id="Myfav\Org\Core\Content\MyfavOrgCustomerData\MyfavOrgCustomerDataDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_customer_data" />
+        </service>
+
         <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition">
             <tag name="shopware.entity.definition" entity="myfav_org_employee" />
         </service>
@@ -127,6 +131,11 @@
 
         <service id="Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition">
             <tag name="shopware.entity.definition" entity="order_clearance_role" />
+        </service>
+
+        <!-- Entity Extensions -->
+        <service id="Myfav\Org\Extension\Checkout\Customer\MyfavOrgCustomerExtension">
+            <tag name="shopware.entity.extension"/>
         </service>
 
         <!-- PageLoader -->

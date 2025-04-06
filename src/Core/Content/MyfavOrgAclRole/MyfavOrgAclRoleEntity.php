@@ -11,7 +11,7 @@ class MyfavOrgAclRoleEntity extends Entity
     use EntityIdTrait;
 
     protected ?string $name;
-    protected ?MyfavOrgAclRoleAttributeCollection $myfavOrgAclRoleAttributes;
+    protected ?MyfavOrgAclRoleAttributeCollection $myfavOrgAclRoleAttributes = null;
 
     // $name
     public function getName(): ?string
