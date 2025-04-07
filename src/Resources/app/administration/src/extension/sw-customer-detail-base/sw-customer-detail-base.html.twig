@@ -17,6 +17,7 @@
 
         <sw-container columns="1fr">
             <sw-entity-single-select
+                :criteria="myfavOrgAclRoleCriteria"
                 entity="myfav_org_acl_role"
                 :label="$tc('myfav-org-company.sw-customer-detail-base.assignedMyfavOrgAclRoleLabel')"
                 v-model:value="myfavOrgAclRoleId"

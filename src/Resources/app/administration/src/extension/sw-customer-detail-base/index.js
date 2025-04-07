@@ -2,9 +2,12 @@ import template from './sw-customer-detail-base.html.twig';
 import './sw-customer-detail-base.scss';
 
 const { Component } = Shopware;
+const { Criteria } = Shopware.Data;
 
 Component.override('sw-customer-detail-base', {
     template,
+
+    inject: ['repositoryFactory'],
 
     data() {
         return {
@@ -13,6 +16,12 @@ Component.override('sw-customer-detail-base', {
     },
 
     computed: {
+        myfavOrgAclRoleCriteria() {
+            const criteria = new Criteria(1, 500);
+            criteria.addFilter(Criteria.equals('myfavOrgCompanyId', this.myfavOrgCompanyId));
+            return criteria;
+        },
+
         myfavOrgAclRoleId: {
             get() {
                 return this.customer?.extensions?.myfavOrgCustomerExtension?.myfavOrgAclRoleId || null;
@@ -29,6 +38,7 @@ Component.override('sw-customer-detail-base', {
                 this.customer.extensions.myfavOrgCustomerExtension.myfavOrgAclRoleId = value;
             }
         },
+
         myfavOrgCompanyId: {
             get() {
                 return this.customer?.extensions?.myfavOrgCustomerExtension?.myfavOrgCompanyId || null;
