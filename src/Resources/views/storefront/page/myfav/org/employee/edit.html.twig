@@ -17,6 +17,7 @@
             <h1>
                 {% if editMode == 'new' %}{{ 'myfav.org.employee.pageNewTitle'|trans|sw_sanitize }}{% else %}{{ 'myfav.org.employee.pageEditTitle'|trans|sw_sanitize }}{% endif %}
             </h1>
+
             <div class="myfav-org-employee-edit-container">
                 <form
                     action="{% if editMode == 'new' %}{{ path('myfav.org.employee.create') }}{% else %}{{ path('myfav.org.employee.update', { 'employeeId': employee.id }) }}{% endif %}"
@@ -24,7 +25,7 @@
                 >
                     <div class="row g-2">
                         <div class="form-group col-sm-6">
-                            <label for="active">{{ 'myfav.org.employee.formFieldActive'|trans|sw_sanitize }}</label>
+                            <label for="active">{{ 'myfav.org.employee.formFieldActive'|trans|sw_sanitize }}*</label>
                             <select
                                 class="form-select"
                                 name="active"
@@ -39,12 +40,27 @@
 
                     <div class="row g-2">
                         <div class="form-group col-sm-6">
-                            <label for="myfavOrgAclRoleId">{{ 'myfav.org.employee.formFieldMyfavOrgAclRole'|trans|sw_sanitize }}</label>
+                            <label for="groupId">{{ 'myfav.org.employee.formFieldGroupId'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="groupId"
+                                id="groupId"
+                                autocomplete="off"
+                                required="required">
+                                <option value=""></option>
+                                {% for group in company.myfavOrgCompanyCustomerGroups %}
+                                    <option value="{{ group.customerGroup.id }}"{% if employee.groupId == group.customerGroup.id %} selected="selected"{% endif %}>{{ group.customerGroup.translated.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="myfavOrgAclRoleId">{{ 'myfav.org.employee.formFieldMyfavOrgAclRole'|trans|sw_sanitize }}*</label>
                             <select
                                 class="form-select"
                                 name="myfavOrgAclRoleId"
                                 id="myfavOrgAclRoleId"
-                                autocomplete="off">
+                                autocomplete="off"
+                                required="required">
                                 <option value=""></option>
                                 {% for aclRole in aclRoles %}
                                     <option value="{{ aclRole.id }}"{% if employee.myfavOrgAclRoleId == aclRole.id %} selected="selected"{% endif %}>{{ aclRole.name }}</option>
@@ -69,7 +85,7 @@
                         {% endfor %}
 
                         <div class="form-group col-sm-6 has-validation">
-                            <label for="email"{% if emailError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldEmail'|trans|sw_sanitize }}</label>
+                            <label for="email"{% if emailError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldEmail'|trans|sw_sanitize }}*</label>
                             <input 
                                 type="text"
                                 class="form-control {% if emailError %}is-invalid{% endif %}"
@@ -108,7 +124,7 @@
                         {% endfor %}
 
                         <div class="form-group col-sm-6 has-validation">
-                            <label for="password"{% if passwordError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}</label>
+                            <label for="password"{% if passwordError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}*</label>
                             <input 
                                 type="password"
                                 class="form-control {% if passwordError %}is-invalid{% endif %}"
@@ -127,99 +143,6 @@
 
                     <div class="row g-2">
                         <div class="form-group col-sm-6">
-                            <label for="firstName">{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}"
-                                name="firstName"
-                                id="firstName"
-                                required="required"
-                                value="{{ employee.firstName }}"
-                            />
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label for="lastName">{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}"
-                                name="lastName"
-                                id="lastName"
-                                required="required"
-                                value="{{ employee.lastName }}"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group col-sm-6">
-                            <label for="position">{{ 'myfav.org.employee.formFieldPosition'|trans|sw_sanitize }}</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldPosition'|trans|sw_sanitize }}"
-                                name="position"
-                                id="position"
-                                value="{{ employee.position }}"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group col-sm-6">
-                            <label for="languageId">{{ 'myfav.org.employee.formFieldLanguage'|trans|sw_sanitize }}</label>
-                            <select
-                                class="form-select"
-                                name="languageId"
-                                id="languageId"
-                                autocomplete="off"
-                                required="required">
-                                {% for language in languages %}
-                                    <option value="{{ language.id }}">{{ language.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group">
-                            <label for="defaultBillingAddressId">{{ 'myfav.org.employee.formFieldDefaultBillingAddress'|trans|sw_sanitize }}</label>
-                            <select
-                                class="form-select"
-                                name="defaultBillingAddressId"
-                                id="defaultBillingAddressId"
-                                autocomplete="off"
-                                required="required">
-                                {% for address in addresses %}
-                                    <option value="{{ address.id }}">{{ address.company }} - {{ address.firstName }} {{ address.lastName }} - {{ address.street }} - {{ address.zipcode }} {{ address.city }} - {{ address.additionalAddressLine1 }} - {{ address.additionalAddressLine2 }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group">
-                            <label for="defaultShippingAddressId">{{ 'myfav.org.employee.formFieldDefaultShippingAddress'|trans|sw_sanitize }}</label>
-                            <select
-                                class="form-select"
-                                name="defaultShippingAddressId"
-                                id="defaultShippingAddressId"
-                                autocomplete="off"
-                                required="required">
-                                {% for address in addresses %}
-                                    <option value="{{ address.id }}">{{ address.company }} - {{ address.firstName }} {{ address.lastName }} - {{ address.street }} - {{ address.zipcode }} {{ address.city }} - {{ address.additionalAddressLine1 }} - {{ address.additionalAddressLine2 }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group">
                             <label for="salutationId">{{ 'myfav.org.employee.formFieldSalutation'|trans|sw_sanitize }}</label>
                             <select
                                 class="form-select"
@@ -228,7 +151,7 @@
                                 autocomplete="off"
                                 required="required">
                                 {% for salutation in salutations %}
-                                    <option value="{{ salutation.id }}">{{ salutation.displayName }}</option>
+                                    <option value="{{ salutation.id }}"{% if employee.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -246,87 +169,116 @@
                         </div>
                     </div>
 
-                    <div class="row g-2 myfav-org-employee-attribute-container">
-                        <h2>{{ 'myfav.org.employee.headingAclAttribute'|trans|sw_sanitize }}</h2>
-                        <table class="table table-striped table-hover myfav-org-employee-attribute-table">
-                            <thead>
-                                <tr>
-                                    <th>{{ 'myfav.org.employee.aclTableHeadingAttributeName'|trans|sw_sanitize }}</th>
-                                    <th>{{ 'myfav.org.aclRole.aclTableHeadingCreate'|trans|sw_sanitize }}</th>
-                                    <th>{{ 'myfav.org.employee.aclTableHeadingRead'|trans|sw_sanitize }}</th>
-                                    <th>{{ 'myfav.org.employee.aclTableHeadingUpdate'|trans|sw_sanitize }}</th>
-                                    <th>{{ 'myfav.org.employee.aclTableHeadingDelete'|trans|sw_sanitize }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for aclAttributeGroup in aclAttributeGroups %}
-                                    <tr>
-                                        <th>{{ ('myfav.org.aclRole.aclTableAttribute' ~ (aclAttributeGroup.name|capitalize))|trans|sw_sanitize }}</th>
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="firstName">{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}"
+                                name="firstName"
+                                id="firstName"
+                                required="required"
+                                value="{{ employee.firstName }}"
+                            />
+                        </div>
 
-                                        {# create #}
-                                        {% set tmpAttributeFound = false %}
-                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
-                                            {% if myfavOrgAclAttribute.technicalName ends with '.create' %}
-                                                {% set tmpAttributeFound = true %}
-                                                <td><input
-                                                    type="checkbox"
-                                                    value="1"
-                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
-                                                    {% if editMode == 'edit' && activatedEmployeeAclAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
-                                                /></td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
-
-                                        {# read #}
-                                        {% set tmpAttributeFound = false %}
-                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
-                                            {% if myfavOrgAclAttribute.technicalName ends with '.read' %}
-                                                {% set tmpAttributeFound = true %}
-                                                <td><input
-                                                    type="checkbox"
-                                                    value="1"
-                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
-                                                    {% if editMode == 'edit' && activatedEmployeeAclAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
-                                                /></td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
-
-                                        {# update #}
-                                        {% set tmpAttributeFound = false %}
-                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
-                                            {% if myfavOrgAclAttribute.technicalName ends with '.update' %}
-                                                {% set tmpAttributeFound = true %}
-                                                <td><input
-                                                    type="checkbox"
-                                                    value="1"
-                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
-                                                    {% if editMode == 'edit' && activatedEmployeeAclAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
-                                                /></td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
-
-                                        {# delete #}
-                                        {% set tmpAttributeFound = false %}
-                                        {% for myfavOrgAclAttribute in aclAttributeGroup.myfavOrgAclAttributes %}
-                                            {% if myfavOrgAclAttribute.technicalName ends with '.delete' %}
-                                                {% set tmpAttributeFound = true %}
-                                                <td><input
-                                                    type="checkbox"
-                                                    value="1"
-                                                    name="aclAttributes[{{ myfavOrgAclAttribute.id }}]"
-                                                    {% if editMode == 'edit' && activatedEmployeeAclAttributes[myfavOrgAclAttribute.id] is defined %}checked="checked"{% endif %}
-                                                /></td>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if tmpAttributeFound === false %}<td>&nbsp;</td>{% endif %}
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="form-group col-sm-6">
+                            <label for="lastName">{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}"
+                                name="lastName"
+                                id="lastName"
+                                required="required"
+                                value="{{ employee.lastName }}"
+                            />
+                        </div>
                     </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="street">{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}"
+                                name="street"
+                                id="street"
+                                required="required"
+                                value="{{ employee.street }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="zipcode">{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}"
+                                name="zipcode"
+                                id="zipcode"
+                                required="required"
+                                value="{{ employee.zipcode }}"
+                            />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="city">{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}"
+                                name="city"
+                                id="city"
+                                required="required"
+                                value="{{ employee.city }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="countryId">{{ 'myfav.org.employee.formFieldCountry'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="countryId"
+                                id="countryId"
+                                autocomplete="off"
+                                required="required">
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}"{% if employee.countryId == country.id%} selected="selected"{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="languageId">{{ 'myfav.org.employee.formFieldLanguage'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="languageId"
+                                id="languageId"
+                                autocomplete="off"
+                                required="required">
+                                {% for language in languages %}
+                                    <option value="{{ language.id }}">{{ language.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="card-actions">
                         <button type="submit" class="btn btn-primary btn-sm" title="{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}">{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}</button>
                     </div>

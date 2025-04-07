@@ -41,6 +41,7 @@
             <argument type="service" id="Myfav\Org\Service\AclAttributeGroupService"/>
             <argument type="service" id="Myfav\Org\Service\AclRoleService" />
             <argument type="service" id="Myfav\Org\Service\AddressService" />
+            <argument type="service" id="Myfav\Org\Service\CountryService" />
             <argument type="service" id="Myfav\Org\Service\EmployeeAclAttributeService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
             <argument type="service" id="Myfav\Org\Service\EmployeeService" />
@@ -67,33 +68,6 @@
             <call method="setTwig">
                 <argument type="service" id="twig"/>
             </call>
-        </service>
-
-        <!-- Decorator -->
-        <service id="Myfav\Org\Decorator\Core\Checkout\Customer\SalesChannel\LoginRoute"
-                decorates="Shopware\Core\Checkout\Customer\SalesChannel\LoginRoute">
-            <argument type="service" id="Myfav\Org\Decorator\Core\Checkout\Customer\SalesChannel\LoginRoute.inner"/>
-            <argument type="service" id="Shopware\Core\Checkout\Customer\SalesChannel\AccountService"/>
-            <argument type="service" id="Myfav\Org\Service\EmployeeLoginService"/>
-            <argument type="service" id="Symfony\Component\HttpFoundation\RequestStack"/>
-            <argument type="service" id="Shopware\Core\Framework\RateLimiter\RateLimiter"/>
-        </service>
-
-        <service id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextService"
-                 decorates="Shopware\Core\System\SalesChannel\Context\SalesChannelContextService">
-            <argument type="service" id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextService.inner"/>
-            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
-            <argument type="service" id="Myfav\Org\Service\EmployeeService"/>
-            <argument type="service" id="Myfav\Org\Service\MyfavOrgAclLoaderService"/>
-        </service>
-
-        <service id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextPersister"
-                 decorates="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister">
-            <argument type="service" id="Myfav\Org\Decorator\Core\System\SalesChannel\Context\MyfavSalesChannelContextPersister.inner"/>
-            <argument type="service" id="Doctrine\DBAL\Connection"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\CartPersister"/>
-            <argument type="string">%shopware.api.store.context_lifetime%</argument>
         </service>
 
         <!-- Entity -->
@@ -183,6 +157,10 @@
             <argument type="service" id="myfav_org_acl_role.repository" />
         </service>
 
+        <service id="Myfav\Org\Service\CountryService" public="true">
+            <argument type="service" id="Shopware\Core\System\Country\SalesChannel\CountryRoute"/>
+        </service>
+
         <service id="Myfav\Org\Service\CustomerService" public="true">
             <argument type="service" id="customer.repository" />
         </service>
@@ -200,6 +178,8 @@
             <argument type="service" id="myfav_org_employee.repository" />
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory"/>
             <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService"/>
+            <argument type="service" id="Shopware\Core\System\NumberRange\ValueGenerator\NumberRangeValueGeneratorInterface"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
 

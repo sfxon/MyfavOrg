@@ -6,6 +6,7 @@ use Myfav\Org\Service\AccessRightsService;
 use Myfav\Org\Service\AclAttributeGroupService;
 use Myfav\Org\Service\AclRoleService;
 use Myfav\Org\Service\AddressService;
+use Myfav\Org\Service\CountryService;
 use Myfav\Org\Service\EmployeeAclAttributeService;
 use Myfav\Org\Service\EmployeeService;
 use Myfav\Org\Service\LanguageService;
@@ -41,6 +42,7 @@ class EmployeeController extends StorefrontController
         private readonly AclAttributeGroupService $aclAttributeGroupService,
         private readonly AclRoleService $aclRoleService,
         private readonly AddressService $addressService,
+        private readonly CountryService $countryService,
         private readonly EmployeeAclAttributeService $employeeAclAttributeService,
         private readonly EmployeePageLoader $employeePageLoader,
         private readonly EmployeeService $employeeService,
@@ -57,6 +59,7 @@ class EmployeeController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.create', 'myfav.org.employee.list');
         $dataBag = new DataBag($requestDataBag->all());
+        $dataBag->add(['salesChannelId' => $salesChannelContext->getSalesChannelId()]);
         $result = $this->employeeService->createEmployeeFromRequest($context, $dataBag, $salesChannelContext);
 
         if($result['hasErrors']) {
@@ -231,10 +234,17 @@ class EmployeeController extends StorefrontController
             $employeeData = new DataBag();
         }
 
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            throw new \Exception('Company not found.');
+        }
+
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/edit.html.twig', [
             'aclAttributeGroups' => $aclAttributeGroups,
             'aclRoles' => $this->aclRoleService->loadList($context),
-            'addresses' => $this->addressService->loadList($context, $salesChannelContext->getCustomer()->getId()),
+            'countries' => $this->countryService->loadSalesChannelCountries($salesChannelContext),
+            'company' => $company,
             'editMode' => 'new',
             'employee' => $employeeData->all(),
             'errors' => $errors,

@@ -3,12 +3,16 @@
 namespace Myfav\Org\Service;
 
 use Doctrine\DBAL\Connection;
+use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Shopware\Core\Checkout\Customer\CustomerDefinition;
 use Shopware\Core\Checkout\Customer\Event\CustomerLoginEvent;
 use Shopware\Core\Checkout\Customer\Validation\Constraint\CustomerEmailUnique;
 use Shopware\Core\Checkout\Customer\Validation\Constraint\CustomerPasswordMatches;
+use Shopware\Core\Checkout\Customer\SalesChannel\AbstractRegisterRoute;
+use Shopware\Core\Checkout\Customer\Service\EmailIdnConverter;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\Indexing\EntityIndexerRegistry;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\ContainsFilter;
@@ -22,6 +26,7 @@ use Shopware\Core\Framework\Validation\DataValidationFactoryInterface;
 use Shopware\Core\Framework\Validation\DataValidator;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\Framework\Validation\Exception\ConstraintViolationException;
+use Shopware\Core\System\NumberRange\ValueGenerator\NumberRangeValueGeneratorInterface;
 use Shopware\Core\System\SalesChannel\ContextTokenResponse;
 use Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory;
 use Shopware\Core\System\SalesChannel\Context\CachedSalesChannelContextFactory;
@@ -48,6 +53,8 @@ class EmployeeService
         private readonly EntityRepository $myfavOrgEmployeeRepository,
         private readonly CachedSalesChannelContextFactory $contextFactory,
         private readonly SalesChannelContextPersister $contextPersister,
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
+        private readonly NumberRangeValueGeneratorInterface $numberRangeValueGenerator,
         private readonly SystemConfigService $systemConfigService,)
     {
     }
@@ -62,26 +69,66 @@ class EmployeeService
     {
         $hasErrors = false;
         $errors = [];
-        $employeeId = Uuid::randomHex();
+        $customerId = Uuid::randomHex();
+        EmailIdnConverter::encodeDataBag($dataBag);
+        $dataBag->set('customerId', Uuid::randomHex());
         $dataBag->set('active', $dataBag->get('active') == 1 ? true : false);
-        $dataBag->add(['id' => $employeeId]);
+        $dataBag->add(['id' => $customerId]);
         $dataBag->add(['customerId' => $salesChannelContext->getCustomer()->getId()]);
+        $dataBag->add(['customerNumber' => $this->numberRangeValueGenerator->getValue(
+            $this->customerRepository->getDefinition()->getEntityName(),
+            $context,
+            $salesChannelContext->getSalesChannel()->getId())]
+        );
 
-        try {
+        // Create default billing address id.
+        $defaultAddressId = Uuid::randomHex();
+        $addressStruct = [
+            'id' => $defaultAddressId,
+            'customerId' => $dataBag->get('customerId'),
+            'title' => $dataBag->get('title'),
+            'firstName' => $dataBag->get('firstName'),
+            'lastName' => $dataBag->get('firstName'),
+            'street' => $dataBag->get('street'),
+            'zipcode' => $dataBag->get('zipcode'),
+            'city' => $dataBag->get('city'),
+            'countryId' => $dataBag->get('countryId'),
+        ];
+
+        $dataBag->add(['addresses' => [$addressStruct]]);
+        $dataBag->add(['defaultBillingAddressId' => $defaultAddressId]);
+        $dataBag->add(['defaultShippingAddressId' => $defaultAddressId]);
+        $dataBag->add(['defaultPaymentMethodId' => $salesChannelContext->getPaymentMethod()->getId()]);
+
+        // Set company id.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+        $companyId = null;
+
+        if($company !== null) {
+            $companyId = $company->getId();
+        }
+        
+        $dataBag->add(['myfavOrgCustomerExtension' => [
+            'myfavOrgCompanyId' => $companyId,
+            'myfavOrgAclRoleId' => $dataBag->get('myfavOrgAclRoleId'),
+        ]]);
+
+        $writeContext = clone $salesChannelContext->getContext();
+        $writeContext->addState(EntityIndexerRegistry::USE_INDEXING_QUEUE);
+
+       try {
             $this->validateFullFields($dataBag, $salesChannelContext);
-            $this->myfavOrgEmployeeRepository->create([
-                $dataBag->all()
-            ], $context);
-        } catch(\Exception $e) {
+            $this->customerRepository->create([$dataBag->all()], $writeContext);
+       } catch(\Exception $e) {
             $violations = $e->getViolations();
             $hasErrors = true;
             $errors = $violations;
         }
 
         return [
-            'id' => $employeeId,
+            'id' => $customerId,
             'hasErrors' => $hasErrors,
-            'errors' => $errors
+            'errors' => $errors,
         ];
     }
 

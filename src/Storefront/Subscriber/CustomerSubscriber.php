@@ -3,6 +3,7 @@
 namespace Myfav\Org\Storefront\Subscriber;
 
 use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleEntity;
+use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyEntity;
 use Shopware\Core\Checkout\Customer\CustomerEvents;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityLoadedEvent;
@@ -44,6 +45,11 @@ class CustomerSubscriber implements EventSubscriberInterface
 
             // Load company data.
             $criteria = new Criteria([$extensions['myfavOrgCustomerExtension']['myfavOrgCompanyId']]);
+            $criteria->addAssociation('myfavOrgCompanyCustomerGroups');
+            $criteria->addAssociation('myfavOrgCompanyCustomerGroups.customerGroup');
+            $criteria->addAssociation('myfavOrgCompanyCustomerGroups.customerGroup.translations');
+            
+            /** @var MyfavOrgCompanyEntity $company */
             $company = $this->myfavOrgCompanyRepository->search($criteria, $context)->first();
             $extensions['myfavOrgCustomerExtension']['myfavOrgCompany'] = $company;
 
