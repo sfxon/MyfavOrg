@@ -8,7 +8,7 @@ export default class CompanyCustomerGroupApiService extends ApiService {
     }
 
     /**
-     * Fetch the orderDeliveryInternalState for the order given by orderId.
+     * Update.
      */
     update(myfavOrgCompanyId, customerGroups) {
         const route = `/myfav/org/company/customer/group/update`;

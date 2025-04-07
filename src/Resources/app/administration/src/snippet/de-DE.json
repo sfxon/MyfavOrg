@@ -1,4 +1,60 @@
 {
+    "myfav-org-acl-role": {
+        "detail": {
+            "buttonCancel": "Abbrechen",
+            "buttonSave": "Speichern",
+            "cardTitle": "Allgemeine Informationen",
+            "cardTitleCompanySettings": "ACL-Rollen-Einstellungen",
+            "companyNotChangeableHint": "Die Firma einer Rolle kann zum Schutz der Datenintegrität nicht geändert werden. Wenn Sie eine Rolle mit diesem Namen für diese Firma nutzen möchten, legen Sie bitte eine neue Rolle an.",
+            "contextMenuEditAclAttributes": "Zugriffsrechte einstellen",
+            "labelAssignedCompany": "Zugewiesen zu Firma",
+            "labelName": "Rollen-Name",
+            "title": "ACL-Rollen"
+        },
+        "general": {
+            "menuTitle": "ACL-Rollen",
+            "title": "ACL-Rollen"
+        },
+        "list": {
+            "buttonAdd": "ACL-Role hinzufügen",
+            "cardTitle": "Einstellungen",
+            "columnCompanyName": "Zugwiesene Firma",
+            "columnName": "ACL-Rollen-Name",
+            "labelName": "ACL-Rollen-Name",
+            "title": "ACL-Rollen"
+        }
+    },
+
+    "myfav-org-acl-role-attribute": {
+        "attribute": {
+            "aclTable": {
+                "titleName": "Bereich",
+                "titleCreate": "Erstellen",
+                "titleRead": "Lesen",
+                "titleUpdate": "Aktualisieren",
+                "titleDelete": "Löschen"
+            },
+            "buttonCancel": "Abbrechen",
+            "buttonSave": "Speichern",
+            "cardTitle": "Rolle: ",
+            "cardTitleCompany": "Firma: ",
+            "cardTitleLoading": "Ladevorgang",
+            "title": "Rollen Zugriffsrechte",
+            "attribute": {
+                "employee": "Mitarbeiter",
+                "role": "ACL Rolle",
+                "sw": {
+                    "addresses": "Adressen",
+                    "profile": "Profil",
+                    "payment": {
+                        "methods": "Zahlungsweisen"
+                    },
+                    "orders": "Bestellungen"
+                }
+            }
+        }
+    },
+
     "myfav-org-company": {
         "detail": {
             "buttonCancel": "Abbrechen",

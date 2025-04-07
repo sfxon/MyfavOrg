@@ -1,0 +1,72 @@
+<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+{% block myfav_org_acl_role_detail %}
+<sw-page class="myfav-org-acl-role-detail">
+    <template #smart-bar-header>
+        <h2>{{ placeholder(myfavOrgAclRole, 'name', $tc('myfav-org-acl-role.detail.title')) }}</h2>
+    </template>
+
+     <template #smart-bar-actions>
+        <sw-button
+            :disabled="myfavOrgAclRoleIsLoading"
+            @click="onCancel"
+        >
+            {{ $tc('myfav-org-acl-role.detail.buttonCancel') }}
+        </sw-button>
+
+        <sw-button-process
+            v-model="isSaveSuccessful"
+            class="myfav-org-acl-role-detail__save-action"
+            :is-loading="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $tc('myfav-org-acl-role.detail.buttonSave') }}
+        </sw-button-process>
+
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <template v-if="myfavOrgAclRoleIsLoading">
+                <sw-skeleton variant="detail-bold" />
+                <sw-skeleton />
+            </template>
+
+            <template v-else>
+                <sw-card
+                    position-identifier="myfav-org-acl-role-detail-basic-info"
+                    :title="$tc('myfav-org-acl-role.detail.cardTitle')"
+                >
+                    <sw-container columns="1fr">
+                        <sw-text-field
+                            v-model:value="myfavOrgAclRole.name"
+                            type="text"
+                            :label="$tc('myfav-org-acl-role.detail.labelName')"
+                            name="name"
+                            validation="required"
+                            required
+                        />
+                    </sw-container>
+
+                    <sw-container columns="1fr">
+                        <sw-entity-single-select
+                            class="myfav-org-acl-role-company-field"
+                            :disabled="editMode"
+                            entity="myfav_org_company"
+                            :label="$tc('myfav-org-acl-role.detail.labelAssignedCompany')"
+                            v-model:value="myfavOrgCompanyId"
+                            required="true"
+                        ></sw-entity-single-select>
+                        <div
+                            class="myfav-org-acl-role-company-not-changeable-hint"
+                            v-if="editMode"
+                        >
+                            {{ $tc('myfav-org-acl-role.detail.companyNotChangeableHint') }}
+                        </div>
+                    </sw-container>
+                </sw-card>
+            </template>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

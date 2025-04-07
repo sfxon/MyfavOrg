@@ -30,6 +30,7 @@ class Migration1720556165MyfavOrgAclRole extends MigrationStep
         $connection->executeStatement(
             'CREATE TABLE IF NOT EXISTS `myfav_org_acl_role` (
             `id` BINARY(16) NOT NULL,
+            `myfav_org_company_id` BINARY(16),
             `name` VARCHAR(128),
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,

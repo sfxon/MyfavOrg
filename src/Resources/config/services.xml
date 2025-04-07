@@ -13,6 +13,13 @@
             </call>
         </service>
 
+        <service id="Myfav\Org\Administration\Controller\MyfavOrgAclRoleAttributeApiController" public="true">
+            <argument type="service" id="myfav_org_acl_role_attribute.repository" />
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
         <!-- Controllers -->
         <service id="Myfav\Org\Storefront\Controller\AclRoleController" public="true">
             <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>

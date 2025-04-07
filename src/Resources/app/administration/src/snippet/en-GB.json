@@ -1,4 +1,60 @@
 {
+    "myfav-org-acl-role": {
+        "detail": {
+            "buttonCancel": "Cancel",
+            "buttonSave": "Savel",
+            "cardTitle": "General Informationen",
+            "cardTitleCompanySettings": "ACL-Role-Settings",
+            "companyNotChangeableHint": "To protect data integrity, the company name of a role cannot be changed. If you want to use a role with this name for this company, please create a new role.",
+            "contextMenuEditAclAttributes": "Define Access Rights",
+            "labelAssignedCompany": "Assigned to Company",
+            "labelName": "Role-Name",
+            "title": "ACL-Roles"
+        },
+        "general": {
+            "menuTitle": "ACL-Roles",
+            "title": "ACL-Roles"
+        },
+        "list": {
+            "buttonAdd": "Add ACL-Role",
+            "cardTitle": "Settings",
+            "columnCompanyName": "Assigned Firma",
+            "columnName": "ACL-Roles-Name",
+            "labelName": "ACL-Roles-Name",
+            "title": "ACL-Roles"
+        }
+    },
+
+    "myfav-org-acl-role-attribute": {
+        "attribute": {
+            "aclTable": {
+                "titleName": "Section",
+                "titleCreate": "Create",
+                "titleRead": "Read",
+                "titleUpdate": "Update",
+                "titleDelete": "Delete"
+            },
+            "buttonCancel": "Cancel",
+            "buttonSave": "Save",
+            "cardTitle": "Role: ",
+            "cardTitleCompany": "Company: ",
+            "cardTitleLoading": "Loading",
+            "title": "Roles Access-Control List",
+            "attribute": {
+                "employee": "Employees",
+                "role": "ACL Roles",
+                "sw": {
+                    "addresses": "Addresses",
+                    "profile": "Profile",
+                    "payment": {
+                        "methods": "Payment Methods"
+                    },
+                    "orders": "Orders"
+                }
+            }
+        }
+    },
+
     "myfav-org-company": {
         "detail": {
             "buttonCancel": "Cancel",

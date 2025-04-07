@@ -1,0 +1,49 @@
+.myfavOrgAclAttributeGroupsTable {
+    width: 100%;
+
+    thead {
+        background-color: #243758;
+        color: #FFF;
+        
+        tr th {
+            padding: 3px 6px;
+            width: 5%;
+        }
+
+        tr th:first-child {
+            text-align: left;
+            width: 80%;
+        }
+    }
+
+    tbody {
+        td {
+            padding: 3px 6px;
+        }
+
+        tr:nth-child(even) {
+            td {
+                background-color: #f0f2f5;
+            }
+        }
+
+        tr:hover {
+            td {
+                background-color: #e3f3ff!important;
+            }
+        }
+
+        td.checkbox-column {
+            text-align: center;
+            padding-top: 6px;
+
+            .sw-field--checkbox {
+                margin-bottom: 0!important;
+            }
+
+            .sw-field--checkbox .sw-field--checkbox__content {
+                display: inline-block;
+            }
+        }
+    }
+}

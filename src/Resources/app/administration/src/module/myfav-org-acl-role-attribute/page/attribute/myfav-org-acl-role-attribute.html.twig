@@ -1,0 +1,106 @@
+<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+{% block myfav_org_acl_role_attribute %}
+<sw-page class="myfav-org-acl-role-attribute">
+    <template #smart-bar-header>
+        <h2>{{ $tc('myfav-org-acl-role-attribute.attribute.title') }}</h2>
+    </template>
+
+     <template #smart-bar-actions>
+        <sw-button
+            :disabled="myfavOrgAclRoleAttributeIsLoading"
+            @click="onCancel"
+        >
+            {{ $tc('myfav-org-acl-role-attribute.attribute.buttonCancel') }}
+        </sw-button>
+
+        <sw-button-process
+            v-model="isSaveSuccessful"
+            class="myfav-org-acl-role-attribute__save-action"
+            :is-loading="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $tc('myfav-org-acl-role-attribute.attribute.buttonSave') }}
+        </sw-button-process>
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <template v-if="myfavOrgAclRoleAttributeIsLoading">
+                <sw-skeleton variant="detail-bold" />
+                <sw-skeleton />
+            </template>
+
+            <template v-else>
+                <sw-card
+                    position-identifier="myfav-org-acl-role-attribute-basic-info"
+                    :title="cardTitle"
+                >
+                    <div v-if="myfavOrgAclAttributeGroups !== null">
+                        <table class="myfavOrgAclAttributeGroupsTable">
+                            <thead>
+                                <tr>
+                                    <th>{{ $tc('myfav-org-acl-role-attribute.attribute.aclTable.titleName') }}</th>
+                                    <th>{{ $tc('myfav-org-acl-role-attribute.attribute.aclTable.titleCreate') }}</th>
+                                    <th>{{ $tc('myfav-org-acl-role-attribute.attribute.aclTable.titleRead') }}</th>
+                                    <th>{{ $tc('myfav-org-acl-role-attribute.attribute.aclTable.titleUpdate') }}</th>
+                                    <th>{{ $tc('myfav-org-acl-role-attribute.attribute.aclTable.titleDelete') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="myGroup in myfavOrgAclAttributeGroups">
+                                    <td>{{ $tc('myfav-org-acl-role-attribute.attribute.attribute.' + myGroup.name) }}</td>
+                                    <td class="checkbox-column">
+                                        <input
+                                            type="checkbox"
+                                            :checked="roleHasAccessRight(myGroup, 'create')"
+                                            v-if="aclAttributeExists(myGroup, 'create')"
+                                            @change="roleAccessRightChange($event, myGroup, 'create')"
+                                        />
+                                        <span 
+                                            v-else
+                                        >&nbsp;</span>
+                                    </td>
+                                    <td class="checkbox-column">
+                                        <input
+                                            type="checkbox"
+                                            :checked="roleHasAccessRight(myGroup, 'read')"
+                                            v-if="aclAttributeExists(myGroup, 'read')"
+                                            @change="roleAccessRightChange($event, myGroup, 'read')"
+                                        />
+                                        <span 
+                                            v-else
+                                        >&nbsp;</span>
+                                    </td>
+                                    <td class="checkbox-column">
+                                        <input
+                                            type="checkbox"
+                                            :checked="roleHasAccessRight(myGroup, 'update')"
+                                            v-if="aclAttributeExists(myGroup, 'update')"
+                                            @change="roleAccessRightChange($event, myGroup, 'update')"
+                                        />
+                                        <span 
+                                            v-else
+                                        >&nbsp;</span>
+                                    </td>
+                                    <td class="checkbox-column">
+                                        <input
+                                            type="checkbox"
+                                            :checked="roleHasAccessRight(myGroup, 'delete')"
+                                            v-if="aclAttributeExists(myGroup, 'delete')"
+                                            @change="roleAccessRightChange($event, myGroup, 'delete')"
+                                        />
+                                        <span 
+                                            v-else
+                                        >&nbsp;</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </sw-card>
+            </template>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

@@ -2,24 +2,17 @@
 
 namespace Myfav\Org\Core\Content\MyfavOrgAclRole;
 
+use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition;
 use Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\DateField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\ApiAware;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\CascadeDelete;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\SearchRanking;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
 class MyfavOrgAclRoleDefinition extends EntityDefinition
@@ -65,9 +58,11 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
+            (new FkField('myfav_org_company_id', 'myfavOrgCompanyId', MyfavOrgCompanyDefinition::class)),
             (new StringField('name', 'name'))->addFlags(new Required()),
 
-            new OneToManyAssociationField('myfavOrgAclRoleAttributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_role_id')
+            new ManyToOneAssociationField('myfavOrgCompany', 'myfav_org_company_id', MyfavOrgCompanyDefinition::class, 'id'),
+            new OneToManyAssociationField('myfavOrgAclRoleAttributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_role_id'),
         ]);
     }
 }
