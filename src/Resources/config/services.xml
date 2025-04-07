@@ -226,6 +226,11 @@
         </service>
 
         <!-- Subscriber -->
+        <service id="Myfav\Org\Storefront\Subscriber\CustomerSubscriber">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="myfav_org_company.repository" />
+        </service>
+
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="order.repository" />
