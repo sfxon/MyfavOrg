@@ -29,19 +29,19 @@ class AccessRightsService
      */
     public function hasRight(SalesChannelContext $salesChannelContext, string $accessRightTechnicalName): bool
     {
-        // If this is not an employee account, but a general user, access is always granted.
-        if(!property_exists($salesChannelContext, 'myfavOrgEmployeeId') || $salesChannelContext->myfavOrgEmployeeId === null) {
-            return true;
+        // If this is not a company account, but a general user, access for this route is permitted.
+        $customer = $salesChannelContext->getCustomer();
+
+        if($customer === null) {
+            return false;
         }
 
-        $extensions = $salesChannelContext->getExtensions();
+        $extensions = $customer->getExtensions();
 
-        if(isset($extensions['myfavOrgEmployeeAcl'])) {
-            $employeeAcl = $extensions['myfavOrgEmployeeAcl'];
-            $result = $employeeAcl->get($accessRightTechnicalName);
+        if(isset($extensions['myfavOrgCustomerExtension']) && isset($extensions['myfavOrgCustomerExtension']['indexedRoleAttributes'])) {
+            $acl = $extensions['myfavOrgCustomerExtension']['indexedRoleAttributes'];
 
-            if($result !== null) {
-                // If the right has been actively found, it is set for this account or role.
+            if(is_array($acl) && isset($acl[$accessRightTechnicalName])) {
                 return true;
             }
         }

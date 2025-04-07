@@ -78,7 +78,7 @@
                 "formFieldTitle": "Titel",
                 "headingAclAttribute": "Zugriffs-Rechte",
                 "linkTitle": "Firmen Mitarbeiter",
-                "messageNoEmployeesYet": "Es wurden noch keine Mitarbeiter-Accounts hinzugefügt.",
+                "messageNoEmployeesYet": "Es wurden noch keine Mitarbeiter-Accounts gefunden.",
                 "optionLabelActive": "Aktiv",
                 "optionLabelInActive": "Inaktiv",
                 "pageEditTitle": "Mitarbeiter-Account bearbeiten",

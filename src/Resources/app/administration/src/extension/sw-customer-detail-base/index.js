@@ -32,7 +32,8 @@ Component.override('sw-customer-detail-base', {
                 }
 
                 if(!this.customer.extensions.myfavOrgCustomerExtension) {
-                    this.customer.extensions.myfavOrgCustomerExtension = {};
+                    const tmpRepository = this.repositoryFactory.create('myfav_org_customer_data');
+                    this.customer.extensions.myfavOrgCustomerExtension = tmpRepository.create(Shopware.Context.api);
                 }
 
                 this.customer.extensions.myfavOrgCustomerExtension.myfavOrgAclRoleId = value;
@@ -49,7 +50,8 @@ Component.override('sw-customer-detail-base', {
                 }
 
                 if(!this.customer.extensions.myfavOrgCustomerExtension) {
-                    this.customer.extensions.myfavOrgCustomerExtension = {};
+                    const tmpRepository = this.repositoryFactory.create('myfav_org_customer_data');
+                    this.customer.extensions.myfavOrgCustomerExtension = tmpRepository.create(Shopware.Context.api);
                 }
 
                 this.customer.extensions.myfavOrgCustomerExtension.myfavOrgCompanyId = value;

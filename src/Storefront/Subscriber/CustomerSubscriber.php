@@ -2,6 +2,7 @@
 
 namespace Myfav\Org\Storefront\Subscriber;
 
+use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleEntity;
 use Shopware\Core\Checkout\Customer\CustomerEvents;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Event\EntityLoadedEvent;
@@ -12,6 +13,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CustomerSubscriber implements EventSubscriberInterface
 {
     public function __construct(
+        private readonly EntityRepository $myfavOrgAclRoleRepository,
         private readonly EntityRepository $myfavOrgCompanyRepository
     ) {
     }
@@ -40,9 +42,29 @@ class CustomerSubscriber implements EventSubscriberInterface
                 continue;
             }
 
+            // Load company data.
             $criteria = new Criteria([$extensions['myfavOrgCustomerExtension']['myfavOrgCompanyId']]);
             $company = $this->myfavOrgCompanyRepository->search($criteria, $context)->first();
             $extensions['myfavOrgCustomerExtension']['myfavOrgCompany'] = $company;
+
+            // Load aclRole with attributes.
+            $criteria = new Criteria([$extensions['myfavOrgCustomerExtension']['myfavOrgAclRoleId']]);
+            $criteria->addAssociation('myfavOrgAclRoleAttributes');
+            $criteria->addAssociation('myfavOrgAclRoleAttributes.myfavOrgAclAttribute');
+
+            /** @var MyfavOrgAclRoleEntity aclRole  */
+            $aclRole = $this->myfavOrgAclRoleRepository->search($criteria, $context)->first();
+            $extensions['myfavOrgCustomerExtension']['myfavOrgAclRole'] = $aclRole;
+
+            // Load aclRole Attributes indexed.
+            $indexedRoleAttributes = [];
+
+            if(null !== $aclRole) {
+                $indexedRoleAttributes = $aclRole->getAttributesIndexByTechnicalName();
+            }
+
+            $extensions['myfavOrgCustomerExtension']['indexedRoleAttributes'] = $indexedRoleAttributes;
+
         }
     }
 }

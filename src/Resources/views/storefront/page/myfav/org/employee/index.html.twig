@@ -29,6 +29,19 @@
 
             <h2>{{ 'myfav.org.employee.employeeListTitle'|trans|sw_sanitize }}</h2>
 
+            <div class="myfav-org-employee-search-container">
+                <form action="{{ path('myfav.org.employee.list') }}" method="get">
+                    <div class="row">
+                        <div class="col-4 offset-6" style="padding-right: 0;">
+                            <input type="text" id="myfav-org-employee-search" value="{{ searchQuery|escape }}" name="searchQuery" class="form-control" placeholder="Search for Employee" />
+                        </div>
+                        <div class="col-2" style="padding-left: 0;">
+                            <button type="submit" id="myfav-org-employee-search-button" class="btn btn-sm btn-secondary">Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
             {% if employees.total === 0 %}
                 {{ 'myfav.org.employee.messageNoEmployeesYet'|trans|sw_sanitize }}
             {% else %}
@@ -43,7 +56,7 @@
                     <tbody>
                         {% for employee in employees %}
                             <tr>
-                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}">{% endif %}{{ employee.firstName }} {{ employee.lastName }}{% if userAclCanUpdate %}</a>{% endif %}</td>
+                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}">{% endif %}{{ employee.lastName }} {{ employee.firstName }}{% if userAclCanUpdate %}</a>{% endif %}</td>
                                 <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}">{% endif %}{{ employee.email }}{% if userAclCanUpdate %}</a>{% endif %}</td>
                                 <td>
                                     {% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}"><button type="submit" class="btn btn-primary btn-sm">{{ 'myfav.org.employee.employeeTableEditButton'|trans|sw_sanitize }}</button></a>{% else %}&nbsp;{% endif %}
@@ -52,6 +65,22 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
+                <form action="{{ path('myfav.org.employee.list') }}" method="get" data-form-auto-submit="true">
+                    <input type="hidden" value="{{ searchQuery|escape }}" name="searchQuery" />
+                    {% sw_include '@Storefront/storefront/component/pagination.html.twig' with {
+                        prev_link: currentPage > 1 ? path('myfav.org.employee.list', {page: currentPage - 1, search: searchQuery}) : null,
+                        next_link: currentPage < pages ? path('myfav.org.employee.list', {page: currentPage + 1, search: searchQuery}) : null,
+                        'currentPage': currentPage,
+                        'total': total,
+                        'limit': limit,
+                        'pages': pages,
+                        'criteria': criteria,
+                        'searchRoute': 'myfav.org.employee.list',
+                        'searchQuery': searchQuery
+                    } %}
+                </form>
+
             {% endif %}
         </div>
     {% endblock %}

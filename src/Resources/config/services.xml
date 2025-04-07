@@ -45,6 +45,7 @@
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
             <argument type="service" id="Myfav\Org\Service\EmployeeService" />
             <argument type="service" id="Myfav\Org\Service\LanguageService" />
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
             <argument type="service" id="Myfav\Org\Service\SalutationService" />
             <argument type="service" id="router"/>
             <call method="setContainer">
@@ -193,6 +194,7 @@
         <service id="Myfav\Org\Service\EmployeeService" public="true">
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="Myfav\Org\Service\CustomerService"/>
+            <argument type="service" id="customer.repository"/>
             <argument type="service" id="event_dispatcher"/>
             <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
             <argument type="service" id="myfav_org_employee.repository" />
@@ -213,6 +215,9 @@
             <argument type="service" id="language.repository" />
         </service>
 
+        <service id="Myfav\Org\Service\MyfavSalesChannelContextService" public="true">
+        </service>
+
         <service id="Myfav\Org\Service\MyfavOrgAclLoaderService" public="true">
             <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService"/>
         </service>
@@ -228,6 +233,7 @@
         <!-- Subscriber -->
         <service id="Myfav\Org\Storefront\Subscriber\CustomerSubscriber">
             <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="myfav_org_acl_role.repository" />
             <argument type="service" id="myfav_org_company.repository" />
         </service>
 

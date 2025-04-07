@@ -78,7 +78,7 @@
                 "formFieldTitle": "Title",
                 "headingAclAttribute": "Access-Rights",
                 "linkTitle": "Company Employees",
-                "messageNoEmployeesYet": "No employee accounts have been added yet.",
+                "messageNoEmployeesYet": "No employee accounts have been found.",
                 "optionLabelActive": "Active",
                 "optionLabelInActive": "Inactive",
                 "pageEditTitle": "Edit employee account",

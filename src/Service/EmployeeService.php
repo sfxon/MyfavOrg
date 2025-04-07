@@ -11,7 +11,10 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\ContainsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\MultiFilter;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Uuid\Uuid;
 use Shopware\Core\Framework\Validation\BuildValidationEvent;
 use Shopware\Core\Framework\Validation\DataValidationDefinition;
@@ -39,6 +42,7 @@ class EmployeeService
     public function __construct(
         private readonly Connection $connection,
         private readonly CustomerService $customerService,
+        private readonly EntityRepository $customerRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DataValidator $validator,
         private readonly EntityRepository $myfavOrgEmployeeRepository,
@@ -134,9 +138,47 @@ class EmployeeService
      * @param  Context $context
      * @return EntitySearchResult
      */
-    public function loadList(Context $context): EntitySearchResult
+    public function loadList(Context $context, string $companyId, int $currentPage, int $limit, ?string $searchQuery): EntitySearchResult
     {
-        $employees = $this->myfavOrgEmployeeRepository->search(new Criteria(), $context);
+        $criteria = new Criteria();
+
+        if($searchQuery !== null) {
+            $searchParts = explode(' ', $searchQuery);
+
+            $maxSearchParts = 3;
+            $searchCount = 0;
+            $multiFilterArray = [];
+
+            foreach($searchParts as $searchPart) {
+                if($searchCount === $maxSearchParts) {
+                    break;
+                }
+
+                $multiFilterArray[] = new ContainsFilter('firstName', $searchPart);
+                $multiFilterArray[] = new ContainsFilter('lastName', $searchPart);
+                $multiFilterArray[] = new ContainsFilter('email', $searchPart);
+
+                $searchCount++;
+            }
+
+            if($multiFilterArray > 0) {
+                $criteria->addFilter(
+                    new MultiFilter(
+                        MultiFilter::CONNECTION_OR,
+                        $multiFilterArray
+                    )
+                );
+            }
+        }
+
+        $criteria->addFilter(new EqualsFilter('myfavOrgCustomerExtension.myfavOrgCompanyId', $companyId));
+        $criteria->addSorting(new FieldSorting('lastName', FieldSorting::ASCENDING));
+        $criteria->addSorting(new FieldSorting('firstName', FieldSorting::ASCENDING));
+        $criteria->setOffset(($currentPage - 1) * $limit);
+        $criteria->setLimit($limit);
+        $criteria->setTotalCountMode(Criteria::TOTAL_COUNT_MODE_EXACT);
+        $employees = $this->customerRepository->search($criteria, $context);
+
         return $employees;
     }
 

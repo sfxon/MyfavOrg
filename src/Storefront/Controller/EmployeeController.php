@@ -9,6 +9,7 @@ use Myfav\Org\Service\AddressService;
 use Myfav\Org\Service\EmployeeAclAttributeService;
 use Myfav\Org\Service\EmployeeService;
 use Myfav\Org\Service\LanguageService;
+use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Myfav\Org\Service\SalutationService;
 use Myfav\Org\Storefront\Page\Employee\EmployeePageLoader;
 use Shopware\Core\Content\Media\Pathname\PathnameStrategy\PathnameStrategyInterface;
@@ -44,6 +45,7 @@ class EmployeeController extends StorefrontController
         private readonly EmployeePageLoader $employeePageLoader,
         private readonly EmployeeService $employeeService,
         private readonly LanguageService $languageService,
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly SalutationService $salutationService,
         private readonly RouterInterface $router,
     )
@@ -71,16 +73,41 @@ class EmployeeController extends StorefrontController
         return new RedirectResponse($url);
     }
 
-    #[Route(path: '/myfav/org/employee/list', name: 'myfav.org.employee.list', options: ['seo' => false], defaults: ['_loginRequired' => true], methods: ['GET'])]
+    #[Route(path: '/myfav/org/employee/list', name: 'myfav.org.employee.list', options: ['seo' => false], defaults: ['_loginRequired' => true], methods: ['GET', 'POST'])]
     public function listEmployee(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.read', 'frontend.account.home.page');
+
+        $currentPage = (int) $request->query->get('p', 1);
+        $limit = 1;
+
+        $searchQuery = $request->query->get('searchQuery', null);
+
+        if(null !== $searchQuery) {
+            $searchQuery = trim($searchQuery);
+
+            if(strlen($searchQuery) === 0) {
+                $searchQuery = null;
+            }
+        }
+
         $page = $this->employeePageLoader->load($request, $salesChannelContext);
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            throw new \Exception('Company not found.');
+        }
+
+        $employees = $this->employeeService->loadList($context, $company->getId(), $currentPage, $limit, $searchQuery);
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/index.html.twig', [
-            'employees' => $this->employeeService->loadList($context),
+            'currentPage' => $currentPage,
+            'employees' => $employees,
+            'limit' => $limit,
             'successMessage' => $request->query->get('successMessage'),
             'page' => $page,
+            'searchQuery' => $searchQuery,
+            'total' => $employees->getTotal(),
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.create'),
             'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.update'),
             'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.delete'),

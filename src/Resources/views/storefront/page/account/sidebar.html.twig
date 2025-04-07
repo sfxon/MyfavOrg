@@ -1,30 +1,38 @@
 {% sw_extends '@MyfavOrg/storefront/page/account/sidebar.html.twig' %}
 
 {% block page_account_sidebar_link_profile %}
-    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.profile.update']) %}
+    {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
+
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.profile.update']) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
 
 {% block page_account_sidebar_link_address %}
-    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.addresses.update']) %}
+    {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
+
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.addresses.update']) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
 
 {% block page_account_sidebar_link_payment %}
-    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.payment.methods.update']) %}
+    {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
+
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.payment.methods.update']) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
 
 {% block page_account_sidebar_link_orders %}
-    {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['sw.orders.update']) %}
+    {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
+
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.orders.update']) %}
         {{ parent() }}
     {% endif %}
 
     {% block page_account_sidebar_link_myfav_org_employee_list %}
-        {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['employee.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['employee.read']) %}
             <a href="{{ path('myfav.org.employee.list') }}"
                 title="{{ 'myfav.org.employee.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.employee.list') %} is-active{% endif %}"
@@ -35,7 +43,7 @@
     {% endblock %}
 
     {% block page_account_sidebar_link_myfav_org_acl_role_list %}
-        {% if context.myfavOrgEmployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['role.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['role.read']) %}
             <a href="{{ path('myfav.org.aclrole.list') }}"
                 title="{{ 'myfav.org.aclRole.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.aclrole.list') %} is-active{% endif %}"
@@ -46,7 +54,7 @@
     {% endblock %}
 
     {% block page_account_sidebar_link_order_clearance_group_list %}
-        {% if context.myfavOrgployeeId === null || (context.extensions.myfavOrgEmployeeAcl is defined && context.extensions.myfavOrgEmployeeAcl['orderclearancegroup.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['orderclearancegroup.read']) %}
             <a href="{{ path('myfav.org.orderclearancegroup.list') }}"
                 title="{{ 'myfav.org.orderClearanceGroup.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.orderclearancegroup.list') %} is-active{% endif %} "
