@@ -5,7 +5,9 @@ namespace Myfav\Org\Service;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 class AclRoleService
@@ -19,14 +21,16 @@ class AclRoleService
      *
      * @param  Context $context
      * @param  string $name
+     * @param  string $companyId
      */
-    public function createRole(Context $context, string $name,): string
+    public function createRole(Context $context, string $name, string $companyId): string
     {
         $id = Uuid::randomHex();
         $this->myfavAclRoleRepository->create([
             [
                 'id' => $id,
                 'name' => $name,
+                'myfavOrgCompanyId' => $companyId
             ]
         ], $context);
 
@@ -52,13 +56,16 @@ class AclRoleService
     /**
      * loadRole
      *
-     * @param  mixed $context
-     * @param  mixed $aclRoleId
+     * @param  Context $context
+     * @param  string $aclRoleId
+     * @param  string $companyId
      * @return mixed
      */
-    public function loadRole(Context $context, string $aclRoleId): mixed
+    public function loadRole(Context $context, string $aclRoleId, string $companyId): mixed
     {
-        $criteria = new Criteria([$aclRoleId]);
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('id', $aclRoleId));
+        $criteria->addFilter(new EqualsFilter('myfavOrgCompanyId', $companyId));
         $criteria->addAssociation('myfavOrgAclRoleAttributes');
         $aclRoles = $this->myfavAclRoleRepository->search($criteria, $context)->first();
         return $aclRoles;
@@ -68,11 +75,15 @@ class AclRoleService
      * loadList
      *
      * @param  Context $context
+     * @param  string $companyId
      * @return EntitySearchResult
      */
-    public function loadList(Context $context): EntitySearchResult
+    public function loadList(Context $context, string $companyId): EntitySearchResult
     {
-        $aclRoles = $this->myfavAclRoleRepository->search(new Criteria(), $context);
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('myfavOrgCompanyId', $companyId));
+        $criteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
+        $aclRoles = $this->myfavAclRoleRepository->search($criteria, $context);
         return $aclRoles;
     }
 

@@ -6,21 +6,15 @@ use Myfav\Org\Service\AccessRightsService;
 use Myfav\Org\Service\AclAttributeGroupService;
 use Myfav\Org\Service\AclRoleAttributeService;
 use Myfav\Org\Service\AclRoleService;
+use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader;
-use Shopware\Core\Content\Media\Pathname\PathnameStrategy\PathnameStrategyInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\Dbal\Common\RepositoryIterator;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Storefront\Controller\StorefrontController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Symfony\Component\Routing\RouterInterface;
 
 #[Route(defaults: ['_routeScope' => ['storefront']])]
@@ -35,6 +29,7 @@ class AclRoleController extends StorefrontController
         private readonly AclRoleAttributeService $aclRoleAttributeService,
         private readonly AclRolePageLoader $aclRolePageLoader,
         private readonly AclRoleService $aclRoleService,
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly RouterInterface $router,
     )
     {
@@ -44,7 +39,16 @@ class AclRoleController extends StorefrontController
     public function createRole(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.create', 'myfav.org.aclrole.list');
-        $aclRoleId = $this->aclRoleService->createRole($context, $request->request->get('name'));
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
+        $aclRoleId = $this->aclRoleService->createRole($context, $request->request->get('name'), $company->getId());
         $this->aclRoleAttributeService->updateRoleAttributes(
             $context,
             $aclRoleId,
@@ -59,10 +63,19 @@ class AclRoleController extends StorefrontController
     public function listRole(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.read', 'frontend.account.home.page');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->aclRolePageLoader->load($request, $salesChannelContext);
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/acl-role/index.html.twig', [
-            'aclRoles' => $this->aclRoleService->loadList($context),
+            'aclRoles' => $this->aclRoleService->loadList($context, $company->getId()),
             'successMessage' => $request->query->get('successMessage'),
             'page' => $page,
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'role.create'),
@@ -75,8 +88,26 @@ class AclRoleController extends StorefrontController
     public function deleteRole(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.delete', 'myfav.org.aclrole.list');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $aclRoleId = $request->query->get('aclRoleId');
-        // You might want to get the role first: $this->aclRoleService->loadRole($context, $request->request->get('name'));
+
+        // Loading is important to check, if this ACL Role belongs to this company,
+        // because ACL Roles can only be edited by accounts that are assigned to the
+        // same company.
+        $aclRole = $this->aclRoleService->loadRole($context, $aclRoleId, $company->getId());
+
+        if(null === $aclRole) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
 
         $this->aclRoleAttributeService->removeAllAttributesFromRole(
             $context,
@@ -92,13 +123,30 @@ class AclRoleController extends StorefrontController
     public function editRole(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.update', 'myfav.org.aclrole.list');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->aclRolePageLoader->load($request, $salesChannelContext);
         $aclRoleId = $request->query->get('aclRoleId');
-        $aclRole = $this->aclRoleService->loadRole($context, $aclRoleId);
+
+        // Loading is important to check, if this ACL Role belongs to this company,
+        // because ACL Roles can only be edited by accounts that are assigned to the
+        // same company.
+        $aclRole = $this->aclRoleService->loadRole($context, $aclRoleId, $company->getId());
+
+        if(null === $aclRole) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $activatedRoleAttributes = $aclRole->getAttributesIndexByAttributeId();
         $aclAttributeGroups = $this->aclAttributeGroupService->loadAll($context);
-
-        // Todo: Security check. Check if this role belongs to this account!
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/acl-role/edit.html.twig', [
             'aclAttributeGroups' => $aclAttributeGroups,
@@ -116,6 +164,15 @@ class AclRoleController extends StorefrontController
     public function newRole(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.create', 'frontend.account.home.page');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->aclRolePageLoader->load($request, $salesChannelContext);
         $aclAttributeGroups = $this->aclAttributeGroupService->loadAll($context);
 
@@ -133,7 +190,27 @@ class AclRoleController extends StorefrontController
     public function updateRole(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.update', 'myfav.org.aclrole.list');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $aclRoleId = $request->query->get('aclRoleId');
+
+        // Loading is important to check, if this ACL Role belongs to this company,
+        // because ACL Roles can only be edited by accounts that are assigned to the
+        // same company.
+        $aclRole = $this->aclRoleService->loadRole($context, $aclRoleId, $company->getId());
+
+        if(null === $aclRole) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $this->aclRoleService->updateRole($context, $aclRoleId, $request->request->get('name'));
         $this->aclRoleAttributeService->updateRoleAttributes(
             $context,

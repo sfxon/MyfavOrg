@@ -27,6 +27,7 @@
             <argument type="service" id="Myfav\Org\Service\AclRoleAttributeService"/>
             <argument type="service" id="Myfav\Org\Storefront\Page\AclRole\AclRolePageLoader"/>
             <argument type="service" id="Myfav\Org\Service\AclRoleService"/>
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
             <argument type="service" id="router"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>

@@ -12,7 +12,7 @@ Shopware.Module.register('myfav-org-acl-role', {
         path: 'myfav.org.acl.role.index',
         icon: '',
         parent: 'sw-customer',
-        position: 100
+        position: 110
     }],
 
     routes: {
