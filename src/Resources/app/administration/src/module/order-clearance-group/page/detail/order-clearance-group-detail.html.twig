@@ -1,0 +1,72 @@
+<!-- eslint-disable-next-line sw-deprecation-rules/no-twigjs-blocks -->
+{% block order_clearance_group_detail %}
+<sw-page class="order-clearance-group-detail">
+    <template #smart-bar-header>
+        <h2>{{ placeholder(orderClearanceGroup, 'name', $tc('order-clearance-group.detail.title')) }}</h2>
+    </template>
+
+     <template #smart-bar-actions>
+        <sw-button
+            :disabled="orderClearanceGroupIsLoading"
+            @click="onCancel"
+        >
+            {{ $tc('order-clearance-group.detail.buttonCancel') }}
+        </sw-button>
+
+        <sw-button-process
+            v-model="isSaveSuccessful"
+            class="order-clearance-group-detail__save-action"
+            :is-loading="isLoading"
+            variant="primary"
+            @click.prevent="onSave"
+        >
+            {{ $tc('order-clearance-group.detail.buttonSave') }}
+        </sw-button-process>
+
+    </template>
+
+    <template #content>
+        <sw-card-view>
+            <template v-if="orderClearanceGroupIsLoading">
+                <sw-skeleton variant="detail-bold" />
+                <sw-skeleton />
+            </template>
+
+            <template v-else>
+                <sw-card
+                    position-identifier="order-clearance-group-detail-basic-info"
+                    :title="$tc('order-clearance-group.detail.cardTitle')"
+                >
+                    <sw-container columns="1fr">
+                        <sw-text-field
+                            v-model:value="orderClearanceGroup.name"
+                            type="text"
+                            :label="$tc('order-clearance-group.detail.labelName')"
+                            name="name"
+                            validation="required"
+                            required
+                        />
+                    </sw-container>
+
+                    <sw-container columns="1fr">
+                        <sw-entity-single-select
+                            class="order-clearance-group-company-field"
+                            :disabled="editMode"
+                            entity="myfav_org_company"
+                            :label="$tc('order-clearance-group.detail.labelAssignedCompany')"
+                            v-model:value="myfavOrgCompanyId"
+                            required="true"
+                        ></sw-entity-single-select>
+                        <div
+                            class="order-clearance-group-company-not-changeable-hint"
+                            v-if="editMode"
+                        >
+                            {{ $tc('order-clearance-group.detail.companyNotChangeableHint') }}
+                        </div>
+                    </sw-container>
+                </sw-card>
+            </template>
+        </sw-card-view>
+    </template>
+</sw-page>
+{% endblock %}

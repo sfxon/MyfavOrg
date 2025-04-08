@@ -81,5 +81,30 @@
             "assignedCompanyLabel": "Zugewiesene Firma",
             "cardTitle": "Firma"
         }
+    },
+
+    "order-clearance-group": {
+        "detail": {
+            "buttonCancel": "Abbrechen",
+            "buttonSave": "Speichern",
+            "cardTitle": "Allgemeine Informationen",
+            "cardTitleOrderClearanceGroupSettings": "Freigabegruppe einstellen",
+            "companyNotChangeableHint": "Die Firma dieser Freigabegruppe kann zum Schutz der Datenintegrität nicht geändert werden. Wenn Sie eine Freigabegruppe mit diesem Namen für diese Firma nutzen möchten, legen Sie bitte eine neue Freigabegruppe an.",
+            "labelAssignedCompany": "Zugewiesene Firma",
+            "labelName": "Bezeichnung",
+            "title": "Freigabegruppe"
+        },
+        "general": {
+            "menuTitle": "Freigabegruppen",
+            "title": "Freigabegruppen"
+        },
+        "list": {
+            "buttonAdd": "Freigabegruppe hinzufügen",
+            "cardTitle": "Einstellungen",
+            "columnCompanyName": "Firma",
+            "columnName": "Bezeichnung",
+            "labelName": "Bezeichnung",
+            "title": "Freigabegruppen"
+        }
     }
 }

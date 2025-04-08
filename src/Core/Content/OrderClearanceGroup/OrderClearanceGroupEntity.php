@@ -2,7 +2,7 @@
 
 namespace Myfav\Org\Core\Content\OrderClearanceGroup;
 
-use Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeCollection;
+use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
@@ -11,7 +11,8 @@ class OrderClearanceGroupEntity extends Entity
     use EntityIdTrait;
 
     protected ?string $name;
-    protected ?MyfavOrgEmployeeCollection $myfavOrgEmployees;
+    protected ?string $myfavOrgCompanyId;
+    protected ?MyfavOrgCompanyEntity $myfavOrgCompany = null;
 
     // $name
     public function getName(): ?string
@@ -24,14 +25,25 @@ class OrderClearanceGroupEntity extends Entity
         $this->name = $name;
     }
 
-    // $myfavOrgEmployees
-    public function getMyfavOrgEmployees(): ?MyfavOrgEmployeeCollection
+    // $myfavOrgCompanyId
+    public function getMyfavOrgCompanyId(): ?string
     {
-        return $this->myfavOrgEmployees;
+        return $this->myfavOrgCompanyId;
     }
 
-    public function setMyfavOrgEmployees(?MyfavOrgEmployeeCollection $myfavOrgEmployees): void
+    public function setMyfavOrgCompanyId(?string $myfavOrgCompanyId): void
     {
-        $this->myfavOrgEmployees = $myfavOrgEmployees;
+        $this->myfavOrgCompanyId = $myfavOrgCompanyId;
+    }
+
+    // $myfavOrgCompany
+    public function getMyfavOrgCompany(): ?MyfavOrgCompanyEntity
+    {
+        return $this->myfavOrgCompany;
+    }
+
+    public function setMyfavOrgCompany(?MyfavOrgCompanyEntity $myfavOrgCompany): void
+    {
+        $this->myfavOrgCompany = $myfavOrgCompany;
     }
 }

@@ -12,3 +12,8 @@ import './module/myfav-org-company';
 import './module/myfav-org-company/page/list';
 import './module/myfav-org-company/page/create';
 import './module/myfav-org-company/page/detail';
+
+import './module/order-clearance-group';
+import './module/order-clearance-group/page/list';
+import './module/order-clearance-group/page/create';
+import './module/order-clearance-group/page/detail';

@@ -30,6 +30,7 @@ class Migration1720556169OrderClearanceGroup extends MigrationStep
         $connection->executeStatement(
             'CREATE TABLE IF NOT EXISTS `order_clearance_group` (
             `id` BINARY(16) NOT NULL,
+            `myfav_org_company_id` BINARY(16),
             `name` VARCHAR(32),
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,

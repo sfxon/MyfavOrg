@@ -81,5 +81,30 @@
             "assignedCompanyLabel": "Assigned Company",
             "cardTitle": "Company"
         }
+    },
+
+    "order-clearance-group": {
+        "detail": {
+            "buttonCancel": "Cancel",
+            "buttonSave": "Save",
+            "cardTitle": "General Informationen",
+            "cardTitleOrderClearanceGroupSettings": "Setup Order Clearance Group",
+            "companyNotChangeableHint": "To protect data integrity, the company of a Order Clearance Group cannot be changed. If you want to use an Order Clearance Group with this name for this company, please create a new Order Clearance Group.",
+            "labelAssignedCompany": "Assigned Company",
+            "labelName": "Name",
+            "title": "Order Clearance Group"
+        },
+        "general": {
+            "menuTitle": "Order Clearance Groups",
+            "title": "Order Clearance Groups"
+        },
+        "list": {
+            "buttonAdd": "Add Order Clearance Group",
+            "cardTitle": "Settings",
+            "columnCompanyName": "Company",
+            "columnName": "Name",
+            "labelName": "Name",
+            "title": "Order Clearance Groups"
+        }
     }
 }
