@@ -2,7 +2,7 @@
 
 {% block page_account_main_content %}
     {% block page_myfav_org_acl_role_overview %}
-        <div class="myfav-org-employee-edit">
+        <div class="myfav-org-employee-edit" myfav-org-edit-employee="true">
             {% if errors != null %}
                 <div role="alert" class="alert alert-danger alert-has-icon">
                     <span class="icon icon-exclamation-triangle" aria-hidden="true">
@@ -14,13 +14,11 @@
                 </div>
             {% endif %}
 
-            <h1>
-                {% if editMode == 'new' %}{{ 'myfav.org.employee.pageNewTitle'|trans|sw_sanitize }}{% else %}{{ 'myfav.org.employee.pageEditTitle'|trans|sw_sanitize }}{% endif %}
-            </h1>
+            <h1>{{ 'myfav.org.employee.pageEditTitle'|trans|sw_sanitize }}</h1>
 
             <div class="myfav-org-employee-edit-container">
                 <form
-                    action="{% if editMode == 'new' %}{{ path('myfav.org.employee.create') }}{% else %}{{ path('myfav.org.employee.update', { 'employeeId': employee.id }) }}{% endif %}"
+                    action="{{ path('myfav.org.employee.update', { 'customerId': customer.id }) }}"
                     method="POST"
                 >
                     <div class="row g-2">
@@ -33,7 +31,7 @@
                                 autocomplete="off"
                                 required="required">
                                 <option value="0">{{ 'myfav.org.employee.optionLabelInActive'|trans|sw_sanitize }}</option>
-                                <option value="1"{% if employee.active == true %} selected="selected"{% endif %}>{{ 'myfav.org.employee.optionLabelActive'|trans|sw_sanitize }}</option>
+                                <option value="1"{% if customer.active == true %} selected="selected"{% endif %}>{{ 'myfav.org.employee.optionLabelActive'|trans|sw_sanitize }}</option>
                             </select>
                         </div>
                     </div>
@@ -49,7 +47,7 @@
                                 required="required">
                                 <option value=""></option>
                                 {% for group in company.myfavOrgCompanyCustomerGroups %}
-                                    <option value="{{ group.customerGroup.id }}"{% if employee.groupId == group.customerGroup.id %} selected="selected"{% endif %}>{{ group.customerGroup.translated.name }}</option>
+                                    <option value="{{ group.customerGroup.id }}"{% if customer.groupId == group.customerGroup.id %} selected="selected"{% endif %}>{{ group.customerGroup.translated.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -63,7 +61,7 @@
                                 required="required">
                                 <option value=""></option>
                                 {% for aclRole in aclRoles %}
-                                    <option value="{{ aclRole.id }}"{% if employee.myfavOrgAclRoleId == aclRole.id %} selected="selected"{% endif %}>{{ aclRole.name }}</option>
+                                    <option value="{{ aclRole.id }}"{% if customer.extensions.myfavOrgCustomerExtension.myfavOrgAclRoleId == aclRole.id %} selected="selected"{% endif %}>{{ aclRole.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -94,7 +92,7 @@
                                 name="email"
                                 id="email"
                                 required="required"
-                                value="{{ employee.email }}"
+                                value="{{ customer.email }}"
                             />
                             {% if emailError %}
                                 <div id="validationEmailFeedback" class="invalid-feedback">
@@ -124,7 +122,7 @@
                         {% endfor %}
 
                         <div class="form-group col-sm-6 has-validation">
-                            <label for="password"{% if passwordError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}*</label>
+                            <label for="password"{% if passwordError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}</label>
                             <input 
                                 type="password"
                                 class="form-control {% if passwordError %}is-invalid{% endif %}"
@@ -132,7 +130,6 @@
                                 placeholder="{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}"
                                 name="password"
                                 id="password"
-                                {% if editMode === 'new' %}required="required"{% endif %}
                                 value=""
                             />
                             {% if passwordError %}
@@ -151,7 +148,7 @@
                                 autocomplete="off"
                                 required="required">
                                 {% for salutation in salutations %}
-                                    <option value="{{ salutation.id }}"{% if employee.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
+                                    <option value="{{ salutation.id }}"{% if customer.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -164,7 +161,7 @@
                                 placeholder="{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}"
                                 name="title"
                                 id="title"
-                                value="{{ employee.title }}"
+                                value="{{ customer.title }}"
                             />
                         </div>
                     </div>
@@ -180,7 +177,7 @@
                                 name="firstName"
                                 id="firstName"
                                 required="required"
-                                value="{{ employee.firstName }}"
+                                value="{{ customer.firstName }}"
                             />
                         </div>
 
@@ -194,74 +191,10 @@
                                 name="lastName"
                                 id="lastName"
                                 required="required"
-                                value="{{ employee.lastName }}"
+                                value="{{ customer.lastName }}"
                             />
                         </div>
                     </div>
-
-                    <div class="row g-2">
-                        <div class="form-group">
-                            <label for="street">{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}*</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}"
-                                name="street"
-                                id="street"
-                                required="required"
-                                value="{{ employee.street }}"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group col-sm-6">
-                            <label for="zipcode">{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}*</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}"
-                                name="zipcode"
-                                id="zipcode"
-                                required="required"
-                                value="{{ employee.zipcode }}"
-                            />
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <label for="city">{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}*</label>
-                            <input 
-                                type="text"
-                                class="form-control"
-                                autocomplete="off"
-                                placeholder="{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}"
-                                name="city"
-                                id="city"
-                                required="required"
-                                value="{{ employee.city }}"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="row g-2">
-                        <div class="form-group">
-                            <label for="countryId">{{ 'myfav.org.employee.formFieldCountry'|trans|sw_sanitize }}*</label>
-                            <select
-                                class="form-select"
-                                name="countryId"
-                                id="countryId"
-                                autocomplete="off"
-                                required="required">
-                                {% for country in countries %}
-                                    <option value="{{ country.id }}"{% if employee.countryId == country.id%} selected="selected"{% endif %}>{{ country.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-
-                    <hr />
 
                     <div class="row g-2">
                         <div class="form-group col-sm-6">
@@ -273,17 +206,283 @@
                                 autocomplete="off"
                                 required="required">
                                 {% for language in languages %}
-                                    <option value="{{ language.id }}">{{ language.name }}</option>
+                                    <option value="{{ language.id }}"{% if customer.languageId == language.id %} selected="selected"{% endif %}>{{ language.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                     </div>
 
+                    <hr />
+
+                    <h3>{{ 'myfav.org.employee.headingBillingAddress'|trans|sw_sanitize }}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressSalutationId">{{ 'myfav.org.employee.formFieldSalutation'|trans|sw_sanitize }}</label>
+                            <select
+                                class="form-select"
+                                name="billingAddressSalutationId"
+                                id="billingAddressSalutationId"
+                                autocomplete="off"
+                                required="required">
+                                {% for salutation in salutations %}
+                                    <option value="{{ salutation.id }}"{% if customer.defaultBillingAddress.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressTitle">{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}"
+                                name="billingAddressTitle"
+                                id="billingAddressTitle"
+                                value="{{ customer.defaultBillingAddress.title }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressFirstName">{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}"
+                                name="billingAddressFirstName"
+                                id="billingAddressFirstName"
+                                required="required"
+                                value="{{ customer.defaultBillingAddress.firstName }}"
+                            />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressLastName">{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}"
+                                name="billingAddressLastName"
+                                id="billingAddressLastName"
+                                required="required"
+                                value="{{ customer.defaultBillingAddress.lastName }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="billingAddressStreet">{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}"
+                                name="billingAddressStreet"
+                                id="billingAddressStreet"
+                                required="required"
+                                value="{{ customer.defaultBillingAddress.street }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressZipcode">{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}"
+                                name="billingAddressZipcode"
+                                id="billingAddressZipcode"
+                                required="required"
+                                value="{{ customer.defaultBillingAddress.zipcode }}"
+                            />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="billingAddressCity">{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}"
+                                name="billingAddressCity"
+                                id="billingAddressCity"
+                                required="required"
+                                value="{{ customer.defaultBillingAddress.city }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="billingAddressCountryId">{{ 'myfav.org.employee.formFieldCountry'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="billingAddressCountryId"
+                                id="billingAddressCountryId"
+                                autocomplete="off"
+                                required="required">
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}"{% if customer.defaultBillingAddress.countryId == country.id%} selected="selected"{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <input
+                        autocomplete="off"
+                        type="checkbox"
+                        class="form-check-input"
+                        id="useAlternativeShippingAddress"
+                        name="useAlternativeShippingAddress" value="1"
+                        {% if useAlternativeShippingAddress === true %}checked="checked"{% endif %}
+                    />
+                    <label for="useAlternativeShippingAddress">Use different Shipping Address</label>
+
+                    <div
+                        id="myfav-alternative-shipping-address"
+                        {% if useAlternativeShippingAddress is null || useAlternativeShippingAddress === false %}style="display: none;"{% endif %}
+                    >
+                        <h3 class="myfav-org-employee-edit-shipping-title">{{ 'myfav.org.employee.headingShippingAddress'|trans|sw_sanitize }}</h3>
+
+                        <div class="row g-2">
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressSalutationId">{{ 'myfav.org.employee.formFieldSalutation'|trans|sw_sanitize }}</label>
+                                <select
+                                    class="form-select"
+                                    name="shippingAddressSalutationId"
+                                    id="shippingAddressSalutationId"
+                                    autocomplete="off"
+                                    required="required">
+                                    {% for salutation in salutations %}
+                                        <option value="{{ salutation.id }}"{% if customer.defaultShippingAddress.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressTitle">{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}"
+                                    name="shippingAddressTitle"
+                                    id="shippingAddressTitle"
+                                    value="{{ customer.defaultShippingAddress.title }}"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressFirstName">{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}*</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}"
+                                    name="shippingAddressFirstName"
+                                    id="shippingAddressFirstName"
+                                    required="required"
+                                    value="{{ customer.defaultShippingAddress.firstName }}"
+                                />
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressLastName">{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}*</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}"
+                                    name="shippingAddressLastName"
+                                    id="shippingAddressLastName"
+                                    required="required"
+                                    value="{{ customer.defaultShippingAddress.lastName }}"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="form-group">
+                                <label for="shippingAddressStreet">{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}*</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}"
+                                    name="shippingAddressStreet"
+                                    id="shippingAddressStreet"
+                                    required="required"
+                                    value="{{ customer.defaultShippingAddress.street }}"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressZipcode">{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}*</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}"
+                                    name="shippingAddressZipcode"
+                                    id="shippingAddressZipcode"
+                                    required="required"
+                                    value="{{ customer.defaultShippingAddress.zipcode }}"
+                                />
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label for="shippingAddressCity">{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}*</label>
+                                <input 
+                                    type="text"
+                                    class="form-control"
+                                    autocomplete="off"
+                                    placeholder="{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}"
+                                    name="shippingAddressCity"
+                                    id="shippingAddressCity"
+                                    required="required"
+                                    value="{{ customer.defaultShippingAddress.city }}"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="form-group">
+                                <label for="shippingAddressCountryId">{{ 'myfav.org.employee.formFieldCountry'|trans|sw_sanitize }}*</label>
+                                <select
+                                    class="form-select"
+                                    name="shippingAddressCountryId"
+                                    id="shippingAddressCountryId"
+                                    autocomplete="off"
+                                    required="required">
+                                    {% for country in countries %}
+                                        <option value="{{ country.id }}"{% if customer.shippingAddressCountryId.countryId == country.id%} selected="selected"{% endif %}>{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
                     <div class="card-actions">
                         <button type="submit" class="btn btn-primary btn-sm" title="{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}">{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}</button>
                     </div>
                 </form>
-                {% if editMode == 'edit' %}
+
+                {% if currentEditUserIsLoggedInUser === false %}
                     <hr />
                     <div class="accordion" id="accordionRemoveEntry">
                         <div class="accordion-item">
@@ -295,7 +494,7 @@
                             <div id="flush-collapseRemoveEntry" class="accordion-collapse collapse" data-bs-parent="#accordionRemoveEntry">
                                 <div class="accordion-body">
                                     <p class="myfav-org-employee-delete-warning">{{ 'myfav.org.employee.removeEntryWarning'|trans|sw_sanitize }}</p>
-                                    <a href="{{ path('myfav.org.employee.delete', { 'employeeId': employee.id }) }}"><button type="submit" class="btn btn-danger btn-sm">{{ 'myfav.org.employee.removeEntryBtn'|trans|sw_sanitize }}</button></a>
+                                    <a href="{{ path('myfav.org.employee.delete', { 'customerId': customer.id }) }}"><button type="submit" class="btn btn-danger btn-sm">{{ 'myfav.org.employee.removeEntryBtn'|trans|sw_sanitize }}</button></a>
                                 </div>
                             </div>
                         </div>

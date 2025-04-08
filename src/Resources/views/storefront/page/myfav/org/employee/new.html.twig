@@ -1,0 +1,287 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    {% block page_myfav_org_acl_role_overview %}
+        <div class="myfav-org-employee-edit">
+            {% if errors != null %}
+                <div role="alert" class="alert alert-danger alert-has-icon">
+                    <span class="icon icon-exclamation-triangle" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><defs><path d="M24 12c0 6.6274-5.3726 12-12 12S0 18.6274 0 12 5.3726 0 12 0s12 5.3726 12 12zM12 2C6.4772 2 2 6.4772 2 12s4.4772 10 10 10 10-4.4772 10-10S17.5228 2 12 2zM7.7071 12.2929 10 14.5858l6.2929-6.293c.3905-.3904 1.0237-.3904 1.4142 0 .3905.3906.3905 1.0238 0 1.4143l-7 7c-.3905.3905-1.0237.3905-1.4142 0l-3-3c-.3905-.3905-.3905-1.0237 0-1.4142.3905-.3905 1.0237-.3905 1.4142 0z" id="icons-default-checkmark-circle"></path></defs><use xlink:href="#icons-default-checkmark-circle" fill="#758CA3" fill-rule="evenodd"></use></svg>
+                    </span>
+                    <div class="alert-content-container">
+                        <div class="alert-content">{{ 'myfav.org.employee.editErrorGeneral'|trans|sw_sanitize }}</div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <h1>{{ 'myfav.org.employee.pageNewTitle'|trans|sw_sanitize }}</h1>
+
+            <div class="myfav-org-employee-edit-container">
+                <form
+                    action="{{ path('myfav.org.employee.create') }}{% endif %}"
+                    method="POST"
+                >
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="active">{{ 'myfav.org.employee.formFieldActive'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="active"
+                                id="active"
+                                autocomplete="off"
+                                required="required">
+                                <option value="0">{{ 'myfav.org.employee.optionLabelInActive'|trans|sw_sanitize }}</option>
+                                <option value="1"{% if customer.active == true %} selected="selected"{% endif %}>{{ 'myfav.org.employee.optionLabelActive'|trans|sw_sanitize }}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="groupId">{{ 'myfav.org.employee.formFieldGroupId'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="groupId"
+                                id="groupId"
+                                autocomplete="off"
+                                required="required">
+                                <option value=""></option>
+                                {% for group in company.myfavOrgCompanyCustomerGroups %}
+                                    <option value="{{ group.customerGroup.id }}"{% if customer.groupId == group.customerGroup.id %} selected="selected"{% endif %}>{{ group.customerGroup.translated.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="myfavOrgAclRoleId">{{ 'myfav.org.employee.formFieldMyfavOrgAclRole'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="myfavOrgAclRoleId"
+                                id="myfavOrgAclRoleId"
+                                autocomplete="off"
+                                required="required">
+                                <option value=""></option>
+                                {% for aclRole in aclRoles %}
+                                    <option value="{{ aclRole.id }}"{% if customer.myfavOrgAclRoleId == aclRole.id %} selected="selected"{% endif %}>{{ aclRole.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        {% set emailError = false %}
+                        {% set emailErrorMessage = '' %}
+
+                        {% for error in errors %}
+                            {% if error.propertyPath == '/email' %}
+                                {% set emailError = true %}
+                                {% if emailErrorMessage|length === 0 %}
+                                    {% set emailErrorMessage = error.message %}
+                                {% else %}
+                                    {% set emailErrorMessage = passwordErrorMessage ~ "<br />" ~ error.message %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="form-group col-sm-6 has-validation">
+                            <label for="email"{% if emailError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldEmail'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control {% if emailError %}is-invalid{% endif %}"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldEmail'|trans|sw_sanitize }}"
+                                name="email"
+                                id="email"
+                                required="required"
+                                value="{{ customer.email }}"
+                            />
+                            {% if emailError %}
+                                <div id="validationEmailFeedback" class="invalid-feedback">
+                                    {% if emailErrorMessage == 'MYFAV_ORG::EMAIL_ADDRESS_DUPLICATE_IN_ACCOUNT' %}
+                                        {{ 'myfav.org.employee.editErrorEmailAccountDuplicate'|trans|sw_sanitize }}
+                                    {% elseif emailErrorMessage == 'MYFAV_ORG::EMAIL_ADDRESS_DUPLICATE_IN_EMPLOYEE' %}
+                                        {{ 'myfav.org.employee.editErrorEmailEmployeeDuplicate'|trans|sw_sanitize }}
+                                    {% else %}
+                                        {{ 'myfav.org.employee.editErrorEmail'|trans|sw_sanitize }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% set passwordError = false %}
+                        {% set passwordErrorMessage = '' %}
+
+                        {% for error in errors %}
+                            {% if error.propertyPath == '/password' %}
+                                {% set passwordError = true %}
+                                {% if passwordErrorMessage|length === 0 %}
+                                    {% set passwordErrorMessage = error.message %}
+                                {% else %}
+                                    {% set passwordErrorMessage = passwordErrorMessage ~ "<br />" ~ error.message %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="form-group col-sm-6 has-validation">
+                            <label for="password"{% if passwordError %} class="text-danger"{% endif %}>{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="password"
+                                class="form-control {% if passwordError %}is-invalid{% endif %}"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldPassword'|trans|sw_sanitize }}"
+                                name="password"
+                                id="password"
+                                required="required"
+                                value=""
+                            />
+                            {% if passwordError %}
+                                <div id="validationPasswordFeedback" class="invalid-feedback">{{ passwordErrorMessage }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="salutationId">{{ 'myfav.org.employee.formFieldSalutation'|trans|sw_sanitize }}</label>
+                            <select
+                                class="form-select"
+                                name="salutationId"
+                                id="salutationId"
+                                autocomplete="off"
+                                required="required">
+                                {% for salutation in salutations %}
+                                    <option value="{{ salutation.id }}"{% if customer.salutationId == salutation.id %} selected="selected"{% endif %}>{{ salutation.displayName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="title">{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldTitle'|trans|sw_sanitize }}"
+                                name="title"
+                                id="title"
+                                value="{{ customer.title }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="firstName">{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldFirstName'|trans|sw_sanitize }}"
+                                name="firstName"
+                                id="firstName"
+                                required="required"
+                                value="{{ customer.firstName }}"
+                            />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="lastName">{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldLastName'|trans|sw_sanitize }}"
+                                name="lastName"
+                                id="lastName"
+                                required="required"
+                                value="{{ customer.lastName }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="street">{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldStreet'|trans|sw_sanitize }}"
+                                name="street"
+                                id="street"
+                                required="required"
+                                value="{{ customer.street }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="zipcode">{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldZipcode'|trans|sw_sanitize }}"
+                                name="zipcode"
+                                id="zipcode"
+                                required="required"
+                                value="{{ customer.zipcode }}"
+                            />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="city">{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}*</label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                placeholder="{{ 'myfav.org.employee.formFieldCity'|trans|sw_sanitize }}"
+                                name="city"
+                                id="city"
+                                required="required"
+                                value="{{ customer.city }}"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="form-group">
+                            <label for="countryId">{{ 'myfav.org.employee.formFieldCountry'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="countryId"
+                                id="countryId"
+                                autocomplete="off"
+                                required="required">
+                                {% for country in countries %}
+                                    <option value="{{ country.id }}"{% if customer.countryId == country.id%} selected="selected"{% endif %}>{{ country.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="languageId">{{ 'myfav.org.employee.formFieldLanguage'|trans|sw_sanitize }}*</label>
+                            <select
+                                class="form-select"
+                                name="languageId"
+                                id="languageId"
+                                autocomplete="off"
+                                required="required">
+                                {% for language in languages %}
+                                    <option value="{{ language.id }}" {% if customer.languageId == language.id %} selected="selected"{% endif %}>{{ language.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button type="submit" class="btn btn-primary btn-sm" title="{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}">{{ 'myfav.org.employee.btnSave'|trans|sw_sanitize }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endblock %}
+{% endblock %}

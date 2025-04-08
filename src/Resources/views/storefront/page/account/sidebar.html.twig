@@ -1,9 +1,9 @@
-{% sw_extends '@MyfavOrg/storefront/page/account/sidebar.html.twig' %}
+{% sw_extends '@Storefront/storefront/page/account/sidebar.html.twig' %}
 
 {% block page_account_sidebar_link_profile %}
     {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
 
-    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.profile.update']) %}
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.profile.update'] is defined) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
@@ -11,7 +11,7 @@
 {% block page_account_sidebar_link_address %}
     {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
 
-    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.addresses.update']) %}
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.addresses.update'] is defined) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
@@ -19,7 +19,7 @@
 {% block page_account_sidebar_link_payment %}
     {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
 
-    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.payment.methods.update']) %}
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.payment.methods.update'] is defined) %}
         {{ parent() }}
     {% endif %}
 {% endblock %}
@@ -27,12 +27,12 @@
 {% block page_account_sidebar_link_orders %}
     {% set tmpRoleAttributes = context.customer.extensions.myfavOrgCustomerExtension.indexedRoleAttributes %}
 
-    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.orders.update']) %}
+    {% if (tmpRoleAttributes is defined && tmpRoleAttributes['sw.orders.update'] is defined) %}
         {{ parent() }}
     {% endif %}
 
     {% block page_account_sidebar_link_myfav_org_employee_list %}
-        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['employee.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['employee.read'] is defined) %}
             <a href="{{ path('myfav.org.employee.list') }}"
                 title="{{ 'myfav.org.employee.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.employee.list') %} is-active{% endif %}"
@@ -43,7 +43,7 @@
     {% endblock %}
 
     {% block page_account_sidebar_link_myfav_org_acl_role_list %}
-        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['role.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['role.read'] is defined) %}
             <a href="{{ path('myfav.org.aclrole.list') }}"
                 title="{{ 'myfav.org.aclRole.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.aclrole.list') %} is-active{% endif %}"
@@ -54,7 +54,7 @@
     {% endblock %}
 
     {% block page_account_sidebar_link_order_clearance_group_list %}
-        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['orderclearancegroup.read']) %}
+        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['orderclearancegroup.read'] is defined) %}
             <a href="{{ path('myfav.org.orderclearancegroup.list') }}"
                 title="{{ 'myfav.org.orderClearanceGroup.linkTitle'|trans|striptags }}"
                 class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.orderclearancegroup.list') %} is-active{% endif %} "

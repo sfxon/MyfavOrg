@@ -67,6 +67,8 @@
                 "formFieldTitle": "Title",
                 "formFieldZipcode": "Zipcode",
                 "headingAclAttribute": "Access-Rights",
+                "headingBillingAddress": "Billing Address",
+                "headingShippingAddress": "Shipping Address",
                 "linkTitle": "Company Employees",
                 "messageNoEmployeesYet": "No employee accounts have been found.",
                 "optionLabelActive": "Active",

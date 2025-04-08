@@ -56,10 +56,10 @@
                     <tbody>
                         {% for employee in employees %}
                             <tr>
-                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}">{% endif %}{{ employee.lastName }} {{ employee.firstName }}{% if userAclCanUpdate %}</a>{% endif %}</td>
-                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}">{% endif %}{{ employee.email }}{% if userAclCanUpdate %}</a>{% endif %}</td>
+                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'customerId': employee.id }) }}">{% endif %}{{ employee.lastName }} {{ employee.firstName }}{% if userAclCanUpdate %}</a>{% endif %}</td>
+                                <td>{% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'customerId': employee.id }) }}">{% endif %}{{ employee.email }}{% if userAclCanUpdate %}</a>{% endif %}</td>
                                 <td>
-                                    {% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'employeeId': employee.id }) }}"><button type="submit" class="btn btn-primary btn-sm">{{ 'myfav.org.employee.employeeTableEditButton'|trans|sw_sanitize }}</button></a>{% else %}&nbsp;{% endif %}
+                                    {% if userAclCanUpdate %}<a href="{{ path('myfav.org.employee.edit', { 'customerId': employee.id }) }}"><button type="submit" class="btn btn-primary btn-sm">{{ 'myfav.org.employee.employeeTableEditButton'|trans|sw_sanitize }}</button></a>{% else %}&nbsp;{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -72,10 +72,10 @@
                         prev_link: currentPage > 1 ? path('myfav.org.employee.list', {page: currentPage - 1, search: searchQuery}) : null,
                         next_link: currentPage < pages ? path('myfav.org.employee.list', {page: currentPage + 1, search: searchQuery}) : null,
                         'currentPage': currentPage,
-                        'total': total,
+                        'entities': eymployees,
+                        'total': employees.total,
                         'limit': limit,
-                        'pages': pages,
-                        'criteria': criteria,
+                        'criteria': employees.criteria,
                         'searchRoute': 'myfav.org.employee.list',
                         'searchQuery': searchQuery
                     } %}

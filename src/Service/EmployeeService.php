@@ -65,6 +65,7 @@ class EmployeeService
      * @param  Context $context
      * @param  Request $request
      */
+    /*
     public function createEmployeeFromRequest(Context $context, DataBag $dataBag, SalesChannelContext $salesChannelContext): mixed
     {
         $hasErrors = false;
@@ -131,6 +132,7 @@ class EmployeeService
             'errors' => $errors,
         ];
     }
+    */
 
     /**
      * deleteEmployee
@@ -185,6 +187,7 @@ class EmployeeService
      * @param  Context $context
      * @return EntitySearchResult
      */
+    /*
     public function loadList(Context $context, string $companyId, int $currentPage, int $limit, ?string $searchQuery): EntitySearchResult
     {
         $criteria = new Criteria();
@@ -228,6 +231,7 @@ class EmployeeService
 
         return $employees;
     }
+    */
 
     /**
      * updateEmployeeFromRequest

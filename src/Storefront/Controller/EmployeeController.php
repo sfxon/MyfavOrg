@@ -7,6 +7,7 @@ use Myfav\Org\Service\AclAttributeGroupService;
 use Myfav\Org\Service\AclRoleService;
 use Myfav\Org\Service\AddressService;
 use Myfav\Org\Service\CountryService;
+use Myfav\Org\Service\CustomerService;
 use Myfav\Org\Service\EmployeeAclAttributeService;
 use Myfav\Org\Service\EmployeeService;
 use Myfav\Org\Service\LanguageService;
@@ -43,9 +44,10 @@ class EmployeeController extends StorefrontController
         private readonly AclRoleService $aclRoleService,
         private readonly AddressService $addressService,
         private readonly CountryService $countryService,
+        private readonly CustomerService $customerService,
         private readonly EmployeeAclAttributeService $employeeAclAttributeService,
         private readonly EmployeePageLoader $employeePageLoader,
-        private readonly EmployeeService $employeeService,
+        //private readonly EmployeeService $employeeService,
         private readonly LanguageService $languageService,
         private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly SalutationService $salutationService,
@@ -60,7 +62,7 @@ class EmployeeController extends StorefrontController
         $this->accessRightsService->validate($salesChannelContext, 'employee.create', 'myfav.org.employee.list');
         $dataBag = new DataBag($requestDataBag->all());
         $dataBag->add(['salesChannelId' => $salesChannelContext->getSalesChannelId()]);
-        $result = $this->employeeService->createEmployeeFromRequest($context, $dataBag, $salesChannelContext);
+        $result = $this->customerService->createCustomerFromRequest($context, $dataBag, $salesChannelContext);
 
         if($result['hasErrors']) {
             return $this->showNewPage($context, $request, $salesChannelContext, $result['errors'], $dataBag);
@@ -82,7 +84,7 @@ class EmployeeController extends StorefrontController
         $this->accessRightsService->validate($salesChannelContext, 'employee.read', 'frontend.account.home.page');
 
         $currentPage = (int) $request->query->get('p', 1);
-        $limit = 1;
+        $limit = 25;
 
         $searchQuery = $request->query->get('searchQuery', null);
 
@@ -101,7 +103,7 @@ class EmployeeController extends StorefrontController
             throw new \Exception('Company not found.');
         }
 
-        $employees = $this->employeeService->loadList($context, $company->getId(), $currentPage, $limit, $searchQuery);
+        $employees = $this->customerService->loadList($context, $company->getId(), $currentPage, $limit, $searchQuery);
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/index.html.twig', [
             'currentPage' => $currentPage,
@@ -110,7 +112,6 @@ class EmployeeController extends StorefrontController
             'successMessage' => $request->query->get('successMessage'),
             'page' => $page,
             'searchQuery' => $searchQuery,
-            'total' => $employees->getTotal(),
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.create'),
             'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.update'),
             'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.delete'),
@@ -121,19 +122,40 @@ class EmployeeController extends StorefrontController
     public function deleteEmployee(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.delete', 'myfav.org.employee.list');
-        $employeeId = $request->query->get('employeeId');
+        
+        // Load customerId
+        $customerId = $request->query->get('customerId');
 
-        if($employeeId === null) {
+        if($customerId === null) {
             $url = $this->router->generate('myfav.org.employee.list');
             return new RedirectResponse($url);
         }
 
-        $this->employeeAclAttributeService->removeAllAttributesFromEmployee(
-            $context,
-            $employeeId,
-        );
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
-        $this->employeeService->deleteEmployee($context, $employeeId);
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        $customer = $this->customerService->loadCustomerById($context, $customerId, $company->getId());
+
+        if($customer === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        // Check, that this customer is not the logged in customer.
+        // The logged in customer cannot delete it's own account.
+        $loggedInCustomer = $this->myfavSalesChannelContextService->getCustomer($salesChannelContext);
+
+        if($loggedInCustomer->getId() === $customer->getId()) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        $this->customerService->deleteCustomer($context, $customerId);
 
         $url = $this->router->generate('myfav.org.employee.list', [ 'successMessage'=> 'deletedEmployee' ]);
         return new RedirectResponse($url);
@@ -143,15 +165,38 @@ class EmployeeController extends StorefrontController
     public function editEmployee(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.update', 'myfav.org.employee.list');
-        $employeeId = $request->query->get('employeeId');
 
-        if($employeeId === null) {
+        // Load customerId
+        $customerId = $request->query->get('customerId');
+
+        if($customerId === null) {
             $url = $this->router->generate('myfav.org.employee.list');
             return new RedirectResponse($url);
         }
 
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        $customer = $this->customerService->loadCustomerById($context, $customerId, $company->getId());
+
+        if($customer === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        $useAlternativeShippingAddress = false;
+
+        if($customer->getDefaultBillingAddressId() !== $customer->getDefaultShippingAddressid()) {
+            $useAlternativeShippingAddress = true;
+        }
+
         // Show edit page.
-        return $this->showEditPage($context, $request, $salesChannelContext);
+        return $this->showEditPage($context, $request, $salesChannelContext, [], $customer, $company, $useAlternativeShippingAddress);
     }
 
     #[Route(path: '/myfav/org/employee/new', name: 'myfav.org.employee.new',  options: ['seo' => false], defaults: ['_loginRequired' => true], methods: ['GET'])]
@@ -162,22 +207,48 @@ class EmployeeController extends StorefrontController
     }
 
     #[Route(path: '/myfav/org/employee/update', name: 'myfav.org.employee.update',  options: ['seo' => false], defaults: ['_loginRequired' => true], methods: ['POST'])]
-    public function updateRole(Context $context, Request $request, RequestDataBag $requestDataBag, SalesChannelContext $salesChannelContext): Response
+    public function updateEmployee(Context $context, Request $request, RequestDataBag $requestDataBag, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.update', 'myfav.org.employee.list');
-        $dataBag = new DataBag($requestDataBag->all());
-        $employeeId = $request->query->get('employeeId');
-        $result = $this->employeeService->updateEmployeeFromRequest($context, $employeeId, $dataBag, $salesChannelContext);
 
-        if($result['hasErrors']) {
-            return $this->showEditPage($context, $request, $salesChannelContext, $result['errors']);
+        // Load customerId
+        $customerId = $request->query->get('customerId');
+
+        if($customerId === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
         }
 
-        $this->employeeAclAttributeService->updateEmployeAclAttributes(
-            $context,
-            $employeeId,
-            $request->request->all()['aclAttributes'] ?? []
-        );
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        // Load customer.
+        $customer = $this->customerService->loadCustomerById($context, $customerId, $company->getId());
+
+        if($customer === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        // Get request data.
+        $dataBag = new DataBag($requestDataBag->all());
+        $customerId = $request->query->get('customerId');
+        $result = $this->customerService->updateCustomerFromRequest($context, $dataBag, $salesChannelContext, $customer, $company);
+
+        $useAlternativeShippingAddress = false;
+
+        if($dataBag->get('useAlternativeShippingAddress')) {
+            $useAlternativeShippingAddress = true;
+        }
+
+        if($result['hasErrors']) {
+            return $this->showEditPage($context, $request, $salesChannelContext, $result['errors'], $customer, $company, $useAlternativeShippingAddress);
+        }
 
         $url = $this->router->generate('myfav.org.employee.list', [ 'successMessage'=> 'updatedEmployee' ]);
         return new RedirectResponse($url);
@@ -191,26 +262,38 @@ class EmployeeController extends StorefrontController
      * @param  SalesChannelContext $salesChannelContext
      * @return Response
      */
-    private function showEditPage(Context $context, Request $request, SalesChannelContext $salesChannelContext, $errors = null): Response
+    private function showEditPage(
+        Context $context,
+        Request $request,
+        SalesChannelContext $salesChannelContext,
+        $errors = null,
+        mixed $customer,
+        mixed $company,
+        bool $useAlternativeShippingAddress): Response
     {
-        // Todo: Check access rights.
         $page = $this->employeePageLoader->load($request, $salesChannelContext);
-        $employeeId = $request->query->get('employeeId');
-        $employee = $this->employeeService->loadById($context, $employeeId);
-        $activatedEmployeeAclAttributes = $employee->getAttributesIndexByAttributeId();
-        $aclAttributeGroups = $this->aclAttributeGroupService->loadAll($context);
-        
+
+        // Check, if the user that is to be edited is the current user.
+        $loggedInCustomer = $this->myfavSalesChannelContextService->getCustomer($salesChannelContext);
+        $currentEditUserIsLoggedInUser = false;
+
+        if($loggedInCustomer->getId() === $customer->getId()) {
+            $currentEditUserIsLoggedInUser = true;
+        }
+
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/edit.html.twig', [
-            'aclAttributeGroups' => $aclAttributeGroups,
             'aclRoles' => $this->aclRoleService->loadList($context),
-            'activatedEmployeeAclAttributes' => $activatedEmployeeAclAttributes,
             'addresses' => $this->addressService->loadList($context, $salesChannelContext->getCustomer()->getId()),
+            'countries' => $this->countryService->loadSalesChannelCountries($salesChannelContext),
+            'company' => $company,
+            'currentEditUserIsLoggedInUser' => $currentEditUserIsLoggedInUser,
+            'customer' => $customer,
             'editMode' => 'edit',
-            'employee' => $employee,
             'errors' => $errors,
             'languages' => $this->languageService->loadList($context),
             'page' => $page,
             'salutations' => $this->salutationService->loadList($context),
+            'useAlternativeShippingAddress' => $useAlternativeShippingAddress,
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.create'),
             'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.update'),
             'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.delete'),
@@ -225,13 +308,12 @@ class EmployeeController extends StorefrontController
      * @param  mixed $salesChannelContext
      * @return Response
      */
-    private function showNewPage(Context $context, Request $request, SalesChannelContext $salesChannelContext, $errors = [], $employeeData = null): Response
+    private function showNewPage(Context $context, Request $request, SalesChannelContext $salesChannelContext, $errors = [], $customerData = null): Response
     {
         $page = $this->employeePageLoader->load($request, $salesChannelContext);
-        $aclAttributeGroups = $this->aclAttributeGroupService->loadAll($context);
 
-        if($employeeData === null) {
-            $employeeData = new DataBag();
+        if($customerData === null) {
+            $customerData = new DataBag();
         }
 
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
@@ -240,13 +322,12 @@ class EmployeeController extends StorefrontController
             throw new \Exception('Company not found.');
         }
 
-        return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/edit.html.twig', [
-            'aclAttributeGroups' => $aclAttributeGroups,
+        return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/new.html.twig', [
             'aclRoles' => $this->aclRoleService->loadList($context),
             'countries' => $this->countryService->loadSalesChannelCountries($salesChannelContext),
             'company' => $company,
             'editMode' => 'new',
-            'employee' => $employeeData->all(),
+            'customer' => $customerData->all(),
             'errors' => $errors,
             'languages' => $this->languageService->loadList($context),
             'page' => $page,

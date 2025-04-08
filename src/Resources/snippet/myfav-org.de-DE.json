@@ -67,6 +67,8 @@
                 "formFieldTitle": "Titel",
                 "formFieldZipcode": "Postleitzahl",
                 "headingAclAttribute": "Zugriffs-Rechte",
+                "headingBillingAddress": "Rechnungsadresse",
+                "headingShippingAddress": "Shipping Address",
                 "linkTitle": "Firmen Mitarbeiter",
                 "messageNoEmployeesYet": "Es wurden noch keine Mitarbeiter-Accounts gefunden.",
                 "optionLabelActive": "Aktiv",

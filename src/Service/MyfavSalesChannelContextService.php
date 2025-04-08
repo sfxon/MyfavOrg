@@ -2,6 +2,7 @@
 
 namespace Myfav\Org\Service;
 
+use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyEntity;
 use Shopware\Core\Content\Category\Tree\TreeItem;
 use Shopware\Core\Framework\Context;
@@ -40,5 +41,16 @@ class MyfavSalesChannelContextService
         }
 
         return null;
+    }
+
+    /**
+     * getCustomer
+     *
+     * @param  SalesChannelContext $salesChannelContext
+     * @return CustomerEntity
+     */
+    public function getCustomer(SalesChannelContext $salesChannelContext): ?CustomerEntity
+    {
+        return $salesChannelContext->getCustomer();
     }
 }

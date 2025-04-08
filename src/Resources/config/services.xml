@@ -42,9 +42,9 @@
             <argument type="service" id="Myfav\Org\Service\AclRoleService" />
             <argument type="service" id="Myfav\Org\Service\AddressService" />
             <argument type="service" id="Myfav\Org\Service\CountryService" />
+            <argument type="service" id="Myfav\Org\Service\CustomerService" />
             <argument type="service" id="Myfav\Org\Service\EmployeeAclAttributeService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
-            <argument type="service" id="Myfav\Org\Service\EmployeeService" />
             <argument type="service" id="Myfav\Org\Service\LanguageService" />
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
             <argument type="service" id="Myfav\Org\Service\SalutationService" />
@@ -162,33 +162,16 @@
         </service>
 
         <service id="Myfav\Org\Service\CustomerService" public="true">
+            <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="customer.repository" />
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService"/>
+            <argument type="service" id="Shopware\Core\System\NumberRange\ValueGenerator\NumberRangeValueGeneratorInterface"/>
+            <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
         
         <service id="Myfav\Org\Service\EmployeeAclAttributeService" public="true">
             <argument type="service" id="myfav_org_employee_acl_attribute.repository" />
-        </service>
-
-        <service id="Myfav\Org\Service\EmployeeService" public="true">
-            <argument type="service" id="Doctrine\DBAL\Connection"/>
-            <argument type="service" id="Myfav\Org\Service\CustomerService"/>
-            <argument type="service" id="customer.repository"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
-            <argument type="service" id="myfav_org_employee.repository" />
-            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextFactory"/>
-            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
-            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService"/>
-            <argument type="service" id="Shopware\Core\System\NumberRange\ValueGenerator\NumberRangeValueGeneratorInterface"/>
-            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
-        </service>
-
-        <service id="Myfav\Org\Service\EmployeeLoginService" public="true">
-            <argument type="service" id="Doctrine\DBAL\Connection"/>
-            <argument type="service" id="Myfav\Org\Service\CustomerService"/>
-            <argument type="service" id="Myfav\Org\Service\EmployeeService"/>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="Shopware\Core\System\SalesChannel\Context\SalesChannelContextPersister"/>
         </service>
 
         <service id="Myfav\Org\Service\LanguageService" public="true">
