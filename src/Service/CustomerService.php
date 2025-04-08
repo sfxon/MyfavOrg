@@ -415,7 +415,6 @@ class CustomerService
         
         $this->validator->validate($data->all(), $definition);
         $this->emailUniqueValidation($data, $salesChannelContext);
-        $this->emailEmployeeUniqueValidation($data, $salesChannelContext);
     }
 
     /**
@@ -451,7 +450,6 @@ class CustomerService
         
         $this->validator->validate($data->all(), $definition);
         $this->emailUniqueValidation($data, $salesChannelContext);
-        $this->emailEmployeeUniqueValidationExceptEditedEmployee($data, $salesChannelContext);
     }
 
     /**
@@ -476,8 +474,6 @@ class CustomerService
         $definition->add('lastName', new NotBlank(), new Length(['max' => CustomerDefinition::MAX_LENGTH_LAST_NAME]));
         
         $this->validator->validate($data->all(), $definition);
-        // $this->emailUniqueValidation($data, $salesChannelContext);
-        // $this->emailEmployeeUniqueValidationExceptEditedEmployee($data, $salesChannelContext);
     }
 
     /**
@@ -520,72 +516,6 @@ class CustomerService
         // If we don't have anything, skip
         if ($results !== []) {
             $violation = $this->buildViolation("MYFAV_ORG::EMAIL_ADDRESS_DUPLICATE_IN_ACCOUNT", [], '/email');
-            $constraintViolations = new ConstraintViolationList();
-            $constraintViolations->add($violation);
-            throw new ConstraintViolationException($constraintViolations, $data->all());
-        }
-    }
-
-    /**
-     * emailEmployeeUniqueValidation
-     *
-     * @param  DataBag $data
-     * @param  SalesChannelContext $salesChannelContext
-     * @return void
-     */
-    private function emailEmployeeUniqueValidation(DataBag $data, SalesChannelContext $salesChannelContext): void
-    {
-        $value = $data->get('email');
-        $query = $this->connection->createQueryBuilder();
-
-        /** @var array{email: string, guest: int, bound_sales_channel_id: string|null}[] $results */
-        $results = $query
-            ->select('email')
-            ->from('myfav_org_employee')
-            ->where($query->expr()->eq('email', $query->createPositionalParameter($value)))
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        // If we don't have anything, skip
-        if ($results !== []) {
-            $violation = $this->buildViolation("MYFAV_ORG::EMAIL_ADDRESS_DUPLICATE_IN_EMPLOYEE", [], '/email');
-            $constraintViolations = new ConstraintViolationList();
-            $constraintViolations->add($violation);
-            throw new ConstraintViolationException($constraintViolations, $data->all());
-        }
-    }
-
-    /**
-     * emailEmployeeUniqueValidationExceptEditedEmployee
-     *
-     * @param  DataBag $data
-     * @param  SalesChannelContext $salesChannelContext
-     * @return void
-     */
-    private function emailEmployeeUniqueValidationExceptEditedEmployee(DataBag $data, SalesChannelContext $salesChannelContext): void
-    {
-        $employeeId = $data->get('id');
-        $value = $data->get('email');
-        $query = $this->connection->createQueryBuilder();
-
-        /** @var array{email: string, guest: int, bound_sales_channel_id: string|null}[] $results */
-        $results = $query
-            ->select('LOWER(HEX(id)) as id', 'email')
-            ->from('myfav_org_employee')
-            ->where($query->expr()->eq('email', $query->createPositionalParameter($value)))
-            ->executeQuery()
-            ->fetchAllAssociative();
-
-        // If this is the same mail address, but the employeeId matches too - ignore this one.
-        if(count($results) == 1) {
-            if(strtolower($results[0]['id']) == strtolower($employeeId)) {
-                return;
-            }
-        }
-
-        // If we don't have anything, skip
-        if ($results !== []) {
-            $violation = $this->buildViolation("MYFAV_ORG::EMAIL_ADDRESS_DUPLICATE_IN_EMPLOYEE", [], '/email');
             $constraintViolations = new ConstraintViolationList();
             $constraintViolations->add($violation);
             throw new ConstraintViolationException($constraintViolations, $data->all());

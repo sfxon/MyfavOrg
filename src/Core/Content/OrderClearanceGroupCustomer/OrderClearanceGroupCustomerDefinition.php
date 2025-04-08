@@ -1,12 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace Myfav\Org\Core\Content\MyfavOrgEmployeeAclAttribute;
+namespace Myfav\Org\Core\Content\OrderClearanceGroupCustomer;
 
-use Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeDefinition;
-use Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition;
+use Shopware\Core\Checkout\Customer\CustomerDefinition;
+use Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition;
+use Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\BoolField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\DateTimeField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\DateField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\ApiAware;
@@ -18,13 +19,14 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToOneAssociationField;
+use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
-class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
+class OrderClearanceGroupCustomerDefinition extends EntityDefinition
 {
-    public const ENTITY_NAME = 'myfav_org_employee_acl_attribute';
+    public const ENTITY_NAME = 'order_clearance_group_customer';
 
     /**
      * getEntityName
@@ -43,7 +45,7 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return MyfavOrgEmployeeAclAttributeEntity::class;
+        return OrderClearanceGroupCustomerEntity::class;
     }
 
     /**
@@ -53,7 +55,7 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return MyfavOrgEmployeeAclAttributeCollection::class;
+        return OrderClearanceGroupCustomerCollection::class;
     }
 
     /**
@@ -65,13 +67,13 @@ class MyfavOrgEmployeeAclAttributeDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
-            (new FkField('myfav_org_employee_id', 'myfavOrgEmployeeId', MyfavOrgEmployeeDefinition::class))->addFlags(new Required()),
-            (new FkField('myfav_org_acl_attribute_id', 'myfavOrgAclAttributeId', MyfavOrgAclAttributeDefinition::class))->addFlags(new Required()),
-            (new DateTimeField('valid_from', 'validFrom')),
-            (new DateTimeField('valid_until', 'validUntil')),
+            (new FkField('customer_id', 'customerId', CustomerDefinition::class))->addFlags(new Required()),
+            (new FkField('order_clearance_group_id', 'orderClearanceGroupId', OrderClearanceGroupDefinition::class))->addFlags(new Required()),
+            (new FkField('order_clearance_role_id', 'orderClearanceRoleId', OrderClearanceRoleDefinition::class))->addFlags(new Required()),
 
-            new ManyToOneAssociationField('myfavOrgEmployee', 'myfav_org_employee_id', MyfavOrgEmployeeDefinition::class, 'id'),
-            new ManyToOneAssociationField('myfavOrgAclAttribute', 'myfav_org_acl_attribute_id', MyfavOrgAclAttributeDefinition::class, 'id'),
+            new ManyToOneAssociationField('customer', 'customer_id', CustomerDefinition::class, 'id'),
+            new ManyToOneAssociationField('orderClearanceGroupId', 'order_clearance_group_id', OrderClearanceGroupDefinition::class, 'id'),
+            new ManyToOneAssociationField('orderClearanceRoleId', 'order_clearance_role_id', OrderClearanceRoleDefinition::class, 'id'),
         ]);
     }
 }

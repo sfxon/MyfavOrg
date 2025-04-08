@@ -1,30 +1,30 @@
 <?php declare(strict_types=1);
 
-namespace Myfav\Org\Core\Content\OrderClearanceGroupEmployee;
+namespace Myfav\Org\Core\Content\OrderClearanceGroupCustomer;
 
-use Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeEntity;
+use Shopware\Core\Checkout\Customer\CustomerEntity;
 use Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\Entity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityIdTrait;
 
-class OrderClearanceGroupEmployeeEntity extends Entity
+class OrderClearanceGroupCustomerEntity extends Entity
 {
     use EntityIdTrait;
 
-    protected ?string $myfavOrgEmployeeId;
+    protected ?string $customerId;
     protected ?string $orderClearanceRoleId;
-    protected ?MyfavOrgEmployeeEntity $myfavOrgEmployee;
+    protected ?CustomerEntity $customer;
     protected ?OrderClearanceRoleEntity $orderClearanceRole;
 
-    // $myfavOrgEmployeeId
-    public function getMyfavOrgEmployeeId(): ?string
+    // $customerId
+    public function getCustomerId(): ?string
     {
-        return $this->myfavOrgEmployeeId;
+        return $this->customerId;
     }
 
-    public function setMyfavOrgEmployeeId(?string $myfavOrgEmployeeId): void
+    public function setCustomerId(?string $customerId): void
     {
-        $this->myfavOrgEmployeeId = $myfavOrgEmployeeId;
+        $this->customerId = $customerId;
     }
 
     // $orderClearanceRoleId
@@ -38,15 +38,15 @@ class OrderClearanceGroupEmployeeEntity extends Entity
         $this->orderClearanceRoleId = $orderClearanceRoleId;
     }
 
-    // $myfavOrgEmployee
-    public function getMyfavOrgEmployee(): ?MyfavOrgEmployeeEntity
+    // $customer
+    public function getCustomer(): ?CustomerEntity
     {
-        return $this->myfavOrgEmployee;
+        return $this->customer;
     }
 
-    public function setMyfavOrgEmployee(?MyfavOrgEmployeeEntity $myfavOrgEmployee): void
+    public function setCustomer(?CustomerEntity $customer): void
     {
-        $this->myfavOrgEmployee = $myfavOrgEmployee;
+        $this->customer = $customer;
     }
 
     // $orderClearanceRole

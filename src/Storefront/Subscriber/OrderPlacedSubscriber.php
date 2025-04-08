@@ -36,6 +36,7 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
      */
     public function onCartConvertedEvent(CartConvertedEvent $event): void
     {
+        /*
         $salesChannelContext = $event->getSalesChannelContext();
         $extensions = $salesChannelContext->getExtensions();
         $myfavOrgEmployee = null;
@@ -61,5 +62,6 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
             // Modifizierte Daten zurücksetzen
             $event->setConvertedCart($convertedCart);
         }
+        */
     }
 }

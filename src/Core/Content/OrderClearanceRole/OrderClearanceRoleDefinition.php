@@ -66,7 +66,6 @@ class OrderClearanceRoleDefinition extends EntityDefinition
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
             (new StringField('technicalName', 'technicalName'))->addFlags(new Required()),
-            (new OneToManyAssociationField('myfavOrgEmployees', MyfavOrgEmployeeDefinition::class, 'order_clearance_role_id'))
         ]);
     }
 }

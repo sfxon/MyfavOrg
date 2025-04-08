@@ -8,19 +8,11 @@ use Myfav\Org\Service\AclRoleService;
 use Myfav\Org\Service\AddressService;
 use Myfav\Org\Service\CountryService;
 use Myfav\Org\Service\CustomerService;
-use Myfav\Org\Service\EmployeeAclAttributeService;
-use Myfav\Org\Service\EmployeeService;
 use Myfav\Org\Service\LanguageService;
 use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Myfav\Org\Service\SalutationService;
 use Myfav\Org\Storefront\Page\Employee\EmployeePageLoader;
-use Shopware\Core\Content\Media\Pathname\PathnameStrategy\PathnameStrategyInterface;
 use Shopware\Core\Framework\Context;
-use Shopware\Core\Framework\DataAbstractionLayer\Dbal\Common\RepositoryIterator;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Validation\DataBag\DataBag;
 use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -28,7 +20,6 @@ use Shopware\Storefront\Controller\StorefrontController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -45,9 +36,7 @@ class EmployeeController extends StorefrontController
         private readonly AddressService $addressService,
         private readonly CountryService $countryService,
         private readonly CustomerService $customerService,
-        private readonly EmployeeAclAttributeService $employeeAclAttributeService,
         private readonly EmployeePageLoader $employeePageLoader,
-        //private readonly EmployeeService $employeeService,
         private readonly LanguageService $languageService,
         private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly SalutationService $salutationService,
@@ -60,6 +49,16 @@ class EmployeeController extends StorefrontController
     public function createEmployee(Request $request, Context $context, RequestDataBag $requestDataBag, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.create', 'myfav.org.employee.list');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        // Create entry.
         $dataBag = new DataBag($requestDataBag->all());
         $dataBag->add(['salesChannelId' => $salesChannelContext->getSalesChannelId()]);
         $result = $this->customerService->createCustomerFromRequest($context, $dataBag, $salesChannelContext);
@@ -67,12 +66,6 @@ class EmployeeController extends StorefrontController
         if($result['hasErrors']) {
             return $this->showNewPage($context, $request, $salesChannelContext, $result['errors'], $dataBag);
         }
-
-        $this->employeeAclAttributeService->updateEmployeAclAttributes(
-            $context,
-            $result['id'],
-            $request->request->all()['aclAttributes'] ?? []
-        );
 
         $url = $this->router->generate('myfav.org.employee.list', [ 'successMessage'=> 'createdEmployee' ]);
         return new RedirectResponse($url);
@@ -83,6 +76,15 @@ class EmployeeController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.read', 'frontend.account.home.page');
 
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
+        // Set Pagination data and search query.
         $currentPage = (int) $request->query->get('p', 1);
         $limit = 25;
 
@@ -96,15 +98,17 @@ class EmployeeController extends StorefrontController
             }
         }
 
+        // Generate page.
         $page = $this->employeePageLoader->load($request, $salesChannelContext);
-        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
             throw new \Exception('Company not found.');
         }
 
+        // Query employees.
         $employees = $this->customerService->loadList($context, $company->getId(), $currentPage, $limit, $searchQuery);
 
+        // Render storefront.
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/index.html.twig', [
             'currentPage' => $currentPage,
             'employees' => $employees,
@@ -203,6 +207,15 @@ class EmployeeController extends StorefrontController
     public function newEmployee(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'employee.create', 'myfav.org.employee.list');
+
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.employee.list');
+            return new RedirectResponse($url);
+        }
+
         return $this->showNewPage($context, $request, $salesChannelContext);
     }
 

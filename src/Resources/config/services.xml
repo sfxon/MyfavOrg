@@ -43,7 +43,6 @@
             <argument type="service" id="Myfav\Org\Service\AddressService" />
             <argument type="service" id="Myfav\Org\Service\CountryService" />
             <argument type="service" id="Myfav\Org\Service\CustomerService" />
-            <argument type="service" id="Myfav\Org\Service\EmployeeAclAttributeService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
             <argument type="service" id="Myfav\Org\Service\LanguageService" />
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
@@ -99,16 +98,12 @@
             <tag name="shopware.entity.definition" entity="myfav_org_customer_data" />
         </service>
 
-        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\MyfavOrgEmployeeDefinition">
-            <tag name="shopware.entity.definition" entity="myfav_org_employee" />
-        </service>
-
-        <service id="Myfav\Org\Core\Content\MyfavOrgEmployeeAclAttribute\MyfavOrgEmployeeAclAttributeDefinition">
-            <tag name="shopware.entity.definition" entity="myfav_org_employee_acl_attribute" />
-        </service>
-
         <service id="Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition">
             <tag name="shopware.entity.definition" entity="order_clearance_group" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\OrderClearanceGroupCustomer\OrderClearanceGroupCustomerDefinition">
+            <tag name="shopware.entity.definition" entity="order_clearance_group_customer" />
         </service>
 
         <service id="Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition">
@@ -169,10 +164,6 @@
             <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
-        
-        <service id="Myfav\Org\Service\EmployeeAclAttributeService" public="true">
-            <argument type="service" id="myfav_org_employee_acl_attribute.repository" />
-        </service>
 
         <service id="Myfav\Org\Service\LanguageService" public="true">
             <argument type="service" id="language.repository" />
@@ -203,10 +194,6 @@
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="order.repository" />
-        </service>
-
-        <!-- ValidationFactory-->
-        <service id="Myfav\Org\Core\Content\MyfavOrgEmployee\Validation\EmployeePasswordValidationFactory" public="true">
         </service>
     </services>
 </container>
