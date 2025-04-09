@@ -56,6 +56,53 @@ Component.override('sw-customer-detail-base', {
 
                 this.customer.extensions.myfavOrgCustomerExtension.myfavOrgCompanyId = value;
             }
-        }
+        },
+
+        orderClearanceGroupCriteria() {
+            const criteria = new Criteria(1, 500);
+            criteria.addFilter(Criteria.equals('myfavOrgCompanyId', this.myfavOrgCompanyId));
+            return criteria;
+        },
+
+        orderClearanceGroupId: {
+            get() {
+                return this.customer?.extensions?.myfavOrgCustomerExtension?.orderClearanceGroupId || null;
+            },
+            set(value) {
+                if(!this.customer.extensions) {
+                    this.customer.extensions = {};
+                }
+
+                if(!this.customer.extensions.myfavOrgCustomerExtension) {
+                    const tmpRepository = this.repositoryFactory.create('myfav_org_customer_data');
+                    this.customer.extensions.myfavOrgCustomerExtension = tmpRepository.create(Shopware.Context.api);
+                }
+
+                this.customer.extensions.myfavOrgCustomerExtension.orderClearanceGroupId = value;
+            }
+        },
+
+        orderClearanceRoleCriteria() {
+            const criteria = new Criteria(1, 500);
+            return criteria;
+        },
+
+        orderClearanceRoleId: {
+            get() {
+                return this.customer?.extensions?.myfavOrgCustomerExtension?.orderClearanceRoleId || null;
+            },
+            set(value) {
+                if(!this.customer.extensions) {
+                    this.customer.extensions = {};
+                }
+
+                if(!this.customer.extensions.myfavOrgCustomerExtension) {
+                    const tmpRepository = this.repositoryFactory.create('myfav_org_customer_data');
+                    this.customer.extensions.myfavOrgCustomerExtension = tmpRepository.create(Shopware.Context.api);
+                }
+
+                this.customer.extensions.myfavOrgCustomerExtension.orderClearanceRoleId = value;
+            }
+        },
     }
 });

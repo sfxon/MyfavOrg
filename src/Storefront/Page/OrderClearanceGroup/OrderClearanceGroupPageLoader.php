@@ -37,9 +37,6 @@ class OrderClearanceGroupPageLoader
         $page = $this->genericPageLoader->load($request, $context);
         $page = OrderClearanceGroupPage::createFrom($page);
 
-        // Do additional stuff, e.g. load more data from store api and add it to page
-        // $page->setExampleData(...);
-
         $this->eventDispatcher->dispatch(
             new OrderClearanceGroupPageLoadedEvent($page, $context, $request)
         );

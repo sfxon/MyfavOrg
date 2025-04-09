@@ -30,11 +30,21 @@ class Migration1720556170OrderClearanceRole extends MigrationStep
         $connection->executeStatement(
             'CREATE TABLE IF NOT EXISTS `order_clearance_role` (
             `id` BINARY(16) NOT NULL,
-            `technical_name` VARCHAR(32),
+            `name` VARCHAR(32),
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;');
+
+        $connection->executeStatement(
+            'INSERT INTO `order_clearance_role` (`id`, `name`, `created_at`, `updated_at`)
+            VALUES (UNHEX(\'0196192887a871f38d43089598db212b\'), \'Manager\', now(), NULL);'
+        );
+
+        $connection->executeStatement(
+            'INSERT INTO `order_clearance_role` (`id`, `name`, `created_at`, `updated_at`)
+            VALUES (UNHEX(\'019619298b5671ae9570af6538ca375e\'), \'User\', now(), NULL);'
+        );
     }
 
     public function updateDestructive(Connection $connection): void

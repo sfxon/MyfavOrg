@@ -79,6 +79,8 @@
         "sw-customer-detail-base": {
             "assignedMyfavOrgAclRoleLabel": "Zugewiesene Berechtigungs-Rolle",
             "assignedCompanyLabel": "Zugewiesene Firma",
+            "assignedOrderClearanceGroupLabel": "Zugewiesene Bestellfreigabe Gruppe",
+            "assignedOrderClearanceRoleLabel": "Zugewiesene Bestellfreigabe Rolle",
             "cardTitle": "Firma"
         }
     },

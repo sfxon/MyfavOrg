@@ -68,6 +68,35 @@
                     </div>
 
                     <div class="row g-2">
+                        <div class="form-group col-sm-6">
+                            <label for="orderClearanceGroupId">{{ 'myfav.org.employee.formFieldOrderClearanceGroupId'|trans|sw_sanitize }}</label>
+                            <select
+                                class="form-select"
+                                name="orderClearanceGroupId"
+                                id="orderClearanceGroupId"
+                                autocomplete="off">
+                                <option value=""></option>
+                                {% for orderClearanceGroup in orderClearanceGroups %}
+                                    <option value="{{ orderClearanceGroup.id }}"{% if customer.orderClearanceGroupId == orderClearanceGroup.id %} selected="selected"{% endif %}>{{ orderClearanceGroup.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="orderClearanceRoleId">{{ 'myfav.org.employee.formFieldOrderClearanceRoleId'|trans|sw_sanitize }}</label>
+                            <select
+                                class="form-select"
+                                name="orderClearanceRoleId"
+                                id="orderClearanceRoleId"
+                                autocomplete="off">
+                                <option value=""></option>
+                                {% for orderClearanceRole in orderClearanceRoles %}
+                                    <option value="{{ orderClearanceRole.id }}"{% if customer.orderClearanceRoleId == orderClearanceRole.id %} selected="selected"{% endif %}>{{ orderClearanceRole.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-2">
                         {% set emailError = false %}
                         {% set emailErrorMessage = '' %}
 

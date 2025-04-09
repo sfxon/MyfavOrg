@@ -3,6 +3,8 @@
 namespace Myfav\Org\Service;
 
 use Doctrine\DBAL\Connection;
+use Myfav\Org\Service\AclRoleService;
+use Myfav\Org\Service\OrderClearanceGroupService;
 use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Shopware\Core\Checkout\Customer\CustomerDefinition;
 use Shopware\Core\Checkout\Customer\Event\CustomerLoginEvent;
@@ -46,10 +48,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class CustomerService
 {
     public function __construct(
+        private readonly AclRoleService $aclRoleService,
         private readonly Connection $connection,
         private readonly EntityRepository $customerRepository,
         private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly NumberRangeValueGeneratorInterface $numberRangeValueGenerator,
+        private readonly OrderClearanceGroupService $orderClearanceGroupService,
         private readonly DataValidator $validator,
         private readonly SystemConfigService $systemConfigService,)
     {
@@ -103,10 +107,37 @@ class CustomerService
         if($company !== null) {
             $companyId = $company->getId();
         }
-        
+
+        // Check that aclRoleId and orderClearanceGroup can be set by this company.
+        $myfavOrgAclRole = $this->aclRoleService->loadRole($context, $dataBag->get('myfavOrgAclRoleId'), $company->getId());
+
+        if(null === $myfavOrgAclRole) {
+            throw new \Exception('This Role cannot be used by this Company.');
+        }
+
+        $orderClearanceGroupId = trim($dataBag->get('orderClearanceGroupId', null));
+
+        if('' !== $orderClearanceGroupId) {
+            $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId, $company->getId());
+
+            if(null === $orderClearanceGroup) {
+                throw new \Exception('This Order Clearance Gruop cannot be used by this Company.');
+            }
+        } else {
+            $orderClearanceGroupId = null;
+        }
+
+        $orderClearanceRoleId = trim($dataBag->get('orderClearanceRoleId', null));
+
+        if('' === $orderClearanceRoleId) {
+            $orderClearanceRoleId = null;
+        }
+
         $dataBag->add(['myfavOrgCustomerExtension' => [
             'myfavOrgCompanyId' => $companyId,
             'myfavOrgAclRoleId' => $dataBag->get('myfavOrgAclRoleId'),
+            'orderClearanceGroupId' => $orderClearanceGroupId,
+            'orderClearanceRoleId' => $orderClearanceRoleId,
         ]]);
 
         $writeContext = clone $salesChannelContext->getContext();
@@ -290,13 +321,44 @@ class CustomerService
             $addresses[] = $shippingAddress;
         }
 
-        // Set customer id.
+        // Set customer data.
         $customerDataBag = new DataBag();
         $customerDataBag->add(['id' => $customer->getId()]);
         $customerDataBag->add(['active' => $dataBag->get('active')]);
         $customerDataBag->add(['groupId' => $dataBag->get('groupId')]);
-        $customerDataBag->add(['myfavOrgEmployeeExtension' => 
-            [ 'myfavOrgAclRoleId' => $dataBag->get('myfavOrgAclRoleId') ]
+
+        // Check that aclRoleId and orderClearanceGroup can be set by this company.
+        $myfavOrgAclRole = $this->aclRoleService->loadRole($context, $dataBag->get('myfavOrgAclRoleId'), $company->getId());
+
+        if(null === $myfavOrgAclRole) {
+            throw new \Exception('This Role cannot be used by this Company.');
+        }
+
+        $orderClearanceGroupId = trim($dataBag->get('orderClearanceGroupId', null));
+
+        if('' !== $orderClearanceGroupId) {
+            $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId, $company->getId());
+
+            if(null === $orderClearanceGroup) {
+                throw new \Exception('This Order Clearance Gruop cannot be used by this Company.');
+            }
+        } else {
+            $orderClearanceGroupId = null;
+        }
+
+        $orderClearanceRoleId = trim($dataBag->get('orderClearanceRoleId', null));
+
+        if('' === $orderClearanceRoleId) {
+            $orderClearanceRoleId = null;
+        }
+
+        $customerDataBag->add([
+            'myfavOrgCustomerExtension' => [
+                'id' => $customer->getExtensions()['myfavOrgCustomerExtension']['id'],
+                'myfavOrgAclRoleId' => $dataBag->get('myfavOrgAclRoleId'),
+                'orderClearanceGroupId' => $orderClearanceGroupId,
+                'orderClearanceRoleId' => $orderClearanceRoleId, 
+            ]
         ]);
         $customerDataBag->add(['salutationId' => $dataBag->get('salutationId')]);
         $customerDataBag->add(['title' => $dataBag->get('title')]);
@@ -311,7 +373,7 @@ class CustomerService
         $customerDataBag->add(['addresses' => $addresses]);
 
         // Update user account, if set.
-        // try {
+        try {
             // Validate email only if it has been changed.
             if($dataBag->get('email') != $customer->getEmail()) {
                 $this->validateEmailField($customerDataBag, $salesChannelContext);
@@ -321,14 +383,13 @@ class CustomerService
             $this->customerRepository->update([
                 $customerDataBag->all()
             ], $context);
-        
-        /*
+
+            //dd($customerDataBag->all());
         } catch(\Exception $e) {
             $violations = $e->getViolations();
             $hasErrors = true;
             $errors = $violations;
         }
-            */
 
         // Update password, if it is set.
         if(!$hasErrors) {

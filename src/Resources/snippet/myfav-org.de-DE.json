@@ -8,6 +8,7 @@
                 "aclTableHeadingUpdate": "Aktualisieren",
                 "aclTableHeadingDelete": "Löschen",
                 "aclTableAttributeEmployee": "Mitarbeiter",
+                "aclTableAttributeOrderclearancegroup": "Bestellfreigabe Gruppen",
                 "aclTableAttributeRole": "Rollen",
                 "aclTableAttributeSw": {
                     "profile": "Account Profil",
@@ -60,6 +61,8 @@
                 "formFieldLanguage": "Sprache",
                 "formFieldLastName": "Nachname",
                 "formFieldMyfavOrgAclRole": "ACL Rolle",
+                "formFieldOrderClearanceGroupId": "Bestellfreigabe Gruppe",
+                "formFieldOrderClearanceRoleId": "Bestellfreigabe Rolle",
                 "formFieldPassword": "Passwort",
                 "formFieldPosition": "Position",
                 "formFieldSalutation": "Anrede",

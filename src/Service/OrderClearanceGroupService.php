@@ -5,7 +5,9 @@ namespace Myfav\Org\Service;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\EntitySearchResult;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Sorting\FieldSorting;
 use Shopware\Core\Framework\Uuid\Uuid;
 
 class OrderClearanceGroupService
@@ -20,13 +22,14 @@ class OrderClearanceGroupService
      * @param  Context $context
      * @param  string $name
      */
-    public function createOrderClearanceGroup(Context $context, string $name,): string
+    public function createOrderClearanceGroup(Context $context, string $name, string $companyId): string
     {
         $id = Uuid::randomHex();
         $this->orderClearanceGroupRepository->create([
             [
                 'id' => $id,
                 'name' => $name,
+                'myfavOrgCompanyId' => $companyId
             ]
         ], $context);
 
@@ -52,13 +55,16 @@ class OrderClearanceGroupService
     /**
      * loadOrderClearanceGroup
      *
-     * @param  mixed $context
-     * @param  mixed $orderClearanceGroupId
+     * @param  Context $context
+     * @param  string $orderClearanceGroupId
+     * @param  string $companyId
      * @return mixed
      */
-    public function loadOrderClearanceGroup(Context $context, string $orderClearanceGroupId): mixed
+    public function loadOrderClearanceGroup(Context $context, string $orderClearanceGroupId, string $companyId): mixed
     {
-        $criteria = new Criteria([$orderClearanceGroupId]);
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('id', $orderClearanceGroupId));
+        $criteria->addFilter(new EqualsFilter('myfavOrgCompanyId', $companyId));
         $orderClearanceGroups = $this->orderClearanceGroupRepository->search($criteria, $context)->first();
         return $orderClearanceGroups;
     }
@@ -67,11 +73,15 @@ class OrderClearanceGroupService
      * loadList
      *
      * @param  Context $context
+     * @param  string $companyId
      * @return EntitySearchResult
      */
-    public function loadList(Context $context): EntitySearchResult
+    public function loadList(Context $context, string $companyId): EntitySearchResult
     {
-        $orderClearanceGroups = $this->orderClearanceGroupRepository->search(new Criteria(), $context);
+        $criteria = new Criteria();
+        $criteria->addFilter(new EqualsFilter('myfavOrgCompanyId', $companyId));
+        $criteria->addSorting(new FieldSorting('name', FieldSorting::ASCENDING));
+        $orderClearanceGroups = $this->orderClearanceGroupRepository->search($criteria, $context);
         return $orderClearanceGroups;
     }
 

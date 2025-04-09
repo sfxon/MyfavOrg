@@ -47,6 +47,8 @@
             <argument type="service" id="Myfav\Org\Storefront\Page\Employee\EmployeePageLoader" />
             <argument type="service" id="Myfav\Org\Service\LanguageService" />
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService" />
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceRoleService" />
             <argument type="service" id="Myfav\Org\Service\SalutationService" />
             <argument type="service" id="router"/>
             <call method="setContainer">
@@ -59,6 +61,7 @@
 
         <service id="Myfav\Org\Storefront\Controller\OrderClearanceGroupController" public="true">
             <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\OrderClearanceGroup\OrderClearanceGroupPageLoader"/>
             <argument type="service" id="router"/>
             <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService"/>
@@ -101,10 +104,6 @@
 
         <service id="Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition">
             <tag name="shopware.entity.definition" entity="order_clearance_group" />
-        </service>
-
-        <service id="Myfav\Org\Core\Content\OrderClearanceGroupCustomer\OrderClearanceGroupCustomerDefinition">
-            <tag name="shopware.entity.definition" entity="order_clearance_group_customer" />
         </service>
 
         <service id="Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition">
@@ -158,10 +157,12 @@
         </service>
 
         <service id="Myfav\Org\Service\CustomerService" public="true">
+            <argument type="service" id="Myfav\Org\Service\AclRoleService" />
             <argument type="service" id="Doctrine\DBAL\Connection"/>
             <argument type="service" id="customer.repository" />
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService"/>
             <argument type="service" id="Shopware\Core\System\NumberRange\ValueGenerator\NumberRangeValueGeneratorInterface"/>
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService" />
             <argument type="service" id="Shopware\Core\Framework\Validation\DataValidator"/>
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
         </service>
@@ -179,6 +180,10 @@
 
         <service id="Myfav\Org\Service\OrderClearanceGroupService" public="true">
             <argument type="service" id="order_clearance_group.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\OrderClearanceRoleService" public="true">
+            <argument type="service" id="order_clearance_role.repository" />
         </service>
 
         <service id="Myfav\Org\Service\SalutationService" public="true">

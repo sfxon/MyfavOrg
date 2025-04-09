@@ -9,16 +9,16 @@ class OrderClearanceRoleEntity extends Entity
 {
     use EntityIdTrait;
 
-    protected ?string $technicalName;
+    protected ?string $name;
 
-    // $technicalName
-    public function getTechnicalName(): ?string
+    // $name
+    public function getName(): ?string
     {
-        return $this->technicalName;
+        return $this->name;
     }
 
-    public function setTechnicalName(?string $technicalName): void
+    public function setName(?string $name): void
     {
-        $this->technicalName = $technicalName;
+        $this->name = $name;
     }
 }

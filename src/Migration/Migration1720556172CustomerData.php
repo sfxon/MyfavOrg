@@ -33,6 +33,8 @@ class Migration1720556172CustomerData extends MigrationStep
             `customer_id` BINARY(16),
             `myfav_org_company_id` BINARY(16) DEFAULT NULL,
             `myfav_org_acl_role_id` BINARY(16) DEFAULT NULL,
+            `order_clearance_group_id` BINARY(16) DEFAULT NULL,
+            `order_clearance_role_id` BINARY(16) DEFAULT NULL,
             `created_at` DATETIME(3) NOT NULL,
             `updated_at` DATETIME(3) NULL,
             PRIMARY KEY (`id`)

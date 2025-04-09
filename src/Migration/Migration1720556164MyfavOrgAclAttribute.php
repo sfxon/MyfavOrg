@@ -55,7 +55,12 @@ class Migration1720556164MyfavOrgAclAttribute extends MigrationStep
 
             (UNHEX(\'0195c7bdca66702d9b1b992871646d0f\'), \'sw.payment.methods.update\', UNHEX(\'0195c7badad37025a6a46a9139a735c9\'), \'2025-03-16 17:16:18.000\', NULL),
 
-            (UNHEX(\'0195c7be1ee372959f527b318514deb6\'), \'sw.orders.update\', UNHEX(\'0195c7b916ac71f5906813e9693a0bfb\'), \'2025-03-16 17:16:18.000\', NULL)
+            (UNHEX(\'0195c7be1ee372959f527b318514deb6\'), \'sw.orders.update\', UNHEX(\'0195c7b916ac71f5906813e9693a0bfb\'), \'2025-03-16 17:16:18.000\', NULL),
+
+            (UNHEX(\'019618e532be713ba2f5a04a55187f5d\'), \'orderclearancegroup.create\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:15:56.000\', NULL),
+            (UNHEX(\'019618e54cbf7128b964d553808b40d0\'), \'orderclearancegroup.read\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:15:56.000\', NULL),
+            (UNHEX(\'019618e55e5c736297d7a3b45097d1b4\'), \'orderclearancegroup.update\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:16:06.000\', NULL),
+            (UNHEX(\'019618e56ce17295b39320c603414047\'), \'orderclearancegroup.delete\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:16:18.000\', NULL),
             ;');
     }
 

@@ -4,6 +4,8 @@ namespace Myfav\Org\Core\Content\MyfavOrgCustomerData;
 
 use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition;
 use Myfav\Org\Core\Content\MyfavOrgAclRole\MyfavOrgAclRoleDefinition;
+use Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition;
+use Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition;
 use Shopware\Core\Checkout\Customer\CustomerDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
@@ -30,6 +32,8 @@ class MyfavOrgCustomerDataDefinition extends EntityDefinition
             (new FkField('customer_id', 'customerId', CustomerDefinition::class)),
             (new FkField('myfav_org_company_id', 'myfavOrgCompanyId', MyfavOrgCompanyDefinition::class)),
             (new FkField('myfav_org_acl_role_id', 'myfavOrgAclRoleId', MyfavOrgAclRoleDefinition::class)),
+            (new FkField('order_clearance_group_id', 'orderClearanceGroupId', OrderClearanceGroupDefinition::class)),
+            (new FkField('order_clearance_role_id', 'orderClearanceRoleId', OrderClearanceRoleDefinition::class)),
             new OneToOneAssociationField('customer', 'customer_id', 'id', CustomerDefinition::class, false)
         ]);
     }

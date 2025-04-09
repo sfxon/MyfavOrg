@@ -79,6 +79,8 @@
         "sw-customer-detail-base": {
             "assignedMyfavOrgAclRoleLabel": "Assigned ACL Role",
             "assignedCompanyLabel": "Assigned Company",
+            "assignedOrderClearanceGroupLabel": "Assigned Order Clearance Group",
+            "assignedOrderClearanceRoleLabel": "Assigned Order Clearance Role",
             "cardTitle": "Company"
         }
     },

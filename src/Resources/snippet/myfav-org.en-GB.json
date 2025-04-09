@@ -8,6 +8,7 @@
                 "aclTableHeadingUpdate": "Update",
                 "aclTableHeadingDelete": "Delete",
                 "aclTableAttributeEmployee": "Employee",
+                "aclTableAttributeOrderclearancegroup": "Order Clearance Groups",
                 "aclTableAttributeRole": "Role",
                 "aclTableAttributeSw": {
                     "profile": "Account Profile",
@@ -60,6 +61,8 @@
                 "formFieldLanguage": "Language",
                 "formFieldLastName": "Last Name",
                 "formFieldMyfavOrgAclRole": "ACL Role",
+                "formFieldOrderClearanceGroupId": "Order Clearance Group",
+                "formFieldOrderClearanceRoleId": "Order Clearance Role",
                 "formFieldPassword": "Password",
                 "formFieldPosition": "Position",
                 "formFieldSalutation": "Salutation",

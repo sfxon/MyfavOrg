@@ -40,7 +40,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.create', 'myfav.org.aclrole.list');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
@@ -64,7 +65,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.read', 'frontend.account.home.page');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
@@ -89,7 +91,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.delete', 'myfav.org.aclrole.list');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
@@ -124,7 +127,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.update', 'myfav.org.aclrole.list');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
@@ -165,7 +169,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.create', 'frontend.account.home.page');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
@@ -191,7 +196,8 @@ class AclRoleController extends StorefrontController
     {
         $this->accessRightsService->validate($salesChannelContext, 'role.update', 'myfav.org.aclrole.list');
 
-        // Load company.
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {

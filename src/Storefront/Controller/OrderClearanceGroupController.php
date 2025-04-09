@@ -4,6 +4,7 @@ namespace Myfav\Org\Storefront\Controller;
 
 use Myfav\Org\Service\AccessRightsService;
 use Myfav\Org\Service\OrderClearanceGroupService;
+use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Myfav\Org\Storefront\Page\OrderClearanceGroup\OrderClearanceGroupPageLoader;
 use Shopware\Core\Content\Media\Pathname\PathnameStrategy\PathnameStrategyInterface;
 use Shopware\Core\Framework\Context;
@@ -29,6 +30,7 @@ class OrderClearanceGroupController extends StorefrontController
      */
     public function __construct(
         private readonly AccessRightsService $accessRightsService,
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly OrderClearanceGroupPageLoader $orderClearanceGroupPageLoader,
         private readonly RouterInterface $router,
         private readonly OrderClearanceGroupService $orderClearanceGroupService,
@@ -40,7 +42,17 @@ class OrderClearanceGroupController extends StorefrontController
     public function createOrderClearanceGroup(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.create', 'myfav.org.orderclearancegroup.list');
-        $this->orderClearanceGroupService->createOrderClearanceGroup($context, $request->request->get('name'));
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
+        $this->orderClearanceGroupService->createOrderClearanceGroup($context, $request->request->get('name'), $company->getId());
         $url = $this->router->generate('myfav.org.orderclearancegroup.list', [ 'successMessage'=> 'createdOrderClearanceGroup' ]);
         return new RedirectResponse($url);
     }
@@ -48,9 +60,19 @@ class OrderClearanceGroupController extends StorefrontController
     #[Route(path: '/myfav/org/order-clearance-group/list', name: 'myfav.org.orderclearancegroup.list', methods: ['GET'], defaults: ['XmlHttpRequest' => 'true'])]
     public function listOrderClearanceGroup(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
-        $this->accessRightsService->validate($salesChannelContext, 'orderclearancegropu', 'frontend.account.home.page');
+        $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.read', 'frontend.account.home.page');
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->orderClearanceGroupPageLoader->load($request, $salesChannelContext);
-        $orderClearanceGroups = $this->orderClearanceGroupService->loadList($context);
+        $orderClearanceGroups = $this->orderClearanceGroupService->loadList($context, $company->getId());
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/order-clearance-group/index.html.twig', [
             'successMessage' => $request->query->get('successMessage'),
@@ -66,9 +88,29 @@ class OrderClearanceGroupController extends StorefrontController
     public function deleteOrderClearanceGroup(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.delete', 'myfav.org.orderclearancegroup.list');
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
+        // Check, that this orderClearanceGroup really exists for this company.
         $orderClearanceGroupId = $request->query->get('orderClearanceGroupId');
+        $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId, $company->getId());
+
+        if(null === $orderClearanceGroup) {
+            $url = $this->router->generate('myfav.org.orderclearancegroup.list');
+            return new RedirectResponse($url);
+        }
+
+        // Delete entry.
         $this->orderClearanceGroupService->deleteOrderClearanceGroup($context, $orderClearanceGroupId);
 
+        // Redirect to index page.
         $url = $this->router->generate('myfav.org.orderclearancegroup.list', [ 'successMessage'=> 'deletedOrderClearanceGroup' ]);
         return new RedirectResponse($url);
     }
@@ -77,26 +119,50 @@ class OrderClearanceGroupController extends StorefrontController
     public function editOrderClearanceGroup(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.update', 'myfav.org.orderclearancegroup.list');
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->orderClearanceGroupPageLoader->load($request, $salesChannelContext);
         $orderClearanceGroupId = $request->query->get('orderClearanceGroupId');
-        $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId);
+        $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId, $company->getId());
 
-        // Todo: Security check. Check if this role belongs to this account!
+        // Check, that this orderClearanceGroup really exists for this company.
+        if(null === $orderClearanceGroup) {
+            $url = $this->router->generate('myfav.org.orderclearancegroup.list');
+            return new RedirectResponse($url);
+        }
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/order-clearance-group/edit.html.twig', [
             'page' => $page,
             'orderClearanceGroup' => $orderClearanceGroup,
             'editMode' => 'edit',
-            'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'role.create'),
-            'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'role.update'),
-            'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'role.delete'),
+            'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.create'),
+            'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.update'),
+            'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.delete'),
         ]);
     }
 
     #[Route(path: '/myfav/org/order-clearance-group/new', name: 'myfav.org.orderclearancegroup.new', methods: ['GET'], defaults: ['XmlHttpRequest' => 'true'])]
-    public function newRole(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
+    public function newOrderClearanceGroup(Context $context, Request $request, SalesChannelContext $salesChannelContext): Response
     {
         $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.create', 'frontend.account.home.page');
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
         $page = $this->orderClearanceGroupPageLoader->load($request, $salesChannelContext);
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/order-clearance-group/edit.html.twig', [
@@ -109,12 +175,32 @@ class OrderClearanceGroupController extends StorefrontController
     }
 
     #[Route(path: '/myfav/org/order-clearance-group/update', name: 'myfav.org.orderclearancegroup.update', methods: ['POST'], defaults: ['XmlHttpRequest' => 'true'])]
-    public function updateRole(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
+    public function updateOrderClearanceGruop(Request $request, Context $context, SalesChannelContext $salesChannelContext): RedirectResponse
     {
         $this->accessRightsService->validate($salesChannelContext, 'orderclearancegroup.update', 'myfav.org.orderclearancegroup.list');
+
+        // Load company - this is also used to validate, that this is a company account.
+        // Only company accounts can use the org modules.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company === null) {
+            $url = $this->router->generate('myfav.org.aclrole.list');
+            return new RedirectResponse($url);
+        }
+
+        // Check, that this orderClearanceGroup really exists for this company.
         $orderClearanceGroupId = $request->query->get('orderClearanceGroupId');
+        $orderClearanceGroup = $this->orderClearanceGroupService->loadOrderClearanceGroup($context, $orderClearanceGroupId, $company->getId());
+
+        if(null === $orderClearanceGroup) {
+            $url = $this->router->generate('myfav.org.orderclearancegroup.list');
+            return new RedirectResponse($url);
+        }
+
+        // Update entry.
         $this->orderClearanceGroupService->updateOrderClearanceGroup($context, $orderClearanceGroupId, $request->request->get('name'));
 
+        // Redirect to list and show success message.
         $url = $this->router->generate('myfav.org.orderclearancegroup.list', [ 'successMessage'=> 'updatedOrderClearanceGroup' ]);
         return new RedirectResponse($url);
     }

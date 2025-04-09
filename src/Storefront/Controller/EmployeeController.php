@@ -10,6 +10,8 @@ use Myfav\Org\Service\CountryService;
 use Myfav\Org\Service\CustomerService;
 use Myfav\Org\Service\LanguageService;
 use Myfav\Org\Service\MyfavSalesChannelContextService;
+use Myfav\Org\Service\OrderClearanceGroupService;
+use Myfav\Org\Service\OrderClearanceRoleService;
 use Myfav\Org\Service\SalutationService;
 use Myfav\Org\Storefront\Page\Employee\EmployeePageLoader;
 use Shopware\Core\Framework\Context;
@@ -39,6 +41,8 @@ class EmployeeController extends StorefrontController
         private readonly EmployeePageLoader $employeePageLoader,
         private readonly LanguageService $languageService,
         private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
+        private readonly OrderClearanceGroupService $orderClearanceGroupService,
+        private readonly OrderClearanceRoleService $orderClearanceRoleService,
         private readonly SalutationService $salutationService,
         private readonly RouterInterface $router,
     )
@@ -280,9 +284,9 @@ class EmployeeController extends StorefrontController
         Request $request,
         SalesChannelContext $salesChannelContext,
         $errors = null,
-        mixed $customer,
-        mixed $company,
-        bool $useAlternativeShippingAddress): Response
+        mixed $customer = null,
+        mixed $company = null,
+        bool $useAlternativeShippingAddress = false): Response
     {
         $page = $this->employeePageLoader->load($request, $salesChannelContext);
 
@@ -295,7 +299,7 @@ class EmployeeController extends StorefrontController
         }
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/edit.html.twig', [
-            'aclRoles' => $this->aclRoleService->loadList($context),
+            'aclRoles' => $this->aclRoleService->loadList($context, $company->getId()),
             'addresses' => $this->addressService->loadList($context, $salesChannelContext->getCustomer()->getId()),
             'countries' => $this->countryService->loadSalesChannelCountries($salesChannelContext),
             'company' => $company,
@@ -305,6 +309,8 @@ class EmployeeController extends StorefrontController
             'errors' => $errors,
             'languages' => $this->languageService->loadList($context),
             'page' => $page,
+            'orderClearanceGroups' => $this->orderClearanceGroupService->loadList($context, $company->getId()),
+            'orderClearanceRoles' => $this->orderClearanceRoleService->loadList($context),
             'salutations' => $this->salutationService->loadList($context),
             'useAlternativeShippingAddress' => $useAlternativeShippingAddress,
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.create'),
@@ -336,7 +342,7 @@ class EmployeeController extends StorefrontController
         }
 
         return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/employee/new.html.twig', [
-            'aclRoles' => $this->aclRoleService->loadList($context),
+            'aclRoles' => $this->aclRoleService->loadList($context, $company->getId()),
             'countries' => $this->countryService->loadSalesChannelCountries($salesChannelContext),
             'company' => $company,
             'editMode' => 'new',
@@ -344,6 +350,8 @@ class EmployeeController extends StorefrontController
             'errors' => $errors,
             'languages' => $this->languageService->loadList($context),
             'page' => $page,
+            'orderClearanceGroups' => $this->orderClearanceGroupService->loadList($context, $company->getId()),
+            'orderClearanceRoles' => $this->orderClearanceRoleService->loadList($context),
             'salutations' => $this->salutationService->loadList($context),
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.create'),
             'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'employee.update'),

@@ -65,7 +65,7 @@ class OrderClearanceRoleDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
-            (new StringField('technicalName', 'technicalName'))->addFlags(new Required()),
+            (new StringField('name', 'name'))->addFlags(new Required()),
         ]);
     }
 }

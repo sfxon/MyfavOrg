@@ -24,5 +24,25 @@
                 :disabled="!customerEditMode"
             ></sw-entity-single-select>
         </sw-container>
+
+        <sw-container columns="1fr">
+            <sw-entity-single-select
+                :criteria="orderClearanceGroupCriteria"
+                entity="order_clearance_group"
+                :label="$tc('myfav-org-company.sw-customer-detail-base.assignedOrderClearanceGroupLabel')"
+                v-model:value="orderClearanceGroupId"
+                :disabled="!customerEditMode"
+            ></sw-entity-single-select>
+        </sw-container>
+
+        <sw-container columns="1fr">
+            <sw-entity-single-select
+                :criteria="orderClearanceRoleCriteria"
+                entity="order_clearance_role"
+                :label="$tc('myfav-org-company.sw-customer-detail-base.assignedOrderClearanceRoleLabel')"
+                v-model:value="orderClearanceRoleId"
+                :disabled="!customerEditMode"
+            ></sw-entity-single-select>
+        </sw-container>
     </sw-card>
 {% endblock %}
