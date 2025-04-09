@@ -1,9 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Myfav\Org\Core\Content\MyfavOrgAclRole;
+namespace Myfav\Org\Core\Content\OrderClearanceLog;
 
-use Myfav\Org\Core\Content\MyfavOrgCompany\MyfavOrgCompanyDefinition;
-use Myfav\Org\Core\Content\MyfavOrgAclRoleAttribute\MyfavOrgAclRoleAttributeDefinition;
+use Shopware\Core\Checkout\Customer\CustomerDefinition;
+use Shopware\Core\Checkout\Order\OrderDefinition;
+use Shopware\Core\System\StateMachine\Aggregation\StateMachineState\StateMachineStateDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
@@ -12,12 +13,11 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\IdField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToOneAssociationField;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\OneToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 
-class MyfavOrgAclRoleDefinition extends EntityDefinition
+class OrderClearanceLogDefinition extends EntityDefinition
 {
-    public const ENTITY_NAME = 'myfav_org_acl_role';
+    public const ENTITY_NAME = 'order_clearance_log';
 
     /**
      * getEntityName
@@ -36,7 +36,7 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
      */
     public function getEntityClass(): string
     {
-        return MyfavOrgAclRoleEntity::class;
+        return OrderClearanceLogEntity::class;
     }
 
     /**
@@ -46,7 +46,7 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
      */
     public function getCollectionClass(): string
     {
-        return MyfavOrgAclRoleCollection::class;
+        return OrderClearanceLogCollection::class;
     }
 
     /**
@@ -58,11 +58,14 @@ class MyfavOrgAclRoleDefinition extends EntityDefinition
     {
         return new FieldCollection([
             (new IdField('id', 'id'))->addFlags(new Required(), new PrimaryKey(), new ApiAware()),
-            (new FkField('myfav_org_company_id', 'myfavOrgCompanyId', MyfavOrgCompanyDefinition::class)),
-            (new StringField('name', 'name'))->addFlags(new Required()),
+            (new FkField('order_id', 'orderId', OrderDefinition::class)),
+            (new FkField('new_state_machine_state_id', 'newStateMachineStateId', StateMachineStateDefinition::class)),
+            (new StringField('comment', 'comment'))->addFlags(new Required()),
+            (new FkField('edited_by_customer_id', 'editedByCustomerId', CustomerDefinition::class)),
 
-            new ManyToOneAssociationField('myfavOrgCompany', 'myfav_org_company_id', MyfavOrgCompanyDefinition::class, 'id'),
-            new OneToManyAssociationField('myfavOrgAclRoleAttributes', MyfavOrgAclRoleAttributeDefinition::class, 'myfav_org_acl_role_id'),
+            new ManyToOneAssociationField('order', 'order_id', OrderDefinition::class, 'id'),
+            new ManyToOneAssociationField('newStateMachineState', 'new_state_machine_state_id', StateMachineStateDefinition::class, 'id'),
+            new ManyToOneAssociationField('editedByCustomer', 'editedByCustomerId', CustomerDefinition::class, 'id'),
         ]);
     }
 }

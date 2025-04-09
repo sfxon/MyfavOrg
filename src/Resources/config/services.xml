@@ -102,8 +102,16 @@
             <tag name="shopware.entity.definition" entity="myfav_org_customer_data" />
         </service>
 
+        <service id="Myfav\Org\Core\Content\MyfavOrgOrderData\MyfavOrgOrderDataDefinition">
+            <tag name="shopware.entity.definition" entity="myfav_org_order_data" />
+        </service>
+
         <service id="Myfav\Org\Core\Content\OrderClearanceGroup\OrderClearanceGroupDefinition">
             <tag name="shopware.entity.definition" entity="order_clearance_group" />
+        </service>
+
+        <service id="Myfav\Org\Core\Content\OrderClearanceLog\OrderClearanceLogDefinition">
+            <tag name="shopware.entity.definition" entity="order_clearance_log" />
         </service>
 
         <service id="Myfav\Org\Core\Content\OrderClearanceRole\OrderClearanceRoleDefinition">
@@ -112,6 +120,10 @@
 
         <!-- Entity Extensions -->
         <service id="Myfav\Org\Extension\Checkout\Customer\MyfavOrgCustomerExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+
+        <service id="Myfav\Org\Extension\Checkout\Order\MyfavOrgOrderExtension">
             <tag name="shopware.entity.extension"/>
         </service>
 
