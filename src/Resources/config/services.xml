@@ -211,7 +211,7 @@
 
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
-            <argument type="service" id="order.repository" />
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
         </service>
     </services>
 </container>

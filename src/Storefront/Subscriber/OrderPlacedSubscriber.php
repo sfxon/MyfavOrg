@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Myfav\Org\Storefront\Subscriber;
 
+use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Shopware\Core\Checkout\Cart\Order\CartConvertedEvent;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 readonly class OrderPlacedSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly EntityRepository $orderRepository,) 
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,)
     {
     }
 
@@ -36,32 +35,50 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
      */
     public function onCartConvertedEvent(CartConvertedEvent $event): void
     {
-        /*
+        $myfavOrgOrderExtension = [];
         $salesChannelContext = $event->getSalesChannelContext();
-        $extensions = $salesChannelContext->getExtensions();
-        $myfavOrgEmployee = null;
-        $convertedCart = $event->getConvertedCart();
 
-        if(isset($extensions['myfavOrgEmployee'])) {
-            $myfavOrgEmployee = $extensions['myfavOrgEmployee'];
+        // Load company.
+        $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
+
+        if($company !== null) {
+            $companyId = $company->getId();
+            $myfavOrgOrderExtension['myfavOrgCompanyId'] = $companyId;
         }
 
-        // If employee is set in salesChannelContext - write employeeData into customFields before they get saved.
-        if($myfavOrgEmployee !== null)
-        {
-            $convertedCart['customFields']['myfav_org_order_data_employee_id'] = $myfavOrgEmployee->getId();
-            $convertedCart['customFields']['myfav_org_order_data_customer_id'] = $myfavOrgEmployee->getCustomerId();
-            $convertedCart['customFields']['myfav_org_order_data_salutation_id'] = $myfavOrgEmployee->getSalutationId();
-            $convertedCart['customFields']['myfav_org_order_data_salutation'] = $myfavOrgEmployee->getSalutation()->getDisplayName();
-            $convertedCart['customFields']['myfav_org_order_data_firstname'] = $myfavOrgEmployee->getFirstName();
-            $convertedCart['customFields']['myfav_org_order_data_lastname'] = $myfavOrgEmployee->getLastName();
-            $convertedCart['customFields']['myfav_org_order_data_position'] = $myfavOrgEmployee->getPosition();
-            $convertedCart['customFields']['myfav_org_order_data_email'] = $myfavOrgEmployee->getEmail();
-            $convertedCart['customFields']['myfav_org_order_data_title'] = $myfavOrgEmployee->getTitle();
+        // Get orderClearanceGroupId from customer extension.
+        $customer = $salesChannelContext->getCustomer();
 
-            // Modifizierte Daten zurücksetzen
+        if($customer !== null) {
+            $customerExtensions = $customer->getExtensions();
+
+            if(isset($customerExtensions['myfavOrgCustomerExtension'])) {
+                $customerExtension = $customerExtensions['myfavOrgCustomerExtension'];
+
+                // Only save orderClearanceGroup, if this order is to be cleared/approved.
+                // Id 0196192887a871f38d43089598db212b is management. A manager should not have
+                // to clear his own order.
+                if(
+                    isset($customerExtension['orderClearanceGroupId']) &&
+                    $customerExtension['orderClearanceGroupId'] !== null &&
+                    isset($customerExtension['orderClearanceRoleId']) &&
+                    $customerExtension['orderClearanceRoleId'] != '0196192887a871f38d43089598db212b' &&
+                    $customerExtension['orderClearanceRoleId'] != null)
+                {
+                    $orderClearanceGroupId = $customerExtension['orderClearanceGroupId'];
+
+                    if($orderClearanceGroupId !== null) {
+                        $myfavOrgOrderExtension['orderClearanceGroupId'] = $orderClearanceGroupId;
+                    }
+                }
+            }
+        }
+
+        // Add additional data to order.
+        if(count($myfavOrgOrderExtension) > 0) {
+            $convertedCart = $event->getConvertedCart();
+            $convertedCart['extensions']['myfavOrgOrderExtension'] = $myfavOrgOrderExtension;
             $event->setConvertedCart($convertedCart);
         }
-        */
     }
 }
