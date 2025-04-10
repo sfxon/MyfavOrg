@@ -3,16 +3,18 @@
 {% block layout_header_search_toggle %}
     {{ parent() }}
 
-    <div class="col-auto">
-        <div class="header-myfav-org-notification">
-            <a class="btn header-actions-btn"
-                href="{{ path('myfav.org.order.approval.list') }}"
-                title="{{ 'myfav.org.header.notification'|trans|striptags }}"
-                aria-label="{{ 'myfav.org.header.notification'|trans|striptags }}">
-                <span class="header-wishlist-icon">
-                    {% sw_icon 'bell-bell' %}
-                </span>
-            </a>
+    {% if context.customer.extensions.myfavOrgCustomerExtension.orderClearanceRoleId == '0196192887a871f38d43089598db212b' %}
+        <div class="col-auto">
+            <div class="header-myfav-org-notification">
+                <a class="btn header-actions-btn"
+                    href="{{ path('myfav.org.order.approval.list') }}"
+                    title="{{ 'myfav.org.header.notification'|trans|striptags }}"
+                    aria-label="{{ 'myfav.org.header.notification'|trans|striptags }}">
+                    <span class="header-wishlist-icon">
+                        {% sw_icon 'bell-bell' %}
+                    </span>
+                </a>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}

@@ -47,10 +47,64 @@ class MyfavSalesChannelContextService
      * getCustomer
      *
      * @param  SalesChannelContext $salesChannelContext
-     * @return CustomerEntity
+     * @return null|CustomerEntity
      */
     public function getCustomer(SalesChannelContext $salesChannelContext): ?CustomerEntity
     {
         return $salesChannelContext->getCustomer();
+    }
+
+    /**
+     * getOrderClearanceGroupId
+     *
+     * @param  SalesChannelContext $salesChannelContext
+     * @return null|string
+     */
+    public function getOrderClearanceGroupId(SalesChannelContext $salesChannelContext): ?string
+    {
+        $customer = $salesChannelContext->getCustomer();
+
+        if($customer === null) {
+            return null;
+        }
+
+        $extensions = $customer->getExtensions();
+
+        if(
+            isset($extensions['myfavOrgCustomerExtension']) &&
+            isset($extensions['myfavOrgCustomerExtension']['orderClearanceGroupId']) &&
+            $extensions['myfavOrgCustomerExtension']['orderClearanceGroupId'] !== null)
+        {
+            return $extensions['myfavOrgCustomerExtension']['orderClearanceGroupId'];
+        }
+
+        return null;
+    }
+
+    /**
+     * getOrderClearanceRoleId
+     *
+     * @param  SalesChannelContext $salesChannelContext
+     * @return null|string
+     */
+    public function getOrderClearanceRoleId(SalesChannelContext $salesChannelContext): ?string
+    {
+        $customer = $salesChannelContext->getCustomer();
+
+        if($customer === null) {
+            return null;
+        }
+
+        $extensions = $customer->getExtensions();
+
+        if(
+            isset($extensions['myfavOrgCustomerExtension']) &&
+            isset($extensions['myfavOrgCustomerExtension']['orderClearanceRoleId']) &&
+            $extensions['myfavOrgCustomerExtension']['orderClearanceRoleId'] !== null)
+        {
+            return $extensions['myfavOrgCustomerExtension']['orderClearanceRoleId'];
+        }
+
+        return null;
     }
 }

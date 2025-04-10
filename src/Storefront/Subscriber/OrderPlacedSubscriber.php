@@ -52,30 +52,17 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
         }
 
         // Get orderClearanceGroupId from customer extension.
-        $customer = $salesChannelContext->getCustomer();
+        //$customer = $salesChannelContext->getCustomer();
 
-        if($customer !== null) {
-            $customerExtensions = $customer->getExtensions();
+        $orderClearanceGroupId = $this->myfavSalesChannelContextService->getOrderClearanceGroupId($salesChannelContext);
+        $orderClearanceRoleId = $this->myfavSalesChannelContextService->getOrderClearanceRoleId($salesChannelContext);
 
-            if(isset($customerExtensions['myfavOrgCustomerExtension'])) {
-                $customerExtension = $customerExtensions['myfavOrgCustomerExtension'];
-
-                // Only save orderClearanceGroup, if this order is to be cleared/approved.
-                // Id 0196192887a871f38d43089598db212b is management. A manager should not have
-                // to clear his own order.
-                if(
-                    isset($customerExtension['orderClearanceGroupId']) &&
-                    $customerExtension['orderClearanceGroupId'] !== null &&
-                    isset($customerExtension['orderClearanceRoleId']) &&
-                    $customerExtension['orderClearanceRoleId'] != '0196192887a871f38d43089598db212b' &&
-                    $customerExtension['orderClearanceRoleId'] != null)
-                {
-                    $orderClearanceGroupId = $customerExtension['orderClearanceGroupId'];
-
-                    if($orderClearanceGroupId !== null) {
-                        $myfavOrgOrderExtension['orderClearanceGroupId'] = $orderClearanceGroupId;
-                    }
-                }
+        if($orderClearanceGroupId !== null && $orderClearanceRoleId !== null) {
+            // Only save orderClearanceGroup, if this order is to be cleared/approved.
+            // Id 0196192887a871f38d43089598db212b is management. A manager should not have
+            // to clear his own order.
+            if($orderClearanceRoleId != '0196192887a871f38d43089598db212b') {
+                $myfavOrgOrderExtension['orderClearanceGroupId'] = $orderClearanceGroupId;
             }
         }
 

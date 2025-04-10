@@ -3,7 +3,7 @@
 namespace Myfav\Org\Storefront\Controller;
 
 use Myfav\Org\Service\AccessRightsService;
-use Myfav\Org\Service\OrderClearanceGroupService;
+use Myfav\Org\Service\OrderClearanceService;
 use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Myfav\Org\Storefront\Page\OrderApproval\OrderApprovalPageLoader;
 use Shopware\Core\Framework\Context;
@@ -26,7 +26,7 @@ class OrderApprovalController extends StorefrontController
         private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
         private readonly OrderApprovalPageLoader $orderApprovalPageLoader,
         private readonly RouterInterface $router,
-        private readonly OrderClearanceGroupService $orderClearanceGroupService,
+        private readonly OrderClearanceService $orderClearanceService,
     )
     {
     }
@@ -41,25 +41,36 @@ class OrderApprovalController extends StorefrontController
         $company = $this->myfavSalesChannelContextService->getCompany($salesChannelContext);
 
         if($company === null) {
-            $url = $this->router->generate('myfav.org.aclrole.list');
+            $url = $this->router->generate('frontend.account.home.page', ['t' => 1]);
             return new RedirectResponse($url);
         }
 
+        // Get users order clearance group and role.
+        $orderClearanceGroupId = $this->myfavSalesChannelContextService->getOrderClearanceGroupId($salesChannelContext);
+        $orderClearanceRoleId = $this->myfavSalesChannelContextService->getOrderClearanceRoleId($salesChannelContext);
+
+        if($orderClearanceGroupId === null || $orderClearanceRoleId === null) {
+            $url = $this->router->generate('frontend.account.home.page', ['t' => 2]);
+            return new RedirectResponse($url);
+        }
+
+        // Check, if user is in an orderClearanceRole as manager.
+        if($orderClearanceRoleId !== '0196192887a871f38d43089598db212b') {
+            $url = $this->router->generate('frontend.account.home.page', ['t' => 3]);
+            return new RedirectResponse($url);
+        }
+
+        $orders = $this->orderClearanceService->loadOrders($context, $company->getId(), $orderClearanceGroupId);
+
         $page = $this->orderApprovalPageLoader->load($request, $salesChannelContext);
 
-        die('get orders that have to be cleared.');
-        
-        /*
-        $orderClearanceGroups = $this->orderClearanceGroupService->loadList($context, $company->getId());
-
-        return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/order-clearance-group/index.html.twig', [
+        return $this->renderStorefront('@MyfavOrg/storefront/page/myfav/org/order-approval/index.html.twig', [
             'successMessage' => $request->query->get('successMessage'),
-            'orderClearanceGroups' => $orderClearanceGroups,
+            'orders' => $orders,
             'page' => $page,
             'userAclCanCreate' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.create'),
             'userAclCanUpdate' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.update'),
             'userAclCanDelete' => $this->accessRightsService->hasRight($salesChannelContext, 'orderclearancegroup.delete'),
         ]);
-        */
     }
 }

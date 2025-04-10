@@ -43,13 +43,15 @@
     {% endblock %}
 
     {% block page_account_sidebar_link_myfav_org_order_approval_list %}
-        {% if (tmpRoleAttributes is defined && tmpRoleAttributes['orderapproval.read'] is defined) %}
-            <a href="{{ path('myfav.org.order.approval.list') }}"
-                title="{{ 'myfav.org.order-approval.linkTitle'|trans|striptags }}"
-                class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.order.approval.list') %} is-active{% endif %}"
-                {% if activeRoute is same as('myfav.org.order.approval.list') %} aria-current="page"{% endif %}>
-                {{ 'myfav.org.order-approval.linkTitle'|trans|sw_sanitize }}
-            </a>
+        {% if context.customer.extensions.myfavOrgCustomerExtension.orderClearanceRoleId == '0196192887a871f38d43089598db212b' %}
+            {% if (tmpRoleAttributes is defined && tmpRoleAttributes['orderapproval.read'] is defined) %}
+                <a href="{{ path('myfav.org.order.approval.list') }}"
+                    title="{{ 'myfav.org.order-approval.linkTitle'|trans|striptags }}"
+                    class="list-group-item list-group-item-action account-aside-item{% if activeRoute is same as('myfav.org.order.approval.list') %} is-active{% endif %}"
+                    {% if activeRoute is same as('myfav.org.order.approval.list') %} aria-current="page"{% endif %}>
+                    {{ 'myfav.org.order-approval.linkTitle'|trans|sw_sanitize }}
+                </a>
+            {% endif %}
         {% endif %}
     {% endblock %}
 

@@ -1,0 +1,56 @@
+{% sw_extends '@Storefront/storefront/page/account/_page.html.twig' %}
+
+{% block page_account_main_content %}
+    {% block page_myfav_org_order_clearance_group_overview %}
+        <div class="myfav-org-order-clearance-group-overview">
+            {#
+            {% if successMessage && (successMessage == 'createdOrderClearanceGroup' || successMessage == 'deletedOrderClearanceGroup' || successMessage == 'updatedOrderClearanceGroup') %}
+                <div role="alert" class="alert alert-success alert-has-icon">
+                    <span class="icon icon-checkmark-circle" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24"><defs><path d="M24 12c0 6.6274-5.3726 12-12 12S0 18.6274 0 12 5.3726 0 12 0s12 5.3726 12 12zM12 2C6.4772 2 2 6.4772 2 12s4.4772 10 10 10 10-4.4772 10-10S17.5228 2 12 2zM7.7071 12.2929 10 14.5858l6.2929-6.293c.3905-.3904 1.0237-.3904 1.4142 0 .3905.3906.3905 1.0238 0 1.4143l-7 7c-.3905.3905-1.0237.3905-1.4142 0l-3-3c-.3905-.3905-.3905-1.0237 0-1.4142.3905-.3905 1.0237-.3905 1.4142 0z" id="icons-default-checkmark-circle"></path></defs><use xlink:href="#icons-default-checkmark-circle" fill="#758CA3" fill-rule="evenodd"></use></svg>
+                    </span>
+                    <div class="alert-content-container">
+                        {% if successMessage == 'createdOrderClearanceGroup' %}
+                            <div class="alert-content">{{ 'myfav.org.orderClearanceGroup.successMessageOrderClearanceGroupCreated'|trans|sw_sanitize }}</div>
+                        {% elseif successMessage == 'deletedOrderClearanceGroup' %}
+                            <div class="alert-content">{{ 'myfav.org.orderClearanceGroup.successMessageOrderClearanceGroupDeleted'|trans|sw_sanitize }}</div>
+                        {% elseif successMessage == 'updatedOrderClearanceGroup' %}
+                            <div class="alert-content">{{ 'myfav.org.orderClearanceGroup.successMessageOrderClearanceGroupUpdated'|trans|sw_sanitize }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            #}
+
+            <h1>{{ 'myfav.org.order-approval.pageTitle'|trans|sw_sanitize }}</h1>
+
+            TODO: Add order Listing from "Orders" section here, too.
+
+            Extend it by some custom buttons, by giving it some more parameters in the include.
+
+
+            {% if aclRoles.total === 0 %}
+                {{ 'myfav.org.order-clearance.messageNoOrders'|trans|sw_sanitize }}
+            {% else %}
+                <table class="table table-striped table-hover myfav-org-order-clearance-group-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'myfav.org.orderClearanceGroup.orderClearanceTableOrderNumber'|trans|sw_sanitize }}</th>
+                            <th>{{ 'myfav.org.orderClearanceGroup.orderClearanceTableOrderDate'|trans|sw_sanitize }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.orderNumber }}</td>
+                                <td>
+                                    test
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endblock %}

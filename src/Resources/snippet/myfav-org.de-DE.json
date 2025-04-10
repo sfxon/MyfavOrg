@@ -88,7 +88,8 @@
                 "successMessageEmployeeUpdated": "Der Mitarbeiter-account wurde aktualisiert."
             },
             "order-approval": {
-                "linkTitle": "Bestellfreigabe"
+                "linkTitle": "Bestellfreigabe",
+                "pageTitle": "Bestellfreigabe"
             },
             "orderClearanceGroup": {
                 "addOrderClearanceGroupButton": "Gruppe hinzufügen",

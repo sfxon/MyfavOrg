@@ -78,7 +78,7 @@
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
             <argument type="service" id="Myfav\Org\Storefront\Page\OrderApproval\OrderApprovalPageLoader"/>
             <argument type="service" id="router"/>
-            <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService"/>
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceService"/>
             <call method="setContainer">
                 <argument type="service" id="service_container"/>
             </call>
@@ -215,6 +215,10 @@
 
         <service id="Myfav\Org\Service\OrderClearanceRoleService" public="true">
             <argument type="service" id="order_clearance_role.repository" />
+        </service>
+
+        <service id="Myfav\Org\Service\OrderClearanceService" public="true">
+            <argument type="service" id="order.repository" />
         </service>
 
         <service id="Myfav\Org\Service\SalutationService" public="true">

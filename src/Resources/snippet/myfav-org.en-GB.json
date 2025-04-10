@@ -88,7 +88,8 @@
                 "successMessageEmployeeUpdated": "The employee account has been updated."
             },
             "order-approval": {
-                "linkTitle": "Order Approval"
+                "linkTitle": "Order Approval",
+                "pageTitle": "Order Approval"
             },
             "orderClearanceGroup": {
                 "addOrderClearanceGroupButton": "Add Group",
