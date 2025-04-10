@@ -45,7 +45,8 @@ class Migration1720556163MyfavOrgAclAttributeGroup extends MigrationStep
             (UNHEX(\'0195c7ba2d4d72d0a1a17e099998b042\'), \'sw.addresses\', 40, \'2025-03-16 17:15:19.000\', NULL),
             (UNHEX(\'0195c7badad37025a6a46a9139a735c9\'), \'sw.payment.methods\', 50, \'2025-03-16 17:15:19.000\', NULL),
             (UNHEX(\'0195c7b916ac71f5906813e9693a0bfb\'), \'sw.orders\', 60, \'2025-03-16 17:15:19.000\', NULL),
-            (UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'orderclearancegroup\', 70, \'2025-03-16 17:15:19.000\', NULL),;');
+            (UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'orderclearancegroup\', 70, \'2025-03-16 17:15:19.000\', NULL),
+            (UNHEX(\'01962057bc30715282f7281671a34de1\'), \'orderapproval\', 80, \'2025-03-16 17:15:19.000\', NULL);');
     }
 
     public function updateDestructive(Connection $connection): void

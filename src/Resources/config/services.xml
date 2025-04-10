@@ -73,6 +73,20 @@
             </call>
         </service>
 
+        <service id="Myfav\Org\Storefront\Controller\OrderApprovalController" public="true">
+            <argument type="service" id="Myfav\Org\Service\AccessRightsService"/>
+            <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
+            <argument type="service" id="Myfav\Org\Storefront\Page\OrderApproval\OrderApprovalPageLoader"/>
+            <argument type="service" id="router"/>
+            <argument type="service" id="Myfav\Org\Service\OrderClearanceGroupService"/>
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+            <call method="setTwig">
+                <argument type="service" id="twig"/>
+            </call>
+        </service>
+
         <!-- Entity -->
         <service id="Myfav\Org\Core\Content\MyfavOrgAclAttribute\MyfavOrgAclAttributeDefinition">
             <tag name="shopware.entity.definition" entity="myfav_org_acl_attribute" />
@@ -139,6 +153,11 @@
         </service>
 
         <service id="Myfav\Org\Storefront\Page\OrderClearanceGroup\OrderClearanceGroupPageLoader" public="true">
+            <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+
+        <service id="Myfav\Org\Storefront\Page\OrderApproval\OrderApprovalPageLoader" public="true">
             <argument type="service" id="Shopware\Storefront\Page\GenericPageLoader" />
             <argument type="service" id="event_dispatcher"/>
         </service>
@@ -212,6 +231,7 @@
         <service id="Myfav\Org\Storefront\Subscriber\OrderPlacedSubscriber">
             <tag name="kernel.event_subscriber"/>
             <argument type="service" id="Myfav\Org\Service\MyfavSalesChannelContextService" />
+            <argument type="service" id="Shopware\Core\System\StateMachine\StateMachineRegistry"/>
         </service>
     </services>
 </container>

@@ -6,12 +6,16 @@ namespace Myfav\Org\Storefront\Subscriber;
 
 use Myfav\Org\Service\MyfavSalesChannelContextService;
 use Shopware\Core\Checkout\Cart\Order\CartConvertedEvent;
+use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Shopware\Core\System\StateMachine\StateMachineRegistry;
+use Shopware\Core\System\StateMachine\Transition;
 
 readonly class OrderPlacedSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,)
+        private readonly MyfavSalesChannelContextService $myfavSalesChannelContextService,
+        private readonly StateMachineRegistry $stateMachineRegistry,)
     {
     }
 
@@ -23,7 +27,8 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            CartConvertedEvent::class => 'onCartConvertedEvent'
+            CartConvertedEvent::class => 'onCartConvertedEvent',
+            CheckoutOrderPlacedEvent::class => 'onOrderPlaced',
         ];
     }
 
@@ -79,6 +84,50 @@ readonly class OrderPlacedSubscriber implements EventSubscriberInterface
             $convertedCart = $event->getConvertedCart();
             $convertedCart['extensions']['myfavOrgOrderExtension'] = $myfavOrgOrderExtension;
             $event->setConvertedCart($convertedCart);
+        }
+    }
+
+    /**
+     * onOrderPlaced
+     *
+     * @param  CheckoutOrderPlacedEvent $event
+     * @return void
+     */
+    public function onOrderPlaced(CheckoutOrderPlacedEvent $event): void
+    {
+        $order = $event->getOrder();
+        $context = $event->getContext();
+
+        $orderExtensions = $order->getExtensions();
+
+        if(!isset($orderExtensions['myfavOrgOrderExtension'])) {
+            return;
+        }
+
+        $myfavOrgOrderExtension = $orderExtensions['myfavOrgOrderExtension'];
+
+        if(!isset($myfavOrgOrderExtension['orderClearanceGroupId'])) {
+            return;
+        }
+
+        $orderClearanceGroupId = $myfavOrgOrderExtension['orderClearanceGroupId'];
+
+        if($orderClearanceGroupId == '0196192887a871f38d43089598db212b' || $orderClearanceGroupId === null) {
+            return;
+        }
+
+        try {
+            $this->stateMachineRegistry->transition(
+                new Transition(
+                    'order',
+                    $order->getId(),
+                    'order_open_to_clearance', // Technical Name of the transition.
+                    'stateId' // Name of the field, holding the state.
+                ),
+                $context
+            );
+        } catch (\Throwable $e) {
+            // Could handle errors here.
         }
     }
 }

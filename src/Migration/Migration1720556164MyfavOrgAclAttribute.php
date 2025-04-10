@@ -61,6 +61,8 @@ class Migration1720556164MyfavOrgAclAttribute extends MigrationStep
             (UNHEX(\'019618e54cbf7128b964d553808b40d0\'), \'orderclearancegroup.read\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:15:56.000\', NULL),
             (UNHEX(\'019618e55e5c736297d7a3b45097d1b4\'), \'orderclearancegroup.update\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:16:06.000\', NULL),
             (UNHEX(\'019618e56ce17295b39320c603414047\'), \'orderclearancegroup.delete\', UNHEX(\'019618decc9572eb9465bd289d5461aa\'), \'2025-03-16 17:16:18.000\', NULL),
+
+            (UNHEX(\'019620578b9c73d2888dcf2f097b16ae\'), \'orderapproval.read\', UNHEX(\'01962057bc30715282f7281671a34de1\'), \'2025-03-16 17:16:18.000\', NULL)
             ;');
     }
 

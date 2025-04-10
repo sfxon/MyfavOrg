@@ -8,6 +8,7 @@
                 "aclTableHeadingUpdate": "Update",
                 "aclTableHeadingDelete": "Delete",
                 "aclTableAttributeEmployee": "Employee",
+                "aclTableAttributeOrderapproval": "Order Approval",
                 "aclTableAttributeOrderclearancegroup": "Order Clearance Groups",
                 "aclTableAttributeRole": "Role",
                 "aclTableAttributeSw": {
@@ -85,6 +86,9 @@
                 "successMessageEmployeeCreated": "The employee account has been created.",
                 "successMessageEmployeeDeleted": "The employee account has been deleted.",
                 "successMessageEmployeeUpdated": "The employee account has been updated."
+            },
+            "order-approval": {
+                "linkTitle": "Order Approval"
             },
             "orderClearanceGroup": {
                 "addOrderClearanceGroupButton": "Add Group",

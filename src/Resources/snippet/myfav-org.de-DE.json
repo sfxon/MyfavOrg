@@ -8,6 +8,7 @@
                 "aclTableHeadingUpdate": "Aktualisieren",
                 "aclTableHeadingDelete": "Löschen",
                 "aclTableAttributeEmployee": "Mitarbeiter",
+                "aclTableAttributeOrderapproval": "Bestellfreigabe",
                 "aclTableAttributeOrderclearancegroup": "Bestellfreigabe Gruppen",
                 "aclTableAttributeRole": "Rollen",
                 "aclTableAttributeSw": {
@@ -85,6 +86,9 @@
                 "successMessageEmployeeCreated": "Der Mitarbeiter-Account wurde angelegt.",
                 "successMessageEmployeeDeleted": "Der Mitarbeiter-Account wurde gelöscht.",
                 "successMessageEmployeeUpdated": "Der Mitarbeiter-account wurde aktualisiert."
+            },
+            "order-approval": {
+                "linkTitle": "Bestellfreigabe"
             },
             "orderClearanceGroup": {
                 "addOrderClearanceGroupButton": "Gruppe hinzufügen",
